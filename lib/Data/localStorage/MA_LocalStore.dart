@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:x_money_manager/model/MA_User.dart';
+// import 'package:x_money_manager/model/MA_User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:x_money_manager/Model/MA_User.dart';
 class MaLocalStore {
     static  Future<SharedPreferences> _prefs  = SharedPreferences.getInstance();
     static SharedPreferences? prefs;
@@ -16,10 +15,10 @@ class MaLocalStore {
         init();
         await prefs?.setString(key, jsonEncode(data));
     }
-    static storeUser(MaUser? user) async{
+    static storeUser(MaUser user) async{
         init();
         await prefs?.setString('localUser', jsonEncode(user));
-        await prefs?.setBool('hasLocalUser', user?.userId?.isNotEmpty ?? false);
+        await prefs?.setBool('hasLocalUser', user.userId?.isNotEmpty ?? false);
     }
     static bool checkUserData(){
         init();

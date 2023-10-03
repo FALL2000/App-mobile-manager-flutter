@@ -32,7 +32,12 @@ class MAInput extends StatelessWidget {
       validator: validator ?? (value) {
         return null;
       },
+      textAlignVertical: TextAlignVertical.center,
+      // textAlign: TextAlign.center,
+       maxLines: 1,
+      // style: TextStyle(fontSize: 17),
       decoration:  InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 labelText: title,
                 suffix: suffix,
                 prefix: prefix,
