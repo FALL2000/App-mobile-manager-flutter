@@ -1,0 +1,170 @@
+{
+  "project_info": {
+    "project_number": "824833644826",
+    "project_id": "plexiform-being-384211",
+    "storage_bucket": "plexiform-being-384211.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824833644826:android:5187c50cf8d2d01f1974a3",
+        "android_client_info": {
+          "package_name": "com.example.first_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIWBZClo5thDjOhdOwlPRSAMNE4j4yjjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824833644826-ein4uidiibsf8c0610pmqtaurp0nm2dj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "noeli.fr.moneyApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824833644826:android:b4bd5607c77c5d191974a3",
+        "android_client_info": {
+          "package_name": "com.example.flutter_x_money"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824833644826-6qpikgd273a88q6gq5a8pq68psr5tikj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_x_money",
+            "certificate_hash": "18629f93c9b5e21e13eb36dc042fd7cd2160ccb0"
+          }
+        },
+        {
+          "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIWBZClo5thDjOhdOwlPRSAMNE4j4yjjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824833644826-ein4uidiibsf8c0610pmqtaurp0nm2dj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "noeli.fr.moneyApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824833644826:android:6c33334e3b062ac11974a3",
+        "android_client_info": {
+          "package_name": "ets.noeli.x_money_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIWBZClo5thDjOhdOwlPRSAMNE4j4yjjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824833644826-ein4uidiibsf8c0610pmqtaurp0nm2dj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "noeli.fr.moneyApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824833644826:android:7a30f8c3f57379af1974a3",
+        "android_client_info": {
+          "package_name": "noeli.fr.money_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824833644826-6vif33dqfpsopucbq0rkjodpjp1gndmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "noeli.fr.money_app",
+            "certificate_hash": "9a6525045b5d9337acc77e75dd1e4bde613f2433"
+          }
+        },
+        {
+          "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIWBZClo5thDjOhdOwlPRSAMNE4j4yjjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824833644826-0042sskkkkh26bfke4qpgvs00j27mi72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824833644826-ein4uidiibsf8c0610pmqtaurp0nm2dj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "noeli.fr.moneyApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
