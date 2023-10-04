@@ -51,10 +51,10 @@ const XItem _transItem=XItem(
       );
 const XItem _currItem=XItem(
         id: 2,
-        name: 'Currencies',
-        label: 'Currencies',
-        path: '/Currencies',
-        icon:  Icons.money,
+        name: 'Agent',
+        label: 'Agent',
+        path: '/Agent',
+        icon:  Icons.people,
       );
 const XItem _settingsItem=XItem(
         id: 3,

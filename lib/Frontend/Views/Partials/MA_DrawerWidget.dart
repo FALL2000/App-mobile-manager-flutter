@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/model/menu_item.dart';
 import 'package:x_money_manager/utilities/colors.dart';
+
+import '../../../Data/localStorage/MA_LocalStore.dart';
     
 class MaDrawerWidget extends StatelessWidget {
   final XItem currentItem;
@@ -15,30 +18,7 @@ class MaDrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<XItem> _items = XItemsRepository.loadXItems('');
     var children2 =  <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            child: Text(
-              'Drawer Header',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          /*ListTile(
-            leading: Icon(Icons.message),
-            title: Text('Messages'),
-          ),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Profile'),
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-          ),*/
+         _buildDrawerHeader(context)
         ];
 
         children2.addAll(_items
@@ -55,6 +35,40 @@ class MaDrawerWidget extends StatelessWidget {
       ),
     );
   }
+
+
+  Widget _drawerHeader(String firstName, String mail, BuildContext context, [String? lastName]){
+      String name =  lastName==null ? firstName.replaceFirst(firstName[0], firstName[0].toUpperCase()) :  firstName.replaceFirst(firstName[0], firstName[0].toUpperCase()) + ' ' + lastName.toString().replaceFirst(lastName.toString()[0], lastName.toString()[0].toUpperCase());
+      String titleName = lastName==null ? firstName[0].toUpperCase() : firstName[0].toUpperCase() + lastName.toString()[0].toUpperCase();
+      return UserAccountsDrawerHeader(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        accountName: Text(name, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.primary)),
+        accountEmail: Text(mail, style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize, color: Theme.of(context).colorScheme.primary)),
+        currentAccountPicture: CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: ClipOval(
+            child: Text(titleName, style: TextStyle(fontSize: 30, fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,),),
+          ),
+        ),
+      );
+  }
+
+  Widget _buildDrawerHeader(BuildContext context){
+    //return _drawerHeader("timene", "fred@gmail.com", context, "Fred");
+    if(MaLocalStore.getStoredUser() == null){
+      return _drawerHeader("UNKNOW", "UNKNOW", context);
+    }else{
+      String firstName = MaLocalStore.getStoredUser()?.firstname as String;
+      String email = MaLocalStore.getStoredUser()?.email as String;
+      String lastName = MaLocalStore.getStoredUser()?.lastname as String;
+      
+      return lastName.isEmpty ? _drawerHeader(firstName, email, context) : _drawerHeader(firstName, email, context, lastName);
+    }
+
+  }
+
 
   Widget _buildCategory(XItem item, BuildContext context) {
     final categoryString =item.label;
