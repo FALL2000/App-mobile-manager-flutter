@@ -17,11 +17,26 @@ import 'package:x_money_manager/model/MA_Zone.dart';
 
   }
 }
+enum Role {
+    client('CLIENT'),
+    manager('MANAGER');
+
+  final String keyValue;
+  const  Role( this.keyValue);
+  static Role? assignRole(String key){
+    try {
+      return Role.values.firstWhere((element) => element.keyValue==key);
+    } catch (e) {
+      print(e); 
+    }
+  }
+}
 
 class MaUser {
     String firstname;
     String? lastname;
     String? phone;
+    Role? role;
     String? password;
     Gender? gender;
     String email;
@@ -31,7 +46,7 @@ class MaUser {
     String? cityId;
   
   MaUser({ required this.firstname, this.lastname, this.phone, this.gender, required this.email, 
-            this.password, this.userId, this.createdDate, this.countryId, 
+            this.password, this.userId, this.createdDate, this.countryId, this.role,
             this.cityId}); 
 
 
@@ -50,6 +65,7 @@ class MaUser {
         countryId: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
         cityId: util.toSString(zone['id']),
         gender: Gender.assignGender(util.toSString(json['gender'])),
+        role: Role.assignRole(util.toSString(json['role'])),
       );
 
 

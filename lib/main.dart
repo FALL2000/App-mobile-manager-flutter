@@ -18,7 +18,7 @@ void main() {
                         } else if (snapshot.hasError) {
                           child =appWrapper( home: Scaffold(body: MaError(snapshot: snapshot ,)),);
                         } else {
-                          child =appWrapper( home: Scaffold(body: MaSpinner(title: 'Initializing...',)));
+                          child =appWrapper( home: Scaffold(body: MaSpinner(title: 'Welcome...',)));
                         }
                         return child;
                       },

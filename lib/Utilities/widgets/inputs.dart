@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 class MAInput extends StatelessWidget {
   TextInputType? keyboardType;
   Widget? suffix;
+  Widget? suffixIcon;
   Widget? prefix;
+  Widget? prefixIcon;
    MAInput({
     super.key,
     required this.controller,
@@ -14,7 +16,9 @@ class MAInput extends StatelessWidget {
     this.obscureText,
     this.keyboardType,
     this.suffix,
+    this.suffixIcon,
     this.prefix,
+    this.prefixIcon,
   });
   final String? label;
   final bool? obscureText;
@@ -24,6 +28,7 @@ class MAInput extends StatelessWidget {
   get title=> label ?? '';
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme= Theme.of(context).colorScheme;
     return TextFormField(
       keyboardType:  keyboardType,
       obscureText: obscureText ?? false,
@@ -32,10 +37,19 @@ class MAInput extends StatelessWidget {
       validator: validator ?? (value) {
         return null;
       },
+      textAlignVertical: TextAlignVertical.center,
+      // textAlign: TextAlign.center,
+       maxLines: 1,
+      style: const TextStyle(fontSize: 16),
       decoration:  InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                 labelText: title,
                 suffix: suffix,
+                suffixIcon: suffixIcon,
                 prefix: prefix,
+                prefixIcon: prefixIcon,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0), borderSide:  BorderSide(color: colorScheme.primary,)),
               ),
     );
   }
