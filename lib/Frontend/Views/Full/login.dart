@@ -1,11 +1,14 @@
 
 
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:x_money_manager/Utilities/widgets/inputs.dart';
 import 'package:x_money_manager/data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/model/MA_Response.dart';
 import 'package:x_money_manager/model/MA_User.dart';
-import 'package:x_money_manager/utilities/widgets/inputs.dart';
+// import 'package:x_money_manager/utilities/widgets/inputs.dart';
 import 'package:x_money_manager/Utilities/widgets/MA_ExitablePage.dart';
 import 'package:x_money_manager/utilities/utils.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
@@ -99,17 +102,18 @@ class _loginPageState extends State<_loginPage> {
                             ),
                             const SizedBox(height: 40.0),
                             MAInput(
-                              prefix: Icon(Icons.mail,color: colorScheme.primary, ),
+                              prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
                               controller: widget._usernameController,
                               label: 'Email',
                             ),
-                            const SizedBox(height: 12.0),
+                            const SizedBox(height: 20.0),
                             MAInput(
+                              prefixIcon: Icon(Icons.key,color: colorScheme.primary, ),
                               controller: widget._passwordController,
                               label: 'Password',
                               obscureText: obscureText,
-                              suffix: IconButton(
-                                padding: EdgeInsets.all(0.2),
+                              suffixIcon: IconButton(
+                                padding: const EdgeInsets.all(0.2),
                                 icon: Icon(obscureIcon, color: colorScheme.primary,), //label: Text(''),
                                 onPressed: (){
                                         // print('value $value');
@@ -128,7 +132,7 @@ class _loginPageState extends State<_loginPage> {
                                     // primary: Colors.blue,
                                     // onSurface: Colors.red,
                                   ),
-                                  child: Text('Password Forgotten?'),
+                                  child: const Text('Password Forgotten?'),
                                   onPressed: () { 
                                     toggleView();
                                   },
@@ -136,8 +140,8 @@ class _loginPageState extends State<_loginPage> {
                                 ),
                                 SizedBox(width: spacerBetweenSignIn,),
                                 ElevatedButton(style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,
-                                                    minimumSize: Size(80, 36),),  
-                                              child: Text('Sign In'),
+                                                    minimumSize: const Size(80, 36),),  
+                                              child: const Text('Log In'),
                                               onPressed: () async {
                                                   await  _handleSignIn(context);
                                                 },
@@ -163,13 +167,13 @@ class _loginPageState extends State<_loginPage> {
                                 ),
                               ],
                             ),
-                             const SizedBox(height: 40.0),
-                            Text.rich(TextSpan(text: 'In order to recover your password, please enter the email address linked to you account.'),
+                            const SizedBox(height: 40.0),
+                            const Text.rich(TextSpan(text: 'In order to recover your password, please enter the email address linked to you account.'),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 15.0),
                             MAInput(
-                              prefix: Icon(Icons.mail),
+                              prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
                               controller: widget._usernameController,
                               label: 'Email',
                             ),
@@ -179,22 +183,22 @@ class _loginPageState extends State<_loginPage> {
                               alignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 TextButton.icon(
-                                  icon: Icon(Icons.arrow_back),
+                                  icon: const Icon(Icons.arrow_back),
                                   style: TextButton.styleFrom(
                                     // padding: EdgeInsets.only(right: spacerBetweenSignIn)
                                     // primary: Colors.blue,
                                     // onSurface: Colors.red,
                                   ),
-                                  label: Text('Back'),
+                                  label: const Text('Back'),
                                   onPressed: () { 
                                     toggleView();
                                   },
                                   
                                 ),
-                                SizedBox(width: spacerBetweenSignIn,),
+                                SizedBox(width: spacerBetweenSignIn*1.5,),
                                 ElevatedButton(style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,
                                                     minimumSize: Size(80, 36),),  
-                                              child: Text('Recover'),
+                                              child: const Text('Recover'),
                                               onPressed: () async {
                                                   await  _handleRecover(context);
                                                 },
