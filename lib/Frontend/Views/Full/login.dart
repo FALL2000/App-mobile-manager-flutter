@@ -1,14 +1,11 @@
 
 
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, camel_case_types, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:x_money_manager/Utilities/widgets/inputs.dart';
-import 'package:x_money_manager/data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/model/MA_Response.dart';
-import 'package:x_money_manager/model/MA_User.dart';
-// import 'package:x_money_manager/utilities/widgets/inputs.dart';
 import 'package:x_money_manager/Utilities/widgets/MA_ExitablePage.dart';
 import 'package:x_money_manager/utilities/utils.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
@@ -87,150 +84,145 @@ class _loginPageState extends State<_loginPage> {
           print('width >>>> ${constraints.biggest.width} ');
           double spacerBetweenSignIn = constraints.biggest.width/4;
           var _loginFormview = ListView(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          children: <Widget>[
-                            const SizedBox(height: 10.0),
-                            Column(
-                              children: <Widget>[
-                                Image.asset('assets/logo.png'),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  'MONEY APP',
-                                  style: Theme.of(context).textTheme.headlineSmall,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 40.0),
-                            MAInput(
-                              prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
-                              controller: widget._usernameController,
-                              label: 'Email',
-                            ),
-                            const SizedBox(height: 20.0),
-                            MAInput(
-                              prefixIcon: Icon(Icons.key,color: colorScheme.primary, ),
-                              controller: widget._passwordController,
-                              label: 'Password',
-                              obscureText: obscureText,
-                              suffixIcon: IconButton(
-                                padding: const EdgeInsets.all(0.2),
-                                icon: Icon(obscureIcon, color: colorScheme.primary,), //label: Text(''),
-                                onPressed: (){
-                                        // print('value $value');
-                                        setState(() {
-                                            obscureText = !obscureText;
-                                          });
-                                  }, ),
-                            ),
-                            const SizedBox(height: 12.0),
-                            OverflowBar(
-                              alignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    // padding: EdgeInsets.only(right: spacerBetweenSignIn)
-                                    // primary: Colors.blue,
-                                    // onSurface: Colors.red,
-                                  ),
-                                  child: const Text('Password Forgotten?'),
-                                  onPressed: () { 
-                                    toggleView();
-                                  },
-                                  
-                                ),
-                                SizedBox(width: spacerBetweenSignIn,),
-                                ElevatedButton(style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,
-                                                    minimumSize: const Size(80, 36),),  
-                                              child: const Text('Log In'),
-                                              onPressed: () async {
-                                                  await  _handleSignIn(context);
-                                                },
-                              ),
-                              ],
-                            ),
-                           
-                            // ElevatedButton(onPressed: onPressed, child: child)
-                            ],
-                          );
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            children: <Widget>[
+              const SizedBox(height: 10.0),
+              Column(
+                children: <Widget>[
+                  Image.asset('assets/logo.png'),
+                  const SizedBox(height: 5.0),
+                  Text('MONEY APP',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40.0),
+              MAInput(
+                prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
+                controller: widget._usernameController,
+                label: 'Email',
+              ),
+              const SizedBox(height: 20.0),
+              MAInput(
+                prefixIcon: Icon(Icons.key,color: colorScheme.primary, ),
+                controller: widget._passwordController,
+                label: 'Password',
+                obscureText: obscureText,
+                suffixIcon: IconButton(
+                        padding: const EdgeInsets.all(0.2),
+                        icon: Icon(obscureIcon, color: colorScheme.primary,), //label: Text(''),
+                        onPressed: (){
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                        }, 
+                    ),
+              ),
+              const SizedBox(height: 12.0),
+              OverflowBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      // padding: EdgeInsets.only(right: spacerBetweenSignIn)
+                      // primary: Colors.blue,
+                      // onSurface: Colors.red,
+                    ),
+                    child: const Text('Password Forgotten?'),
+                    onPressed: () { 
+                      toggleView();
+                    },
+                    
+                  ),
+                  SizedBox(width: spacerBetweenSignIn,),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,minimumSize: const Size(80, 36),),  
+                    child: const Text('Log In'),
+                    onPressed: () async {
+                      await  _handleSignIn(context);
+                    },
+                  ),
+                ],
+              ),
+              
+              // ElevatedButton(onPressed: onPressed, child: child)
+              ],
+          );
 
           var _ForgotFormview = ListView(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          children: <Widget>[
-                            const SizedBox(height: 30.0),
-                            Column(
-                              children: <Widget>[
-                                Image.asset('assets/logo.png'),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  'MONEY APP',
-                                  style: Theme.of(context).textTheme.headlineSmall,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 40.0),
-                            const Text.rich(TextSpan(text: 'In order to recover your password, please enter the email address linked to you account.'),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 15.0),
-                            MAInput(
-                              prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
-                              controller: widget._usernameController,
-                              label: 'Email',
-                            ),
-                           
-                            const SizedBox(height: 12.0),
-                            OverflowBar(
-                              alignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                TextButton.icon(
-                                  icon: const Icon(Icons.arrow_back),
-                                  style: TextButton.styleFrom(
-                                    // padding: EdgeInsets.only(right: spacerBetweenSignIn)
-                                    // primary: Colors.blue,
-                                    // onSurface: Colors.red,
-                                  ),
-                                  label: const Text('Back'),
-                                  onPressed: () { 
-                                    toggleView();
-                                  },
-                                  
-                                ),
-                                SizedBox(width: spacerBetweenSignIn*1.5,),
-                                ElevatedButton(style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,
-                                                    minimumSize: Size(80, 36),),  
-                                              child: const Text('Recover'),
-                                              onPressed: () async {
-                                                  await  _handleRecover(context);
-                                                },
-                              ),
-                              ],
-                            ),
-                           
-                            // ElevatedButton(onPressed: onPressed, child: child)
-                            ],
-                          );
-          return Stack(
-            children:[ Form(
-                  key: formKey,
-                  child: _isLoginView ? _loginFormview : _ForgotFormview
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                children: <Widget>[
+                  const SizedBox(height: 30.0),
+                  Column(
+                    children: <Widget>[
+                      Image.asset('assets/logo.png'),
+                      const SizedBox(height: 5.0),
+                      Text('MONEY APP',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40.0),
+                  const Text.rich(TextSpan(text: 'In order to recover your password, please enter the email address linked to you account.'),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15.0),
+                  MAInput(
+                    prefixIcon: Icon(Icons.mail,color: colorScheme.primary, ),
+                    controller: widget._usernameController,
+                    label: 'Email',
+                  ),
+                  const SizedBox(height: 12.0),
+                  OverflowBar(
+                    alignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      TextButton.icon(
+                        icon: const Icon(Icons.arrow_back),
+                        style: TextButton.styleFrom(
+                          // padding: EdgeInsets.only(right: spacerBetweenSignIn)
+                          // primary: Colors.blue,
+                          // onSurface: Colors.red,
                         ),
-               
-
-            Visibility(
+                        label: const Text('Back'),
+                        onPressed: () { 
+                          toggleView();
+                        },
+                        
+                      ),
+                      SizedBox(width: spacerBetweenSignIn*1.5,),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,minimumSize: Size(80, 36),),  
+                        child: const Text('Recover'),
+                        onPressed: () async {
+                            await  _handleRecover(context);
+                          },
+                      ),
+                    ],
+                  ),
+                  
+                  // ElevatedButton(onPressed: onPressed, child: child)
+                ],
+            );
+          return Stack(
+            children:[ 
+              Form(key: formKey,
+                   child: _isLoginView ? _loginFormview : _ForgotFormview
+              ),
+              Visibility(
                 visible: _isloading,
                 child: Opacity(
                   opacity: 0.8,
                   child:Container(
-                    width: 500,
-                    color: Theme.of(context).colorScheme.background,
-                    child: MaSpinner(title: 'Wait a moment...',)
+                      width: 500,
+                      color: Theme.of(context).colorScheme.background,
+                      child: MaSpinner(title: 'Wait a moment...',),
                     ),
-                ),
+                  ),
               )         
             ]
-          );
-                  }
-            ),
+                );
+          }
+         ),
     );
 
 
