@@ -36,37 +36,52 @@ class MaDrawerWidget extends StatelessWidget {
     );
   }
 
+  Map<String, String> _buildName(String firstName, [String? lastName]){
+     if(lastName == null){
+       String name = firstName.split(' ').length > 1 ? firstName.split(' ')[0].replaceFirst(firstName.split(' ')[0][0], firstName.split(' ')[0][0].toUpperCase())  + ' ' + firstName.split(' ')[1].replaceFirst(firstName.split(' ')[1][0], firstName.split(' ')[1][0].toUpperCase()) : firstName.replaceFirst(firstName[0], firstName[0].toUpperCase());
+       String titleName = firstName.split(' ').length > 1 ? firstName.split(' ')[0][0].toUpperCase() + firstName.split(' ')[1][0].toUpperCase() : firstName[0].toUpperCase();
+       return {
+         "name": name,
+         "titleName": titleName
+       };
+     }else{
+        String fName = firstName.split(' ').length > 1 ? firstName.split(' ')[0].replaceFirst(firstName.split(' ')[0][0], firstName.split(' ')[0][0].toUpperCase()) : firstName.replaceFirst(firstName[0], firstName[0].toUpperCase());
+        String lName = lastName.split(' ').length > 1 ? lastName.split(' ')[0].replaceFirst(lastName.split(' ')[0][0], lastName.split(' ')[0][0].toUpperCase()) : lastName.replaceFirst(lastName[0], lastName[0].toUpperCase());
+        return{
+          "name": fName + ' '+ lName,
+          "titleName": fName[0].toUpperCase() + lName[0].toUpperCase()
+        };
+     }
+  }
 
   Widget _drawerHeader(String firstName, String mail, BuildContext context, [String? lastName]){
-      String name =  lastName==null ? firstName.replaceFirst(firstName[0], firstName[0].toUpperCase()) :  firstName.replaceFirst(firstName[0], firstName[0].toUpperCase()) + ' ' + lastName.toString().replaceFirst(lastName.toString()[0], lastName.toString()[0].toUpperCase());
-      String titleName = lastName==null ? firstName[0].toUpperCase() : firstName[0].toUpperCase() + lastName.toString()[0].toUpperCase();
+      Map<String, String> mapName = lastName == null ? _buildName(firstName) : _buildName(firstName, lastName);
       return UserAccountsDrawerHeader(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
         ),
-        accountName: Text(name, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.primary)),
+        accountName: Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.primary)),
         accountEmail: Text(mail, style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize, color: Theme.of(context).colorScheme.primary)),
         currentAccountPicture: CircleAvatar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           child: ClipOval(
-            child: Text(titleName, style: TextStyle(fontSize: 30, fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,),),
+            child: Text(mapName['titleName'] as String , style: TextStyle(fontSize: 30, fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,),),
           ),
         ),
       );
   }
 
   Widget _buildDrawerHeader(BuildContext context){
-    //return _drawerHeader("timene", "fred@gmail.com", context, "Fred");
-    if(MaLocalStore.getStoredUser() == null){
+    //return _drawerHeader("Nganda Onana", "fred@gmail.com", context, "fred");
+   if(MaLocalStore.getStoredUser() == null){
       return _drawerHeader("UNKNOW", "UNKNOW", context);
-    }else{
+   }else{
       String firstName = MaLocalStore.getStoredUser()?.firstname as String;
       String email = MaLocalStore.getStoredUser()?.email as String;
       String lastName = MaLocalStore.getStoredUser()?.lastname as String;
       
       return lastName.isEmpty ? _drawerHeader(firstName, email, context) : _drawerHeader(firstName, email, context, lastName);
-    }
-
+   }
   }
 
 
