@@ -4,7 +4,7 @@
 import 'dart:math';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:x_money_manager/controller/MA_UserController.dart';
+import 'package:x_money_manager/Backend/MA_UserController.dart';
 import './MA_Local_Notification.dart';
 class MaFirebaseNotification {
   static Future<void> init() async{ 
@@ -53,7 +53,7 @@ class MaFirebaseNotification {
       String? deviceToken = await _firebaseMessage.getToken();
        print('getDeviceToken:::::deviceToken: "${deviceToken}"');
        if(deviceToken!.isNotEmpty){
-          // MaUserController.sendToken(deviceToken);
+          MaUserController.sendToken(deviceToken);
           return deviceToken;
        }
 

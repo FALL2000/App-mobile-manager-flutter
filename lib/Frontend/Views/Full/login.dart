@@ -119,8 +119,9 @@ class _loginPageState extends State<_loginPage> {
                     ),
               ),
               const SizedBox(height: 12.0),
-              OverflowBar(
-                alignment: MainAxisAlignment.center,
+              Row(
+                // alignment: MainAxisAlignment.center,
+                 mainAxisAlignment : MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
@@ -134,7 +135,7 @@ class _loginPageState extends State<_loginPage> {
                     },
                     
                   ),
-                  SizedBox(width: spacerBetweenSignIn,),
+                  // SizedBox(width: spacerBetweenSignIn,),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,minimumSize: const Size(80, 36),),  
                     child: const Text('Log In'),
@@ -173,8 +174,8 @@ class _loginPageState extends State<_loginPage> {
                     label: 'Email',
                   ),
                   const SizedBox(height: 12.0),
-                  OverflowBar(
-                    alignment: MainAxisAlignment.center,
+                  Row(
+                     mainAxisAlignment : MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       TextButton.icon(
                         icon: const Icon(Icons.arrow_back),
@@ -189,7 +190,7 @@ class _loginPageState extends State<_loginPage> {
                         },
                         
                       ),
-                      SizedBox(width: spacerBetweenSignIn*1.5,),
+                      // SizedBox(width: spacerBetweenSignIn*1.5,),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom( backgroundColor: colorScheme.primary,foregroundColor: colorScheme.background,minimumSize: Size(80, 36),),  
                         child: const Text('Recover'),

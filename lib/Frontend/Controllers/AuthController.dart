@@ -7,7 +7,7 @@ import 'package:x_money_manager/firebase_options.dart';
 import 'package:x_money_manager/Notification/MA_firebaseNotification.dart';
 class AuthController extends GetxController { 
 
-bool _loggedIn = true;
+bool _loggedIn = false;
   User? _user ;
   MaUser? storedUser ;
   User? get authUser=> _user ;
@@ -24,7 +24,7 @@ bool _loggedIn = true;
         _user= user;
         print(_user);
         _loggedIn = true;
-        // MaFirebaseNotification.getDeviceToken();
+        MaFirebaseNotification.getDeviceToken();
       } else {
         print('user is logged out ');
         _loggedIn = true;
