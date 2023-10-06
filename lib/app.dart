@@ -33,7 +33,7 @@ class _MoneyAppState extends State<MoneyApp> {
 
   @override
   Widget build(BuildContext context) {
-    
+    print('_initialRoute ${appState.loggedIn}');
     if(!appState.loggedIn) {
       _initialRoute='/login';
       
