@@ -49,11 +49,11 @@ const XItem _transItem=XItem(
         path: '/Transactions',
         icon:  Icons.share,
       );
-const XItem _currItem=XItem(
+const XItem _agentItem=XItem(
         id: 2,
-        name: 'Agent',
-        label: 'Agent',
-        path: '/Agent',
+        name: 'Agents',
+        label: 'Agents',
+        path: '/Agents',
         icon:  Icons.people,
       );
 const XItem _settingsItem=XItem(
@@ -67,7 +67,7 @@ const XItem _settingsItem=XItem(
 class items {
   static XItem homeItem =_homeItem;
   static XItem transItem =_transItem;
-  static XItem currItem =_currItem;
+  static XItem agentItem =_agentItem;
   static XItem settingsItem =_settingsItem;
 }
 class XItemsRepository {
@@ -78,7 +78,7 @@ class XItemsRepository {
     const allXItems = <XItem>[
       _homeItem,
       _transItem,
-      _currItem,
+      _agentItem,
       _settingsItem,
       
     ];

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/login.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/backdrop.dart'; 
 import 'package:x_money_manager/Frontend/Views/Full/home.dart'; 
 import 'utilities/colors.dart';
-import 'model/menu_item.dart';
+import 'package:x_money_manager/model/menu_item.dart';
 import 'package:get/get.dart';
 
 class MoneyApp extends StatefulWidget {
@@ -59,25 +61,58 @@ class _MoneyAppState extends State<MoneyApp> {
               frontLayer: HomePage(),
               frontTitle: Text(items.homeItem.label),
           ),
-      // '/Transactions': (BuildContext context) => Backdrop(
-      //         currentXitem: _curentItem,
-      //         onItemTap: onXItemtap,
-      //         frontLayer: TransactionPage(),
-      //         frontTitle: Text(items.transItem.label),
-      //     ),
-      //   '/Currencies': (BuildContext context) => Backdrop(
-      //         key: GlobalKey(debugLabel: 'Currencies'),
-      //         currentXitem: _curentItem,
-      //         onItemTap: onXItemtap,
-      //         frontLayer: Placeholder(),
-      //         frontTitle: Text(items.currItem.label),
-      //     ),
-      //   '/Settings': (BuildContext context) => Backdrop(
-      //         currentXitem: _curentItem,
-      //         onItemTap: onXItemtap,
-      //         frontLayer: Placeholder(),
-      //         frontTitle: Text(items.settingsItem.label),
-      //     ),
+      '/Transactions': (BuildContext context) => Backdrop(
+              currentXitem: _curentItem,
+              onItemTap: onXItemtap,
+              frontLayer: MaTransactionsPage(),
+              frontTitle: Text(items.transItem.label),
+              buildBarActions:(BuildContext context) {
+                    return <Widget>[
+                      IconButton(
+                        icon: const Icon(
+                          Icons.search,
+                          semanticLabel: 'search',
+                        ),
+                        onPressed: () {
+                          /*Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => SearchPage()),
+                          );*/
+                        },
+                      ),
+                    ];
+                  }
+          ),
+      '/Agents': (BuildContext context) => Backdrop(
+              currentXitem: _curentItem,
+              onItemTap: onXItemtap,
+              frontLayer: MaAgentsPage(),
+              frontTitle: Text(items.agentItem.label),
+              buildBarActions:(BuildContext context) {
+                    return <Widget>[
+                      IconButton(
+                        icon: const Icon(
+                          Icons.search,
+                          semanticLabel: 'search',
+                        ),
+                        onPressed: () {
+                          /*Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => SearchPage()),
+                          );*/
+                        },
+                      ),
+                    ];
+                  }
+          ),
+        '/Settings': (BuildContext context) => Backdrop(
+              currentXitem: _curentItem,
+              onItemTap: onXItemtap,
+              frontLayer: Placeholder(),
+              frontTitle: Text(items.settingsItem.label),
+          ),
     };
 
     return _routes;

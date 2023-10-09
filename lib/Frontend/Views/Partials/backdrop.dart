@@ -9,11 +9,13 @@ class Backdrop extends StatefulWidget {
   final XItem currentXitem;
   final Widget frontLayer;
   final Widget frontTitle;
+  final List<Widget> Function(BuildContext context)? buildBarActions ;
   const Backdrop({
     required this.currentXitem,
     required this.frontLayer,
     required this.frontTitle,
     required this.onItemTap,
+    this.buildBarActions,
     Key? key,
   }) : super(key: key);
 
@@ -45,7 +47,7 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       elevation: 0.0,
       titleSpacing: 0.0,
       title: widget.frontTitle,
-      // actions: _buildBarActions(context),
+      actions: widget.buildBarActions!=null ? widget.buildBarActions!(context) : [],
     );
     return Scaffold(
             appBar: appBar,
