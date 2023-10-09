@@ -37,7 +37,9 @@ class MaDrawerWidget extends StatelessWidget {
   }
 
   Map<String, String> _buildName(String firstName, [String? lastName]){
-     if(lastName == null){
+    
+     try{
+      if(lastName == null){
        String name = firstName.split(' ').length > 1 ? firstName.split(' ')[0].replaceFirst(firstName.split(' ')[0][0], firstName.split(' ')[0][0].toUpperCase())  + ' ' + firstName.split(' ')[1].replaceFirst(firstName.split(' ')[1][0], firstName.split(' ')[1][0].toUpperCase()) : firstName.replaceFirst(firstName[0], firstName[0].toUpperCase());
        String titleName = firstName.split(' ').length > 1 ? firstName.split(' ')[0][0].toUpperCase() + firstName.split(' ')[1][0].toUpperCase() : firstName[0].toUpperCase();
        return {
@@ -51,6 +53,13 @@ class MaDrawerWidget extends StatelessWidget {
           "name": fName + ' '+ lName,
           "titleName": fName[0].toUpperCase() + lName[0].toUpperCase()
         };
+     }
+     }
+     catch( e) {
+      return {
+         "name": '',
+         "titleName": ''
+       };
      }
   }
 

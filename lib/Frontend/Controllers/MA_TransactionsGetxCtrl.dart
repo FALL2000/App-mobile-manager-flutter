@@ -1,43 +1,47 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element
 
 import 'dart:math';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Backend/MA_TransactionsController.dart';
-import 'package:x_money_manager/model/MA_MockRepository.dart';
+import 'package:x_money_manager/Model/MA_Transaction.dart';
 import 'package:x_money_manager/model/MA_Request.dart';
 
-class TransactionsProvider extends ChangeNotifier{
-  List<MaRequest> _transactions=[];
-  List<MaRequest> _filterTransactions=[];
+class TransactionsProvider extends GetxController{
+  List<MaTransaction> _transactions=[];
+  List<MaTransaction> _filterTransactions=[];
   bool get hasTransactions => _transactions.isNotEmpty;
-  int pageSize = 20;
+  int pageSize = 10;
   String searchText='';
-  List<MaRequest> get Transactions => _transactions;
-  set Transactions ( List<MaRequest> Transactions){
+  List<MaTransaction> get Transactions => _transactions;
+  set Transactions ( List<MaTransaction> Transactions){
     _transactions = Transactions;
-    notifyListeners();
+    // notifyListeners();
   }
-  List<MaRequest> getTransactions() {
+  List<MaTransaction> getTransactions() {
     return Transactions.map((e) => e).toList();
   }
 
   
-  // Future<bool> saveTransaction(MaRequest? request) async{
+  // Future<bool> saveTransaction(MaTransaction? request) async{
   //   if(request==null) return false;
   //   request.status=RequestStatus.open;
   //   String respond= await MATransactionsController.saveTransfert(request) ?? '';
   //   return respond.isEmpty ? false : true;
   // }  
-  // Future<bool> updateTransaction(MaRequest? request) async{
+  // Future<bool> updateTransaction(MaTransaction? request) async{
   //   if(request==null) return false;
   //   return await MATransactionsController.updateTransfert(request,request.id);
   // }
-  Future< List<MaRequest>> init() async {
+  Future< List<MaTransaction>> init() async {
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
     // return [];
-    // if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
-    _transactions= await MATransactionsController.getAlltransferts();
+    if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
+    var __transactions=  await MATransactionsController.getAlltransactions();
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
     print(_transactions);
     /*
         await Future.delayed(const Duration(seconds: 2));
@@ -46,7 +50,7 @@ class TransactionsProvider extends ChangeNotifier{
      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
     return Transactions;
   }
-  List<MaRequest> filter()  {
+  List<MaTransaction> filter()  {
     var txt= (searchText??'').toLowerCase();
      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: filter txt `${txt}`  ');
     _filterTransactions=  _transactions.where((trans){
@@ -60,7 +64,7 @@ class TransactionsProvider extends ChangeNotifier{
     return Transactions;
   }
 
-  Future< List<MaRequest>> getNextPageData(int page) async {
+  Future< List<MaTransaction>> getNextPageData(int page) async {
     if(page==0) await init();
     filter();
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@start TransactionsProvider ::::: getNextPageData $page ');
