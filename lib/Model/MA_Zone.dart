@@ -32,7 +32,7 @@ class MaCountry {
       return MaCountry(
         name : util.toSString(json['name']),
         id : util.toSString(json['id']),
-        currencyCode: util.toSString(json['currency']),
+        currencyCode: util.toSString(json['currency']).isNotEmpty ?  util.toSString(json['currency']) :  util.toSString(json['currencyCode']) ,
         cities: _cities
       );
 

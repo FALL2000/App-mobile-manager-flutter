@@ -36,13 +36,17 @@ class TransactionsProvider extends GetxController{
   Future< List<MaTransaction>> init() async {
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
     // return [];
-    if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
+    // if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
     var __transactions=  await MATransactionsController.getAlltransactions();
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    print(_transactions);
+    _transactions=(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+   
+    for (var element in _transactions) {
+       print('----------------------------------------transaction');
+       debugPrint('${element}');
+    }
     /*
         await Future.delayed(const Duration(seconds: 2));
         _transactions=  await MaMockRepository.generatesTransactions(30);
@@ -56,7 +60,7 @@ class TransactionsProvider extends GetxController{
     _filterTransactions=  _transactions.where((trans){
       
 
-      var find= trans.amount.toLowerCase().contains(txt) /*|| trans.from.toLowerCase().contains(txt)*/ || trans.to.toLowerCase().contains(txt);
+      var find= trans.amount.toLowerCase().contains(txt) || trans.id.toLowerCase().contains(txt) || trans.from.toLowerCase().contains(txt) || trans.to.toLowerCase().contains(txt);
       return find;
     }).toList();
 
@@ -67,11 +71,11 @@ class TransactionsProvider extends GetxController{
   Future< List<MaTransaction>> getNextPageData(int page) async {
     if(page==0) await init();
     filter();
+    if(_filterTransactions.isEmpty) return [];
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@start TransactionsProvider ::::: getNextPageData $page ');
     await Future.delayed(const Duration(seconds: 1));
     int start = min(max(((page) * pageSize),0),_filterTransactions.length) ;
     int end = min( ((page + 1)  * pageSize), _filterTransactions.length ) ;
-
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TransactionsProvider ::::: getNextPageData start: $start - end: $end');
     final items = _filterTransactions.sublist(start, end) ;
     return items;

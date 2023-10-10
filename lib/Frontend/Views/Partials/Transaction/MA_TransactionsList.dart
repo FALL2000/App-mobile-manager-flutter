@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll/infinite_scroll.dart';
 import 'package:get/get.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
-import 'package:x_money_manager/Frontend/Views/Partials/statusIconWidget.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/statusIconWidget.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
 // import './statusIconWidget.dart';
 class MaTransactionsList extends StatefulWidget {
-  const MaTransactionsList({Key? key}) : super(key: key);
+  MaTransactionsList({Key? key, this.forceRefresh}) : super(key: key);
+  bool? forceRefresh=false;
 
   @override
   _MaTransactionsListState createState() => _MaTransactionsListState();
@@ -16,14 +17,18 @@ class _MaTransactionsListState extends State<MaTransactionsList> {
   final controller = Get.put(TransactionsProvider());
   // int pageSize= controller.pageSize;
   Future<List<MaTransaction>> getNextPageData(int page) async {
+    isLoading=true;
     var items= await controller.getNextPageData(page);
     everyThingLoaded=  items.length < controller.pageSize;
+    print(everyThingLoaded);
     return items;
   }
+  bool isLoading=true;
 
   List<MaTransaction> data = [];
   bool everyThingLoaded = false;
-
+  get hasData => !isLoading && data.isNotEmpty;
+  get noData => !isLoading && data.isEmpty;
   @override
   void initState() {
     super.initState();
@@ -33,31 +38,58 @@ class _MaTransactionsListState extends State<MaTransactionsList> {
 
   @override
   Widget build(BuildContext context) {
-   
-    return  RefreshIndicator(
-          onRefresh: () async {
-            await loadInitialData();
-          },
-          child: InfiniteScrollList(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              children: data.map((e) => TransactionItem(transaction: e)).toList(),
-              onLoadingStart: (page) async {
-                List<MaTransaction> newData = await getNextPageData(page);
-                setState(() {
-                  data += newData;
-                  if (newData.isEmpty || newData.length < controller.pageSize) {
-                    everyThingLoaded = true;
-                  }
-                });
-              },
-              everythingLoaded: everyThingLoaded,
-          ),
+    print('building with everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: forceRefresh: ${widget.forceRefresh }');
+    if(widget.forceRefresh ?? false) {
+      widget.forceRefresh=false;
+      isLoading=true;
+      loadInitialData();
+      
+    }
+    return  RefreshIndicator.adaptive(
+            onRefresh: () async {
+              await loadInitialData();
+            },
+            child:  ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                  Visibility(
+                    visible:  isLoading || hasData,
+                    child: InfiniteScrollList(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      onLoadingStart: (page) async {
+                        List<MaTransaction> newData = await getNextPageData(page);
+                        setState(() {
+                          isLoading=false;
+                          data += newData;
+                          if (newData.isEmpty || newData.length < controller.pageSize) {
+                            everyThingLoaded = true;
+                          }
+                        });
+                      },
+                      everythingLoaded: true,
+                      children: data.map((e) => TransactionItem(transaction: e)).toList(),
+                    ),
+                  ),
+                  Visibility(
+                    visible: noData,
+                    child: Center(child: Container(
+                      alignment: AlignmentDirectional.center,
+                      child: Text('Nothing to display'))
+                      )
+                    )
+                ],
+              
+            ),
+               
+            
+     
     );
   }
 
   Future<void> loadInitialData() async {
     data = await getNextPageData(0);
+    isLoading=false;
     setState(() {});
   }
 }
@@ -110,9 +142,7 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print('transaction ${transaction.toString()}');
-    return Dismissible(
-      key: Key(transaction.code),
-      child: Container(
+    return Container(
         
         padding: const EdgeInsets.all(5),
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -134,14 +164,14 @@ class TransactionItem extends StatelessWidget {
 
           if(transaction.status!.isInProggress )
           {
-            headers.add(
-                Padding(
-                  padding: const EdgeInsets.only(left: 5,right: 5),
-                  child: Badge( 
-                      backgroundColor: /*Theme.of(context).colorScheme.secondary*/Colors.green, 
-                      smallSize: 15.5,),
-                ),
-            );
+            // headers.add(
+            //     // Padding(
+            //     //   padding: const EdgeInsets.only(left: 5,right: 5),
+            //     //   child: Badge( 
+            //     //       backgroundColor: /*Theme.of(context).colorScheme.secondary*/Colors.green, 
+            //     //       smallSize: 15.5,),
+            //     // ),
+            // );
           }
            
           // if(constraints.biggest.width > 100 ) {
@@ -162,7 +192,14 @@ class TransactionItem extends StatelessWidget {
                           transaction.formattedamount,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
-                        subtitle: Text(transaction.to) ,
+                        subtitle: 
+                        Column(
+                          crossAxisAlignment : CrossAxisAlignment.start,
+                          children: [
+                            Text('${transaction.from} - ${transaction.to}'),
+                            Badge(label: Text('${transaction.participants} participants'),backgroundColor: Theme.of(context).colorScheme.tertiary,)
+                          ],
+                        ) ,
                         trailing: statusIconWidget(status: transaction.status?.keyValue),
                       ),
                 ],
@@ -170,8 +207,7 @@ class TransactionItem extends StatelessWidget {
             );
           
         }
-        )
-      ),
+      )
     );
   }
 }

@@ -27,7 +27,6 @@ bool _loggedIn = false;
         MaFirebaseNotification.getDeviceToken();
       } else {
         print('user is logged out ');
-        _loggedIn = true;
       }
     });
     print('Welcome $_loggedIn after');

@@ -41,7 +41,7 @@ enum TransactionStatus {
 class MaTransaction {
   String amount='0';
   String convertedAmount='0';
-  String participants='0';
+  String? participants='0';
   // bool toBank=false;
   String code; //
   String? createdDate; //
@@ -65,7 +65,7 @@ class MaTransaction {
                         // required this.toBank,
                         // this.receiptInfo,
                         this.inCountry, 
-                        // this.incity,
+                        this.participants,
                         this.outCountry, 
                         // this.outcity,
                         }
@@ -106,7 +106,7 @@ class MaTransaction {
   // bool get isClosed=> status==TransactionStatus.canceled;
   // bool get isSuccess=> status==TransactionStatus.closedwon;
   // bool get isInProggress=> status==TransactionStatus.inprogress || status==TransactionStatus.approved;
-  get currencycode=> inCountry!.currencyCode ?? '';
+  get currencycode=> outCountry!.currencyCode ?? '';
   @override
   String toString() => "(id=$id, code=$code, amount=$amount, endDate=$endDate, status=$status, createdDate=$createdDate,   gap=${gap.toString()} , inCountry=${inCountry.toString()}, outCountry=${outCountry.toString()} )";
 
@@ -115,8 +115,10 @@ class MaTransaction {
 
       print('@@@@@@@@@@@@++++++');
       print(json);
-      Map<Object?, Object?> inzone= jsonDecode( jsonEncode(json['inZone']??{}));
-      Map<Object?, Object?> outzone= jsonDecode( jsonEncode(json['outZone']??{}));
+      Map<Object?, Object?> additionalInfo= jsonDecode( jsonEncode(json['additionalInfo']??{}));
+      
+      Map<Object?, Object?> inzone= jsonDecode( jsonEncode(additionalInfo['inZone'] ?? {}));
+      Map<Object?, Object?> outzone= jsonDecode( jsonEncode(additionalInfo['outZone'] ?? {}));
       // Map<Object?, Object?> createdDate= jsonDecode( jsonEncode(json['createdDate']??{}));
       // var _seconds=0;
       // var date=null;
@@ -125,11 +127,14 @@ class MaTransaction {
       //     _seconds=_seconds*1000;  
       //     date = new DateTime.fromMillisecondsSinceEpoch(_seconds).toString();  
       // }
+      
       return MaTransaction(
-        amount: (json['amount']?.toString() )?? '0',
+
+        amount: (additionalInfo['convertedAmount']?.toString() )?? '0',
+        participants: (additionalInfo['participants']?.toString() )?? '0',
         code: util.toSString(json['code']),
         // toBank: json['to_bank'] as bool,
-        gap: gapInfo.fromJson(jsonDecode( jsonEncode(json['gap'] ?? {}))),// gapInfo.fromJson(json['']),
+        gap: gapInfo.fromJson(jsonDecode( jsonEncode(additionalInfo['gap'] ?? {}))),// gapInfo.fromJson(json['']),
         // currentApproval: approvalTransaction.fromJson(jsonDecode( jsonEncode(json['approval'] ?? {}))),// gapInfo.fromJson(json['']),
         createdDate: util.toSString(json['startDate']),//date,
         endDate: util.toSString(json['endDate']),//date,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_SearchPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/login.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_FilterPage.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/backdrop.dart'; 
 import 'package:x_money_manager/Frontend/Views/Full/home.dart'; 
 import 'utilities/colors.dart';
@@ -74,11 +76,26 @@ class _MoneyAppState extends State<MoneyApp> {
                           semanticLabel: 'search',
                         ),
                         onPressed: () {
-                          /*Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => SearchPage()),
-                          );*/
+                              builder: (BuildContext context) => MATransactionSearchPage()),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.filter_list,
+                          semanticLabel: 'search',
+                        ),
+                        onPressed: () {
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false, // user must tap button!
+                            builder: (BuildContext context) {
+                              return MaFilterPage();
+                            },
+                          );
                         },
                       ),
                     ];

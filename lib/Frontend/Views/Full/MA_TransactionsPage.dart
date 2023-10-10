@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:x_money_manager/Frontend/Views/Partials/MA_List.dart';
-import 'package:x_money_manager/Frontend/Views/Partials/MA_TransactionsList.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_TransactionsList.dart';
     
 class MaTransactionsPage extends StatelessWidget {
 
@@ -8,8 +7,8 @@ class MaTransactionsPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body:  MaTransactionsList( ),
+    return  Scaffold(
+      body: MaTransactionsList(),
     );
   }
 
