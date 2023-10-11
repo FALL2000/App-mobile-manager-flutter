@@ -59,6 +59,7 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
   final ScrollController _sc = ScrollController();
   bool _loading = true;
   bool _refresh = false;
+  bool prepareRefresh=false;
   int page = 1;
   @override
   void initState() {
@@ -74,7 +75,8 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
           await widget.onLoadingStart?.call(page++);
         }
       }
-      if (_sc.position.atEdge && _sc.offset <= 0) {
+      prepareRefresh= prepareRefresh || (_sc.offset <= -30);
+      if (_sc.position.atEdge && prepareRefresh) {
         print('addListener calledrefreshh');
 
         //if (!widget.everythingLoaded) {
@@ -84,6 +86,7 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
           await widget.onRefresh?.call();
           setState(() {
             _refresh = false;
+            prepareRefresh = false;
           });
         //}
       }

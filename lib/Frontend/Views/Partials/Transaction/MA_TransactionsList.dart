@@ -94,37 +94,7 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
               children: [
                 Visibility(
                     visible: (widget.showFilterBadges ?? false) && controller.statusFiltered.isNotEmpty,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 2),
-                      height: 30,
-                      child: ListView(
-                        reverse: true,
-                         scrollDirection : Axis.horizontal,
-                          children: controller.statusFiltered.map((element) {
-                              statusConfig? icn=statusIconWidget.statusConfig0[element];
-                                return  Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  
-                                  child: Dismissible(
-                                    direction : DismissDirection.vertical,
-                                    onDismissed: (dir){
-                                      //print(dir);
-                                      controller.updateStatusSet(element,remove:true);
-                                    },
-                                    key: Key(icn!.key ?? '-'),
-                                    child: Badge(
-                                        label: Text( icn!.label),
-                                        // label: IconButton(icon:Icon( Icons.close) , onPressed: (){},),
-                                        // trailing: Icon(Icons.close),
-                                        backgroundColor: icn!.color ?? Theme.of(context).colorScheme.tertiary,
-                                      
-                                    ),
-                                  ),
-                                ) ;
-                              } 
-                              ).toList(),
-                      ),
-                    )
+                    child: MAStatusesBadges(controller: controller)
                     ),
                   Visibility(
                     visible:  isLoading || hasData,
@@ -177,6 +147,51 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
     data = await getNextPageData(0);
     isLoading=false;
     setState(() {});
+  }
+}
+
+class MAStatusesBadges extends StatelessWidget {
+  const MAStatusesBadges({
+    super.key,
+    required this.controller,
+  });
+
+  final TransactionsProvider controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 7),
+      height: 30,
+      child: ListView(
+        reverse: true,
+         scrollDirection : Axis.horizontal,
+          children: controller.statusFiltered.map((element) {
+              statusConfig? icn=statusIconWidget.statusConfig0[element];
+                return  Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  
+                  child: Dismissible(
+                    direction : DismissDirection.vertical,
+                    onDismissed: (dir){
+                      //print(dir);
+                      controller.updateStatusSet(element,remove:true);
+                    },
+                    key: Key(icn!.key ?? '-'),
+                    child: Badge(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                        label: Text( icn!.label),
+                        // label: IconButton(icon:Icon( Icons.close) , onPressed: (){},),
+                        // trailing: Icon(Icons.close),
+                        backgroundColor: icn!.color ?? Theme.of(context).colorScheme.tertiary,
+                      
+                    ),
+                  ),
+                ) ;
+              } 
+              ).toList(),
+      ),
+    );
   }
 }
 
