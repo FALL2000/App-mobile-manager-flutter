@@ -82,15 +82,15 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
   }
   @override
   Widget build(BuildContext context) {
-    //print('building with widget.showFilterBadges ${widget.showFilterBadges} everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: data.size: ${data.length} }');
+    print('building with widget.showFilterBadges ${widget.showFilterBadges} everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: data.size: ${data.length} }');
     
-    return  RefreshIndicator.adaptive(
+    return  /*RefreshIndicator.adaptive(
             onRefresh: () async {
               controller.initFilter();
               await loadInitialData();
             },
-            child:  ListView(
-              physics: const BouncingScrollPhysics(),
+            child:  */Column(
+              // physics: const BouncingScrollPhysics(),
               children: [
                 Visibility(
                     visible: (widget.showFilterBadges ?? false) && controller.statusFiltered.isNotEmpty,
@@ -98,6 +98,7 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
                       margin: EdgeInsets.symmetric(vertical: 2),
                       height: 30,
                       child: ListView(
+                        reverse: true,
                          scrollDirection : Axis.horizontal,
                           children: controller.statusFiltered.map((element) {
                               statusConfig? icn=statusIconWidget.statusConfig0[element];
@@ -127,21 +128,28 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
                     ),
                   Visibility(
                     visible:  isLoading || hasData,
-                    child: MaInifiniteScrollList(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      onLoadingStart: (page) async {
-                        List<MaTransaction> newData = await getNextPageData(page);
-                        setState(() {
-                          // isLoading=false;
-                          data += newData;
-                          if (newData.isEmpty || newData.length < controller.pageSize) {
-                            everyThingLoaded = true;
-                          }
-                        });
-                      },
-                      everythingLoaded: true,
-                      children: data.map((e) => TransactionItem(transaction: e)).toList(),
+                    child: Expanded(
+                      child: MaInifiniteScrollList(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        onRefresh:()async{
+                          controller.initFilter();
+                          await loadInitialData();
+                        },
+                        onLoadingStart: (page) async {
+                          print('onLoadingStart...');
+                          List<MaTransaction> newData = await getNextPageData(page);
+                          setState(() {
+                            // isLoading=false;
+                            data += newData;
+                            if (newData.isEmpty || newData.length < controller.pageSize) {
+                              everyThingLoaded = true;
+                            }
+                          });
+                        },
+                        everythingLoaded: everyThingLoaded,
+                        children: data.map((e) => TransactionItem(transaction: e)).toList(),
+                      ),
                     ),
                   ),
                   Visibility(
@@ -158,7 +166,7 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
                   //   )
                 ],
               
-            ),
+          //  ),
                
             
      

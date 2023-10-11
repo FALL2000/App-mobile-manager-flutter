@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class MaInifiniteScrollList extends StatefulWidget {
   final List<Widget> children;
   final Function(int page)? onLoadingStart;
+  final Function()? onRefresh;
   final bool everythingLoaded;
   final EdgeInsetsGeometry? padding;
   final bool shrinkWrap;
@@ -29,6 +30,7 @@ class MaInifiniteScrollList extends StatefulWidget {
     Key? key,
     required this.children,
     this.onLoadingStart,
+    this.onRefresh,
     this.everythingLoaded = false,
     this.padding,
     this.shrinkWrap = false,
@@ -56,13 +58,14 @@ class MaInifiniteScrollList extends StatefulWidget {
 class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
   final ScrollController _sc = ScrollController();
   bool _loading = true;
+  bool _refresh = false;
   int page = 1;
   @override
   void initState() {
     super.initState();
     _removeLoader();
     _sc.addListener(() async {
-      print('addListener called with loading $_loading page ${page} _sc.position.atEdge ${_sc.position.atEdge}  _sc.offset ${_sc.offset}');
+      print('addListener called with widget.everythingLoaded ${widget.everythingLoaded} loading $_loading page ${page} _sc.position.atEdge ${_sc.position.atEdge}  _sc.offset ${_sc.offset}');
       if (_sc.position.atEdge && _sc.offset > 0) {
         if (!widget.everythingLoaded) {
           setState(() {
@@ -71,12 +74,25 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
           await widget.onLoadingStart?.call(page++);
         }
       }
+      if (_sc.position.atEdge && _sc.offset <= 0) {
+        print('addListener calledrefreshh');
+
+        //if (!widget.everythingLoaded) {
+          setState(() {
+            _refresh = true;
+          });
+          await widget.onRefresh?.call();
+          setState(() {
+            _refresh = false;
+          });
+        //}
+      }
     });
   }
 
   Future<void> _removeLoader() async {
     Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if (widget.children.isNotEmpty &&
+      if (!_refresh && widget.children.isNotEmpty &&
           mounted &&
           _sc.position.maxScrollExtent == 0) {
         setState(() {
@@ -109,7 +125,7 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.children.isEmpty && _loading
+    return( widget.children.isEmpty && _loading)  
         ? widget.loadingWidget ??
             const Padding(
               padding: EdgeInsets.all(20),
@@ -117,25 +133,71 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
                 child: CircularProgressIndicator.adaptive(),
               ),
             )
-        : ListView(
-            physics: widget.physics,
-            reverse: widget.reverse,
-            primary: widget.primary,
-            itemExtent: widget.itemExtent,
-            prototypeItem: widget.prototypeItem,
-            cacheExtent: widget.cacheExtent,
-            semanticChildCount: widget.semanticChildCount,
-            restorationId: widget.restorationId,
-            addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
-            addRepaintBoundaries: widget.addRepaintBoundaries,
-            addSemanticIndexes: widget.addSemanticIndexes,
-            dragStartBehavior: widget.dragStartBehavior,
-            keyboardDismissBehavior: widget.keyboardDismissBehavior,
-            clipBehavior: widget.clipBehavior,
-            controller: _sc,
-            padding: widget.padding,
-            shrinkWrap: widget.shrinkWrap,
-            children: getChildrens,
-          );
+        : Stack(
+          children: [
+            Visibility(
+              
+              visible: _refresh,
+              child:  widget.loadingWidget ?? const Padding(
+              padding: EdgeInsets.all(20),
+              child: Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            )/*Column(
+                // mainAxisAlignment :MainAxisAlignment.center,
+                // crossAxisAlignment : CrossAxisAlignment.center,
+                children: [
+                    Center(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                      //  color: Colors.green,
+                        width: 50,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Color.fromARGB(255, 225, 234, 225),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          child: CircularProgressIndicator.adaptive(),
+                        )
+                        ),
+                    ))
+                    ])*/,
+                 /*Opacity(
+                  opacity: 0.8,
+                  child:Container(
+                    width: 500,
+                    child: Center(
+                      child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child:  CircularProgressIndicator.adaptive(),
+                            
+                          ),
+                    ),
+                  ),
+                  ),*/
+            ),
+            ListView(
+              physics: widget.physics,
+              reverse: widget.reverse,
+              primary: widget.primary,
+              itemExtent: widget.itemExtent,
+              prototypeItem: widget.prototypeItem,
+              cacheExtent: widget.cacheExtent,
+              semanticChildCount: widget.semanticChildCount,
+              restorationId: widget.restorationId,
+              addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
+              addRepaintBoundaries: widget.addRepaintBoundaries,
+              addSemanticIndexes: widget.addSemanticIndexes,
+              dragStartBehavior: widget.dragStartBehavior,
+              keyboardDismissBehavior: widget.keyboardDismissBehavior,
+              clipBehavior: widget.clipBehavior,
+              controller: _sc,
+              padding: widget.padding,
+              shrinkWrap: widget.shrinkWrap,
+              children: getChildrens,
+            ),]
+        );
   }
 }

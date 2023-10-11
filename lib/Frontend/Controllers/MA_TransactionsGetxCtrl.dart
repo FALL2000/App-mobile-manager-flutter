@@ -71,13 +71,13 @@ class TransactionsProvider extends GetxController{
     // return [];
     if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
     var __transactions=  await MATransactionsController.getAlltransactions();
-    // _transactions=(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
-    _transactions.addAll(__transactions);
+    _transactions=(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
+    // _transactions.addAll(__transactions);
    
     for (var element in _transactions) {
        print('----------------------------------------transaction');
