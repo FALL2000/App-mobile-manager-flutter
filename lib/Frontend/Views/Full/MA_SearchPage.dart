@@ -19,8 +19,18 @@ class _MASearchPageState extends State<MATransactionSearchPage> {
   String searchText='';
   bool viewSearchResult=false;
   final _focusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+     controller.initFilter();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    controller.initFilter();
+  }
   doSearch(){
-      controller.searchText=searchText;
+      controller.updateSearchTerm(searchText);
   }
   @override
   Widget build(BuildContext context) {
@@ -77,8 +87,29 @@ class _MASearchPageState extends State<MATransactionSearchPage> {
       ),
       body: Visibility(
             visible: viewSearchResult,
-            child:  MaTransactionsList(forceRefresh:true) 
+            child:  MaTransactionsList() 
           ),
     );
+  }
+}
+class MATransactionSearchIcon extends StatelessWidget {
+
+  const MATransactionSearchIcon({ Key? key }) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+            icon: const Icon(
+              Icons.search,
+              semanticLabel: 'search',
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MATransactionSearchPage()),
+              );
+            },
+          );
   }
 }

@@ -70,36 +70,10 @@ class _MoneyAppState extends State<MoneyApp> {
               frontTitle: Text(items.transItem.label),
               buildBarActions:(BuildContext context) {
                     return <Widget>[
-                      IconButton(
-                        icon: const Icon(
-                          Icons.search,
-                          semanticLabel: 'search',
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => MATransactionSearchPage()),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.filter_list,
-                          semanticLabel: 'search',
-                        ),
-                        onPressed: () {
-                          showDialog<void>(
-                            context: context,
-                            barrierDismissible: false, // user must tap button!
-                            builder: (BuildContext context) {
-                              return MaFilterPage();
-                            },
-                          );
-                        },
-                      ),
+                      const MATransactionSearchIcon(),
+                      const MaFilterIcon(),
                     ];
-                  }
+              }
           ),
       '/Agents': (BuildContext context) => Backdrop(
               currentXitem: _curentItem,
@@ -167,6 +141,9 @@ ThemeData _buildShrineTheme() {
         color: kShrineBrown900,
       ),
     ),
+    iconTheme: const IconThemeData(
+      color: kShrinePink100,
+    )
   );
 }
 

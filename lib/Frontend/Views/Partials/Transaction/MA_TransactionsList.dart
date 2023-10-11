@@ -2,25 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll/infinite_scroll.dart';
 import 'package:get/get.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/statusIconWidget.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_InifiniteScrollList.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
 // import './statusIconWidget.dart';
-class MaTransactionsList extends StatefulWidget {
-  MaTransactionsList({Key? key, this.forceRefresh}) : super(key: key);
-  bool? forceRefresh=false;
+
+class MaTransactionsList extends StatelessWidget {
+  MaTransactionsList({Key? key, this.showFilterBadges}) : super(key: key);
+  final controller = Get.put(TransactionsProvider());
+  bool? showFilterBadges=false;
+
+  
+  @override
+  Widget build(BuildContext context) {
+    //print('builing...');
+    return  GetBuilder<TransactionsProvider>(builder: (_){
+      return  MaTransactionsList0(showFilterBadges:showFilterBadges);
+    });
+    /*Stack(
+      children: [
+        Obx(() => Visibility(
+           visible: (controller.searching == true.obs),
+            child: Text("...slide loding"))
+          ),
+          Obx(() => Visibility( 
+            visible: (controller.searching == false.obs),
+            child: MaTransactionsList0()
+            )
+          ), 
+      ],
+    );*/
+  }
+}
+class MaTransactionsList0 extends StatefulWidget {
+  MaTransactionsList0({Key? key, this.showFilterBadges}) : super(key: key);
+  bool? showFilterBadges=false;
 
   @override
   _MaTransactionsListState createState() => _MaTransactionsListState();
 }
 
-class _MaTransactionsListState extends State<MaTransactionsList> {
+class _MaTransactionsListState extends State<MaTransactionsList0> {
   final controller = Get.put(TransactionsProvider());
   // int pageSize= controller.pageSize;
   Future<List<MaTransaction>> getNextPageData(int page) async {
     isLoading=true;
     var items= await controller.getNextPageData(page);
     everyThingLoaded=  items.length < controller.pageSize;
-    print(everyThingLoaded);
+    //print(everyThingLoaded);
     return items;
   }
   bool isLoading=true;
@@ -35,32 +65,75 @@ class _MaTransactionsListState extends State<MaTransactionsList> {
 
     loadInitialData();
   }
-
   @override
-  Widget build(BuildContext context) {
-    print('building with everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: forceRefresh: ${widget.forceRefresh }');
-    if(widget.forceRefresh ?? false) {
-      widget.forceRefresh=false;
+  void didUpdateWidget(covariant MaTransactionsList0 oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    //print('did update ${controller.refreshList}');
+    if(controller.refreshList) {
+      // data=[];
+      controller.refreshList=false;
       isLoading=true;
+      // everyThingLoaded = false;
       loadInitialData();
       
     }
+  }
+  @override
+  Widget build(BuildContext context) {
+    //print('building with widget.showFilterBadges ${widget.showFilterBadges} everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: data.size: ${data.length} }');
+    
     return  RefreshIndicator.adaptive(
             onRefresh: () async {
+              controller.initFilter();
               await loadInitialData();
             },
             child:  ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               children: [
+                Visibility(
+                    visible: (widget.showFilterBadges ?? false) && controller.statusFiltered.isNotEmpty,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 2),
+                      height: 30,
+                      child: ListView(
+                         scrollDirection : Axis.horizontal,
+                          children: controller.statusFiltered.map((element) {
+                              statusConfig? icn=statusIconWidget.statusConfig0[element];
+                                return  Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  
+                                  child: Dismissible(
+                                    direction : DismissDirection.vertical,
+                                    onDismissed: (dir){
+                                      //print(dir);
+                                      controller.updateStatusSet(element,remove:true);
+                                    },
+                                    key: Key(icn!.key ?? '-'),
+                                    child: Badge(
+                                        label: Text( icn!.label),
+                                        // label: IconButton(icon:Icon( Icons.close) , onPressed: (){},),
+                                        // trailing: Icon(Icons.close),
+                                        backgroundColor: icn!.color ?? Theme.of(context).colorScheme.tertiary,
+                                      
+                                    ),
+                                  ),
+                                ) ;
+                              } 
+                              ).toList(),
+                      ),
+                    )
+                    ),
                   Visibility(
                     visible:  isLoading || hasData,
-                    child: InfiniteScrollList(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                    child: MaInifiniteScrollList(
+                      physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       onLoadingStart: (page) async {
                         List<MaTransaction> newData = await getNextPageData(page);
                         setState(() {
-                          isLoading=false;
+                          // isLoading=false;
                           data += newData;
                           if (newData.isEmpty || newData.length < controller.pageSize) {
                             everyThingLoaded = true;
@@ -77,7 +150,12 @@ class _MaTransactionsListState extends State<MaTransactionsList> {
                       alignment: AlignmentDirectional.center,
                       child: Text('Nothing to display'))
                       )
-                    )
+                    ),
+                  // Visibility(
+                  //   visible: isLoading,
+                  //   child: Center(
+                  //     child:MaSpinner())
+                  //   )
                 ],
               
             ),
@@ -141,7 +219,7 @@ class TransactionItem extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    // print('transaction ${transaction.toString()}');
+    // //print('transaction ${transaction.toString()}');
     return Container(
         
         padding: const EdgeInsets.all(5),
@@ -151,7 +229,7 @@ class TransactionItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: LayoutBuilder(builder: (context, constraints) {
-          print('width >>>> ${constraints.biggest.width} ');
+          //print('width >>>> ${constraints.biggest.width} ');
           List<Widget> headers=[
             TextButton(
                         child:Text(transaction.code),
@@ -185,7 +263,7 @@ class TransactionItem extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: () {
-                        print('on pressed  ${transaction.code}');
+                        //print('on pressed  ${transaction.code}');
                         goToDetails(context);
                     },
                         title: Text(
@@ -211,3 +289,4 @@ class TransactionItem extends StatelessWidget {
     );
   }
 }
+

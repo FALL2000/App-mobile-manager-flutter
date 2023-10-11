@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-    
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/statusIconWidget.dart';
+
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
+
+import 'package:get/get.dart';
 class MaFilterPage extends StatelessWidget {
 
   const MaFilterPage({ Key? key }) : super(key: key);
@@ -59,3 +63,72 @@ class _MAStatusOptionItemState extends State<MAStatusOptionItem> {
     );
   }
 }
+
+
+
+class MaFilterIcon extends StatelessWidget {
+  static final  controller = Get.put(TransactionsProvider());
+  
+  const MaFilterIcon({ Key? key }) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+            icon: const Icon(
+              Icons.filter_list,
+              semanticLabel: 'search',
+            ),
+            onPressed: () {
+                var widgets=statusIconWidget.filterStatues.map((e)  {
+
+                  print(e.label);
+                  return ListTile(
+                      trailing: Icon(e.icon),
+                      title: Text(e.label),
+                      onTap: ()async {
+                        controller.updateStatusSet(e.key);
+                        Navigator.pop(context);
+                      },
+                  );
+                }).toList();
+                // Get.bottomSheet(
+                //   SizedBox(
+                //       height: 250,
+                //       child: Column(
+                //                 children: widgets /*<Widget>[
+                //                   MAStatusOptionItem(label: 'ALL',value: 'ALL',),
+                //                   MAStatusOptionItem(label: 'Active',value: 'Active',),
+                //                   MAStatusOptionItem(label: 'Cancelled',value: 'cancelled',),
+                //                 ]*/,
+                //       ),
+                //     )
+                // );
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      height: 250,
+                      child: Column(
+                                children: widgets /*<Widget>[
+                                  MAStatusOptionItem(label: 'ALL',value: 'ALL',),
+                                  MAStatusOptionItem(label: 'Active',value: 'Active',),
+                                  MAStatusOptionItem(label: 'Cancelled',value: 'cancelled',),
+                                ]*/,
+                      ),
+                    );
+                  },
+                );
+        
+
+              // showDialog<void>(
+              //   context: context,
+              //   barrierDismissible: false, // user must tap button!
+              //   builder: (BuildContext context) {
+              //     return MaFilterPage();
+              //   },
+              // );
+            },
+          );
+  }
+}
+

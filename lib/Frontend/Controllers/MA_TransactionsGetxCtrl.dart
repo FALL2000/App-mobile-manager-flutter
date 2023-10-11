@@ -9,6 +9,12 @@ import 'package:x_money_manager/model/MA_Request.dart';
 
 class TransactionsProvider extends GetxController{
   List<MaTransaction> _transactions=[];
+  RxSet<String> statusFiltered=<String>{}.obs;
+  bool refreshList=false;
+  bool starting=false;
+  RxBool  searching=false.obs;
+  bool started=false;
+  
   List<MaTransaction> _filterTransactions=[];
   bool get hasTransactions => _transactions.isNotEmpty;
   int pageSize = 10;
@@ -20,6 +26,33 @@ class TransactionsProvider extends GetxController{
   }
   List<MaTransaction> getTransactions() {
     return Transactions.map((e) => e).toList();
+  }
+  void updateSearchTerm(String _searchTerm){
+    searchText=_searchTerm;
+    refreshList=true;
+    update();
+  }
+  void updateStatusSet(String _status,{bool remove=false}){
+    if(remove==true){
+      statusFiltered.remove(_status);
+    }else{
+      statusFiltered.add(_status);
+    }
+    
+    refreshList=true;
+    update();
+  }
+  void initFilter(){
+    statusFiltered=<String>{}.obs;
+    searchText='';
+    _filterTransactions= _transactions;
+    // update();
+  }
+  Future<void> triggerRebuild()async{
+    // searching=true.obs;
+    // await Future.delayed(const Duration(milliseconds: 2));
+    // searching=false.obs;
+    update(); 
   }
 
   
@@ -36,12 +69,15 @@ class TransactionsProvider extends GetxController{
   Future< List<MaTransaction>> init() async {
     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
     // return [];
-    // if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
+    if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
     var __transactions=  await MATransactionsController.getAlltransactions();
-    _transactions=(__transactions);
-    // _transactions.addAll(__transactions);
-    // _transactions.addAll(__transactions);
-    // _transactions.addAll(__transactions);
+    // _transactions=(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
+    _transactions.addAll(__transactions);
    
     for (var element in _transactions) {
        print('----------------------------------------transaction');
@@ -54,15 +90,26 @@ class TransactionsProvider extends GetxController{
      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
     return Transactions;
   }
-  List<MaTransaction> filter()  {
-    var txt= (searchText??'').toLowerCase();
-     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: filter txt `${txt}`  ');
-    _filterTransactions=  _transactions.where((trans){
-      
-
-      var find= trans.amount.toLowerCase().contains(txt) || trans.id.toLowerCase().contains(txt) || trans.from.toLowerCase().contains(txt) || trans.to.toLowerCase().contains(txt);
-      return find;
-    }).toList();
+  List<void> filter()  {
+      var txt= (searchText??'').toLowerCase();
+      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: filter txt `${txt}`  ');
+      if(statusFiltered.isEmpty && txt.isEmpty)  _filterTransactions= _transactions;
+      if(statusFiltered.isNotEmpty){
+        //status filter mode
+        _filterTransactions= _transactions.where((trans){
+            var st=trans.status?.keyValue.toUpperCase();
+            var find= statusFiltered.contains(st);
+            print('found $find status: $st statuses: ${statusFiltered.toString()}');
+            return find;
+            }).toList();
+      }else{
+        //text mode
+        _filterTransactions= _transactions.where((trans){
+              var find= trans.amount.toLowerCase().contains(txt) || trans.id.toLowerCase().contains(txt) || trans.from.toLowerCase().contains(txt) || trans.to.toLowerCase().contains(txt);
+              return find ;
+            }).toList();
+      }
+    
 
      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
     return Transactions;

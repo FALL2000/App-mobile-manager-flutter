@@ -8,7 +8,7 @@ class MaTransactionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: MaTransactionsList(),
+      body: MaTransactionsList(showFilterBadges:true),
     );
   }
 

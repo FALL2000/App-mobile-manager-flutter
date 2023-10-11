@@ -13,7 +13,7 @@ class statusIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var _icon=Icons.do_not_disturb;
     var _color=Colors.black;
-    var _config= _statusConfig[_stauts];
+    var _config= statusConfig0[_stauts];
     var _label='';
     if (_config!=null) {
         _icon= _config.icon;
@@ -28,43 +28,52 @@ class statusIconWidget extends StatelessWidget {
       ],
     );
   }
-
-  Map<String,statusConfig>  _statusConfig={
-    'OPEN': statusConfig(
+  static const openConfig =statusConfig('OPEN',
             icon:Icons.donut_large,
             color:Colors.blue,
             label:'Open',
-          ),
-    'IN APPROVAL':statusConfig(
+          );
+  static const appConfig = statusConfig('IN APPROVAL',
       icon:Icons.circle,
       color:Colors.orange,
       label:'In approval',
-    ),
-    'IN PROGRESS':statusConfig(
+    );
+  static const progressConfig = statusConfig('IN PROGRESS',
       icon:Icons.pending,
       color:Colors.indigo,
       label:'in progress',
-    ),
-    'APPROVED':statusConfig(
+    );
+  static const approvedConfig = statusConfig('APPROVED',
       icon:Icons.pending,
       color:Colors.indigo,
       label:'approved',
-    ),
-    'CANCELED':statusConfig(
+    );
+  static const cancelConfig = statusConfig('CANCELED',
       icon:Icons.cancel,
       color:Colors.red,
       label:'canceled',
-    ),
-    'CLOSED':statusConfig(
+    );
+  static const closeConfig = statusConfig('CLOSED',
       icon:Icons.task_alt,
       color:Colors.green,
       label:'done',
-    ),
+    );
+  static final Map<String,statusConfig>  statusConfig0={
+    'OPEN': openConfig,
+    'IN APPROVAL':appConfig,
+    'IN PROGRESS':progressConfig,
+    'APPROVED':approvedConfig,
+    'CANCELED':cancelConfig,
+    'CLOSED':closeConfig,
   };
+  static final List<statusConfig> filterStatues=[
+    openConfig,progressConfig,closeConfig,cancelConfig
+  ];
 }
 class statusConfig {
   final String label;
+  final String key;
   final IconData icon;
   final Color color;
-  const  statusConfig( {required this.icon, required this.color, required this.label});
+  const  statusConfig(this.key,  {required this.icon, required this.color, required this.label});
 }
