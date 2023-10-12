@@ -67,10 +67,10 @@ class MaDrawerWidget extends StatelessWidget {
       Map<String, String> mapName = lastName == null ? _buildName(firstName) : _buildName(firstName, lastName);
       return UserAccountsDrawerHeader(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color:Color.fromARGB(255, 221, 209, 208),// Theme.of(context).colorScheme.secondary,
         ),
-        accountName: Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.primary)),
-        accountEmail: Text(mail, style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize, color: Theme.of(context).colorScheme.primary)),
+        accountName: Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.onPrimary)),
+        accountEmail: Text(mail, style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize, color: Theme.of(context).colorScheme.onPrimary)),
         currentAccountPicture: CircleAvatar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           child: ClipOval(

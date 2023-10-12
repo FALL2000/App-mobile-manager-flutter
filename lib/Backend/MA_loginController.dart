@@ -16,7 +16,7 @@ class MaLoginController {
           if(response.error==true) return  response;
 
           print('@@@@@-------------------------------');
-          MaUser _user = MaUser.fromJson(response.body);
+          MaUser _user = MaUser.BuilfromJson(response.body);
           
           print(_user);
           print(_user.role);

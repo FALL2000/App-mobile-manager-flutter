@@ -30,7 +30,11 @@ class MaLocalStore {
         MaUser? user;
         String _user= prefs?.getString('localUser') ?? '';
         if(_user.isNotEmpty){
-          user= MaUser.fromJson(jsonDecode(_user));
+          Map<String,dynamic> map=jsonDecode(_user);
+          map.forEach((key, value) { 
+            print(' key $key value $value ');
+          });          
+          user= MaUser.fromJson(map);
         }
         
         return user;

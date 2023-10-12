@@ -104,19 +104,12 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
                       onRefresh: () async {
                         await loadInitialData();
                       },
-                      child:  Expanded(
-                        child: ListView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children:[
-                              Center(
-                                child: Container(
-                                  alignment: AlignmentDirectional.center,
-                                  child: const Text('Nothing to display')
-                                )
-                              ),
-                          ]
-                        ),
-                      )
+                      child:  Center(
+                        child: Container(
+                          alignment: AlignmentDirectional.center,
+                          child: const Text('Nothing to display')
+                        )
+                      ),
                     ),
                   )
                 ),

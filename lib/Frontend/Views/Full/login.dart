@@ -86,7 +86,8 @@ class _loginPageState extends State<_loginPage> {
           var _loginFormview = ListView(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             children: <Widget>[
-              const SizedBox(height: 10.0),
+              //  SizedBox.fromSize(size: Size(0, 20)),
+              const  AspectRatio(aspectRatio: 100 / 35,),
               Column(
                 children: <Widget>[
                   Image.asset('assets/logo.png'),
@@ -153,7 +154,7 @@ class _loginPageState extends State<_loginPage> {
           var _ForgotFormview = ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 children: <Widget>[
-                  const SizedBox(height: 30.0),
+                  const  AspectRatio(aspectRatio: 100 / 30,),
                   Column(
                     children: <Widget>[
                       Image.asset('assets/logo.png'),

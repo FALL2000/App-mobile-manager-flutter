@@ -50,7 +50,7 @@ class MaUser {
             this.cityId}); 
 
 
-   factory MaUser.fromJson(Map<Object?, Object?> json){
+   factory MaUser.BuilfromJson(Map<Object?, Object?> json){
 
       print('@@@@@@@@@@@@++++++');
       print(json);
@@ -64,6 +64,30 @@ class MaUser {
         createdDate: util.toSString(json['createdDate']),
         countryId: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
         cityId: util.toSString(zone['id']),
+        gender: Gender.assignGender(util.toSString(json['gender'])),
+        role: Role.assignRole(util.toSString(json['role'])),
+      );
+
+
+
+
+
+  }
+
+  factory MaUser.fromJson(Map<Object?, Object?> json){
+
+      print('@@@@@@@@@@@@++++++');
+      print(json);
+      Map<Object?, Object?> zone= jsonDecode( jsonEncode(json['cityObj']??{}));
+      return MaUser(
+        firstname: util.toSString(json['firstname']),
+        lastname: util.toSString(json['lastname']),
+        phone: util.toSString(json['phone']),
+        email: util.toSString(json['email']),
+        userId: util.toSString(json['userId']),
+        createdDate: util.toSString(json['createdDate']),
+        countryId: util.toSString(json['countryId']),
+        cityId: util.toSString(json['cityId']),
         gender: Gender.assignGender(util.toSString(json['gender'])),
         role: Role.assignRole(util.toSString(json['role'])),
       );
