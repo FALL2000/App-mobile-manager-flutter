@@ -1,32 +1,35 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element
 
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:x_money_manager/Backend/MA_TransactionsController.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
-import 'package:x_money_manager/model/MA_Request.dart';
 
 class TransactionsProvider extends GetxController{
   List<MaTransaction> _transactions=[];
   RxSet<String> statusFiltered=<String>{}.obs;
   bool refreshList=false;
-  bool starting=false;
-  RxBool  searching=false.obs;
-  bool started=false;
-  
-  List<MaTransaction> _filterTransactions=[];
-  bool get hasTransactions => _transactions.isNotEmpty;
   int pageSize = 10;
   String searchText='';
+  List<MaTransaction> _filterTransactions=[];
+  // bool starting=false;
+  // RxBool  searching=false.obs;
+  // bool started=false;
+  
+  bool get hasTransactions => _transactions.isNotEmpty;
   List<MaTransaction> get Transactions => _transactions;
+
+
   set Transactions ( List<MaTransaction> Transactions){
     _transactions = Transactions;
-    // notifyListeners();
   }
+  
   List<MaTransaction> getTransactions() {
     return Transactions.map((e) => e).toList();
   }
+
   void updateSearchTerm(String _searchTerm){
     searchText=_searchTerm;
     refreshList=true;
@@ -49,26 +52,10 @@ class TransactionsProvider extends GetxController{
     // update();
   }
   Future<void> triggerRebuild()async{
-    // searching=true.obs;
-    // await Future.delayed(const Duration(milliseconds: 2));
-    // searching=false.obs;
     update(); 
   }
-
-  
-  // Future<bool> saveTransaction(MaTransaction? request) async{
-  //   if(request==null) return false;
-  //   request.status=RequestStatus.open;
-  //   String respond= await MATransactionsController.saveTransfert(request) ?? '';
-  //   return respond.isEmpty ? false : true;
-  // }  
-  // Future<bool> updateTransaction(MaTransaction? request) async{
-  //   if(request==null) return false;
-  //   return await MATransactionsController.updateTransfert(request,request.id);
-  // }
   Future< List<MaTransaction>> init() async {
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
-    // return [];
+    debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
     if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
     var __transactions=  await MATransactionsController.getAlltransactions();
     _transactions=(__transactions);
@@ -80,26 +67,22 @@ class TransactionsProvider extends GetxController{
     // _transactions.addAll(__transactions);
    
     for (var element in _transactions) {
-       print('----------------------------------------transaction');
+       debugPrint('----------------------------------------transaction');
        debugPrint('${element}');
     }
-    /*
-        await Future.delayed(const Duration(seconds: 2));
-        _transactions=  await MaMockRepository.generatesTransactions(30);
-    */
-     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
+    debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
     return Transactions;
   }
-  List<void> filter()  {
+  void filter()  {
       var txt= (searchText??'').toLowerCase();
-      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: filter txt `${txt}`  ');
+      debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: filter txt `${txt}`  ');
       if(statusFiltered.isEmpty && txt.isEmpty)  _filterTransactions= _transactions;
       if(statusFiltered.isNotEmpty){
         //status filter mode
         _filterTransactions= _transactions.where((trans){
             var st=trans.status?.keyValue.toUpperCase();
             var find= statusFiltered.contains(st);
-            print('found $find status: $st statuses: ${statusFiltered.toString()}');
+            debugPrint('found $find status: $st statuses: ${statusFiltered.toString()}');
             return find;
             }).toList();
       }else{
@@ -111,22 +94,28 @@ class TransactionsProvider extends GetxController{
       }
     
 
-     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
-    return Transactions;
+     debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
+    // return Transactions;
   }
 
   Future< List<MaTransaction>> getNextPageData(int page) async {
-    if(page==0) await init();
+    if(isInitable(page: 0)) await init();
     filter();
     if(_filterTransactions.isEmpty) return [];
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@start TransactionsProvider ::::: getNextPageData $page ');
-    await Future.delayed(const Duration(seconds: 1));
+    //debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@start TransactionsProvider ::::: getNextPageData $page ');
+    await Future.delayed(const Duration(milliseconds: 500));//mockdelay
     int start = min(max(((page) * pageSize),0),_filterTransactions.length) ;
     int end = min( ((page + 1)  * pageSize), _filterTransactions.length ) ;
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TransactionsProvider ::::: getNextPageData start: $start - end: $end');
+    debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TransactionsProvider ::::: getNextPageData ->page $page start: $start - end: $end');
     final items = _filterTransactions.sublist(start, end) ;
     return items;
   }
+
+  bool isInitable({required int page}){
+
+    return page==0;
+  }
+
   
   
 }

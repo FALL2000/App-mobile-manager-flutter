@@ -18,7 +18,7 @@ class MaTransactionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     //print('builing...');
     return  GetBuilder<TransactionsProvider>(builder: (_){
-      return  MaTransactionsList0(showFilterBadges:showFilterBadges);
+      return  MaTransactionsList0();
     });
     /*Stack(
       children: [
@@ -36,8 +36,7 @@ class MaTransactionsList extends StatelessWidget {
   }
 }
 class MaTransactionsList0 extends StatefulWidget {
-  MaTransactionsList0({Key? key, this.showFilterBadges}) : super(key: key);
-  bool? showFilterBadges=false;
+  MaTransactionsList0({Key? key}) : super(key: key);
 
   @override
   _MaTransactionsListState createState() => _MaTransactionsListState();
@@ -82,7 +81,7 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
   }
   @override
   Widget build(BuildContext context) {
-    print('building with widget.showFilterBadges ${widget.showFilterBadges} everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: data.size: ${data.length} }');
+    print('building with ${controller.statusFiltered.isNotEmpty} everyThingLoaded: $everyThingLoaded   :: isloading: $isLoading :: data.size: ${data.length} }');
     
     return  /*RefreshIndicator.adaptive(
             onRefresh: () async {
@@ -93,8 +92,38 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
               // physics: const BouncingScrollPhysics(),
               children: [
                 Visibility(
-                    visible: (widget.showFilterBadges ?? false) && controller.statusFiltered.isNotEmpty,
-                    child: MAStatusesBadges(controller: controller)
+                    visible: controller.statusFiltered.isNotEmpty,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 2),
+                      height: 30,
+                      child: ListView(
+                        reverse: true,
+                         scrollDirection : Axis.horizontal,
+                          children: controller.statusFiltered.map((element) {
+                              statusConfig? icn=statusIconWidget.statusConfig0[element];
+                                return  Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  
+                                  child: Dismissible(
+                                    direction : DismissDirection.vertical,
+                                    onDismissed: (dir){
+                                      //print(dir);
+                                      controller.updateStatusSet(element,remove:true);
+                                    },
+                                    key: Key(icn!.key ?? '-'),
+                                    child: Badge(
+                                        label: Text( icn!.label),
+                                        // label: IconButton(icon:Icon( Icons.close) , onPressed: (){},),
+                                        // trailing: Icon(Icons.close),
+                                        backgroundColor: icn!.color ?? Theme.of(context).colorScheme.tertiary,
+                                      
+                                    ),
+                                  ),
+                                ) ;
+                              } 
+                              ).toList(),
+                      ),
+                    )
                     ),
                   Visibility(
                     visible:  isLoading || hasData,
@@ -147,51 +176,6 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
     data = await getNextPageData(0);
     isLoading=false;
     setState(() {});
-  }
-}
-
-class MAStatusesBadges extends StatelessWidget {
-  const MAStatusesBadges({
-    super.key,
-    required this.controller,
-  });
-
-  final TransactionsProvider controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 7),
-      height: 30,
-      child: ListView(
-        reverse: true,
-         scrollDirection : Axis.horizontal,
-          children: controller.statusFiltered.map((element) {
-              statusConfig? icn=statusIconWidget.statusConfig0[element];
-                return  Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  
-                  child: Dismissible(
-                    direction : DismissDirection.vertical,
-                    onDismissed: (dir){
-                      //print(dir);
-                      controller.updateStatusSet(element,remove:true);
-                    },
-                    key: Key(icn!.key ?? '-'),
-                    child: Badge(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                        label: Text( icn!.label),
-                        // label: IconButton(icon:Icon( Icons.close) , onPressed: (){},),
-                        // trailing: Icon(Icons.close),
-                        backgroundColor: icn!.color ?? Theme.of(context).colorScheme.tertiary,
-                      
-                    ),
-                  ),
-                ) ;
-              } 
-              ).toList(),
-      ),
-    );
   }
 }
 

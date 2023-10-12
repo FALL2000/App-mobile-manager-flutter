@@ -7,15 +7,8 @@ class MaTransactionsPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: MaTransactionsList(showFilterBadges:true),
+    return   Scaffold(
+      body:  MaTransactionsList(),
     );
-  }
-
-  Future<List<String>> getNextPageData(int page) async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (page == 3) return [];
-    final items = List<String>.generate(14, (i) => "Item $i Page $page");
-    return items;
   }
 }

@@ -8,7 +8,7 @@ import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_Transacti
     
 class MATransactionSearchPage extends StatefulWidget {
 
-  MATransactionSearchPage({ Key? key }) : super(key: key);
+  const MATransactionSearchPage({ Key? key }) : super(key: key);
   @override
   State<MATransactionSearchPage> createState() => _MASearchPageState();
 }
