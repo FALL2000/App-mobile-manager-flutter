@@ -82,7 +82,7 @@ class TransactionsProvider extends GetxController{
         _filterTransactions= _transactions.where((trans){
             var st=trans.status?.keyValue.toUpperCase();
             var find= statusFiltered.contains(st);
-            debugPrint('found $find status: $st statuses: ${statusFiltered.toString()}');
+            //debugPrint('found $find status: $st statuses: ${statusFiltered.toString()}');
             return find;
             }).toList();
       }else{

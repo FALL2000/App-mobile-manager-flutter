@@ -12,7 +12,7 @@ class MATransactionsController {
             'action': 'GET-ALL'
         };
         var result= await MaFireFunctionsController.call(MaConstants.CONST_TRANS_FUNCION, input);
-        // print(result);
+        // debugPrint(result);
         List<MaTransaction> transactions=[];
         if (!result.error){
           for (var element in result.body) {
@@ -20,20 +20,20 @@ class MATransactionsController {
           }
 
         }
-        // print('###################### prinitng trans');
-        print(transactions.length);
-        print(transactions);
+        // debugPrint('###################### prinitng trans');
+        // debugPrint(transactions.length);
+        // debugPrint(transactions);
         
         return transactions;
     }
-    static Future<MaTransaction?> getTransfert( String transfertId) async{
+    /*static Future<MaTransaction?> getTransfert( String transfertId) async{
         var input = {
            'action': 'GET-INFO',
             'transfertId': transfertId
         };
         // input.update(transfertId, (value) => transfertId);
         var result= await MaFireFunctionsController.call(MaConstants.CONST_TRANS_FUNCION, input);
-        // print(result);
+        // debugPrint(result);
         // MaTransaction transaction=null;
         if (!result.error){
           
@@ -42,7 +42,6 @@ class MATransactionsController {
           throw new Exception(result.message??'not found');
         }
         
-        return null;
     }
     static Future<MaResponse?> saveTransfert( MaTransaction? request) async{
       if(request==null) return MaResponse.errorResponse(message: 'Empty request');
@@ -111,6 +110,6 @@ class MATransactionsController {
       var result= await MaFireFunctionsController.call(MaConstants.CONST_TRANS_FUNCION, input);
       if(!result.error) result.message='Delete operation finished successfully';
       return result;
-    }
+    }*/
 }
 
