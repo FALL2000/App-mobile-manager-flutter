@@ -20,7 +20,7 @@ class MaLoginController {
           
           print(_user);
           print(_user.role);
-          if(/*_user.role == Role.manager*/ true) {
+          if(_user.role == Role.manager) {
             await MaLocalStore.storeUser(_user);
             return MaResponse.successResponse(message: '',body: credential);
           }
