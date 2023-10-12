@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class MaInifiniteScrollList extends StatefulWidget {
+class MaInfiniteScrollList extends StatefulWidget {
   final List<Widget> children;
   final Function(int page)? onLoadingStart;
   final Function()? onRefresh;
@@ -26,7 +26,7 @@ class MaInifiniteScrollList extends StatefulWidget {
   final String? restorationId;
   final Clip clipBehavior;
   final Widget? loadingWidget;
-  const MaInifiniteScrollList({
+  const MaInfiniteScrollList({
     Key? key,
     required this.children,
     this.onLoadingStart,
@@ -52,10 +52,10 @@ class MaInifiniteScrollList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MaInifiniteScrollList> createState() => _MaInifiniteScrollListState();
+  State<MaInfiniteScrollList> createState() => _MaInifiniteScrollListState();
 }
 
-class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
+class _MaInifiniteScrollListState extends State<MaInfiniteScrollList> {
   final ScrollController _sc = ScrollController();
   bool _loading = true;
   bool _refresh = false;
@@ -66,7 +66,7 @@ class _MaInifiniteScrollListState extends State<MaInifiniteScrollList> {
     super.initState();
     _removeLoader();
     _sc.addListener(() async {
-      print('addListener called with widget.everythingLoaded ${widget.everythingLoaded} loading $_loading page ${page} _sc.position.atEdge ${_sc.position.atEdge}  _sc.offset ${_sc.offset}');
+      //print('addListener called with widget.everythingLoaded ${widget.everythingLoaded} loading $_loading page ${page} _sc.position.atEdge ${_sc.position.atEdge}  _sc.offset ${_sc.offset}');
       if (_sc.position.atEdge && _sc.offset > 0) {
         if (!widget.everythingLoaded) {
           setState(() {
