@@ -44,10 +44,11 @@ class MaUser {
     String? createdDate;
     String? countryId;
     String? cityId;
+    Map<String, dynamic>? workStatus;
   
   MaUser({ required this.firstname, this.lastname, this.phone, this.gender, required this.email, 
             this.password, this.userId, this.createdDate, this.countryId, this.role,
-            this.cityId}); 
+            this.cityId, this.workStatus});
 
 
    factory MaUser.fromJson(Map<Object?, Object?> json){
