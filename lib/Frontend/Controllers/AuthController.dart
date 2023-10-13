@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/model/MA_User.dart';
 import 'package:x_money_manager/firebase_options.dart';
 import 'package:x_money_manager/Notification/MA_firebaseNotification.dart';
@@ -17,6 +18,7 @@ bool _loggedIn = false;
     print('Welcome $_loggedIn');
     // await Future.delayed(const Duration(seconds: 5));
     await Firebase.initializeApp( options: DefaultFirebaseOptions.currentPlatform);
+    await MaLocalStore.init();
     await MaFirebaseNotification.init();
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
