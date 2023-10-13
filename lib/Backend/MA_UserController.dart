@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:x_money_manager/Backend/MA_FireFunctionsController.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/model/MA_Response.dart';
@@ -7,7 +8,7 @@ import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 class MaUserController {
 
-    static Future<MaResponse> sendToken(String? token) async{
+  static Future<MaResponse> sendToken(String? token) async{
         
         var input = {
             "action": "UPDATE",
@@ -15,8 +16,8 @@ class MaUserController {
         };
         var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
         return result;
-    }
-    static Future<MaResponse?> CompleteAccount( MaUser? user) async{
+  }
+  static Future<MaResponse?> CompleteAccount( MaUser? user) async{
       if(user==null) return MaResponse.errorResponse(message: 'Empty user');
       user.userId=FirebaseAuth.instance.currentUser!.uid;
       var _input = user.toSave();
@@ -33,8 +34,8 @@ class MaUserController {
         await MaLocalStore.storeUser(user);
       }
       return result;
-    }
-    static Future<MaResponse> getProfile() async{
+  }
+  static Future<MaResponse> getProfile() async{
       print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ get profile');
       var input = {
           'action': 'GET-PROFILE',
@@ -47,6 +48,27 @@ class MaUserController {
         // await MaLocalStore.storeUser(user);
       }
       return result;
+  }
+  static Future<List<MaUser>> getAgents() async{
+        
+        const input = {
+            'action': 'GET-ALL',
+             'role': 'AGENT'
+        };
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+        // debugPrint(result);
+        List<MaUser> _agents=[];
+        if (!result.error){
+          for (var element in result.body) {
+            _agents.add(MaUser.fromJson(element));
+          }
+
+        }
+        // debugPrint('###################### prinitng trans');
+        // debugPrint(transactions.length);
+        debugPrint('$_agents');
+        
+        return _agents;
     }
 
 }

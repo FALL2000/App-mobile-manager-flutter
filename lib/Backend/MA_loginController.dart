@@ -20,7 +20,8 @@ class MaLoginController {
           
           print(_user);
           print(_user.role);
-          if(_user.role == Role.manager) {
+          if(_user.role == Role.manager || _user.role == Role.admin) {
+            _user.email = _user.email.isEmpty ? emailAddress : _user.email;
             await MaLocalStore.storeUser(_user);
             return MaResponse.successResponse(message: '',body: credential);
           }

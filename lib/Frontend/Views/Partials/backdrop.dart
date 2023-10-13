@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:x_money_manager/views/full/searchPage.dart';
-import '../../../model/menu_item.dart';
+import 'package:x_money_manager/Model/menu_item.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_DrawerWidget.dart';
 
 

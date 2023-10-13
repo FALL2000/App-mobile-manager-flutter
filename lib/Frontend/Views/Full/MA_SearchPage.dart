@@ -2,18 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:x_money_manager/Utilities/widgets/inputs.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_TransactionsList.dart';
 
     
-class MATransactionSearchPage extends StatefulWidget {
-
-  const MATransactionSearchPage({ Key? key }) : super(key: key);
+class MATransactionSearchPage extends StatelessWidget{
+  final controller = Get.put(TransactionsProvider());
+  MATransactionSearchPage({ Key? key }) : super(key: key);
   @override
-  State<MATransactionSearchPage> createState() => _MASearchPageState();
+  Widget build(BuildContext context) {
+    return WillPopScope(
+
+             onWillPop: () {
+                while (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                print('poping context........ ');
+                controller.initFilter();//clear filter
+                Navigator.pushReplacementNamed(context,'/Transactions');
+                return Future.value(false);
+             },
+
+             child: MATransactionSearchPage0(),
+          );
+  }
+}
+class MATransactionSearchPage0 extends StatefulWidget {
+
+  const MATransactionSearchPage0({ Key? key }) : super(key: key);
+  @override
+  State<MATransactionSearchPage0> createState() => _MASearchPageState();
 }
 
-class _MASearchPageState extends State<MATransactionSearchPage> {
+class _MASearchPageState extends State<MATransactionSearchPage0> {
   final controller = Get.put(TransactionsProvider());
   final TextEditingController searchCtrl= TextEditingController();
   String searchText='';
@@ -24,11 +44,11 @@ class _MASearchPageState extends State<MATransactionSearchPage> {
     super.initState();
      controller.initFilter();
   }
-  @override
+  /*@override
   void dispose() {
     super.dispose();
     controller.initFilter();
-  }
+  }*/
   doSearch(){
       controller.updateSearchTerm(searchText);
   }

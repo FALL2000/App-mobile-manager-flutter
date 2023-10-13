@@ -25,8 +25,8 @@ class MaLocalStore {
         return ( prefs?.containsKey('localUser') ?? false) && ( prefs?.getBool('hasLocalUser') ?? false) ;
     }
 
-    static MaUser? getStoredUser() {
-        init();
+    static Future<MaUser?> getStoredUser() async{
+        await init();
         MaUser? user;
         String _user= prefs?.getString('localUser') ?? '';
         if(_user.isNotEmpty){

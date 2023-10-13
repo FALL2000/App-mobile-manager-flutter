@@ -19,7 +19,8 @@ import 'package:x_money_manager/model/MA_Zone.dart';
 }
 enum Role {
     client('CLIENT'),
-    manager('MANAGER');
+    manager('MANAGER'),
+    admin('ADMIN');
 
   final String keyValue;
   const  Role( this.keyValue);

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:x_money_manager/Backend/MA_UserController.dart';
 import 'package:x_money_manager/Data/mockData/agentMock.dart';
 
 import '../../Model/MA_User.dart';
@@ -36,7 +37,7 @@ class AgentState extends GetxController{
   }
 
   Future<List<MaUser>> _getAgents() async{
-    return await AgentMock.generateAgent(40);
+    return MaUserController.getAgents();//await AgentMock.generateAgent(40);
   }
 
   void getAgentsByPage() async{
@@ -48,7 +49,8 @@ class AgentState extends GetxController{
     }else{
       int totalElement = limit * page;
       if(totalElement > agentsList.length){
-        agentsSubList = agentsList.sublist(totalElement-limit,agentsList.length);
+        int start= totalElement-limit < agentsList.length ? totalElement-limit : agentsList.length-1;
+        agentsSubList = agentsList.sublist(start,agentsList.length);
         hasMore.value = false;
       }else{
         agentsSubList = agentsList.sublist(totalElement-limit,totalElement);

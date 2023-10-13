@@ -7,8 +7,8 @@ import 'package:x_money_manager/Frontend/Views/Full/login.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_FilterPage.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/backdrop.dart'; 
 import 'package:x_money_manager/Frontend/Views/Full/home.dart'; 
-import 'utilities/colors.dart';
-import 'package:x_money_manager/model/menu_item.dart';
+import 'Utilities/colors.dart';
+import 'package:x_money_manager/Model/menu_item.dart';
 import 'package:get/get.dart';
 
 class MoneyApp extends StatefulWidget {
@@ -126,7 +126,7 @@ ThemeData _buildShrineTheme() {
       selectionColor: kShrinePink100,
     ),
     appBarTheme: const AppBarTheme(
-      foregroundColor: kShrineBrown900,
+      foregroundColor: kShrineLight,
       backgroundColor: kShrinePink100,
     ),
     inputDecorationTheme: const InputDecorationTheme(

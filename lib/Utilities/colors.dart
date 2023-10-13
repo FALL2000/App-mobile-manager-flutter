@@ -18,10 +18,11 @@ const kShrinePink50 = Color.fromARGB(255, 205, 176, 168);
 const kShrinePink100 = Color(0xFFF24E1E);
 const kShrinePink300 = Color.fromARGB(255, 243, 68, 225);
 const kShrinePink400 = Color.fromARGB(255, 239, 77, 191);
-const kShrinePinkSelected = Colors.white;
+// const kShrinePinkSelected = Colors.white;
 const kShrinePinkUnselected = Color.fromARGB(255, 54, 2, 2);
 
 const kShrineBrown900 = Color(0xFF442B2D);
+const kShrineLight = Colors.white;
 
 const kShrineErrorRed = Color(0xFFC5032B);
 
