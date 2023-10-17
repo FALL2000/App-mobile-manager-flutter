@@ -26,10 +26,10 @@ class MATransactionsController {
         
         return transactions;
     }
-    /*static Future<MaTransaction?> getTransfert( String transfertId) async{
+    static Future<MaTransaction?> getTransactionDetails( String transactionId) async{
         var input = {
            'action': 'GET-INFO',
-            'transfertId': transfertId
+            'transfertId': transactionId
         };
         // input.update(transfertId, (value) => transfertId);
         var result= await MaFireFunctionsController.call(MaConstants.CONST_TRANS_FUNCION, input);
@@ -43,6 +43,7 @@ class MATransactionsController {
         }
         
     }
+    /*
     static Future<MaResponse?> saveTransfert( MaTransaction? request) async{
       if(request==null) return MaResponse.errorResponse(message: 'Empty request');
       // request.status=RequestStatus.;
