@@ -3,7 +3,7 @@ import 'package:x_money_manager/Backend/MA_UserController.dart';
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
 // import 'package:x_money_manager/Model/MA_User.dart';
-import 'package:x_money_manager/model/MA_Response.dart';
+import 'package:x_money_manager/Model/MA_Response.dart';
 class MaLoginController {
       static Future<MaResponse> login(String emailAddress, String password) async{
         try {

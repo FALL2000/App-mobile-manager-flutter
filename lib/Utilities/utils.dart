@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:x_money_manager/model/MA_Response.dart';
+import 'package:x_money_manager/Model/MA_Response.dart';
 
 void maShowSnackBar({required BuildContext context, required String message, bool? error, bool? info, bool? success, bool? warning}){
         ScaffoldMessenger.of(context).showSnackBar(

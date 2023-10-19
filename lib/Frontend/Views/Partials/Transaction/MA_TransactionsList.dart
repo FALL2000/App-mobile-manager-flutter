@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
-import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_StatusIconWidget.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_TransactionItem.dart';
 import 'package:x_money_manager/Utilities/widgets/MA_InifiniteScrollList.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
 import 'package:x_money_manager/Utilities/MA_TransactionUtils.dart';
@@ -92,7 +92,7 @@ class _MaTransactionsListState extends State<MaTransactionsList0> {
                           });
                         },
                         everythingLoaded: everyThingLoaded,
-                        children: data.map((e) => TransactionItem(transaction: e)).toList(),
+                        children: data.map((e) => MaTransactionItem(transaction: e)).toList(),
                       ),
                   ),
                 ),
@@ -135,7 +135,7 @@ class MAStatusesBadges extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 7),
-      height: 30,
+      height: 40,
       child: ListView(
         reverse: true,
         scrollDirection : Axis.horizontal,
@@ -150,11 +150,31 @@ class MAStatusesBadges extends StatelessWidget {
                     controller.updateStatusSet(element,remove:true);
                   },
                   key: Key(icn?.key ?? '-') ,
-                  child: Badge(
+                  child:/*FilterChip(
+                          label: Text(icn!.label, style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),),
+                          selected: true,
+                          onSelected: (bool selected) {
+                             controller.updateStatusSet(element,remove:true);
+                          },
+                        )*/
+                  
+                   Chip(
+                          elevation: 0.9,
+                          backgroundColor:  icn?.color,
+                          labelPadding: const EdgeInsets.symmetric(vertical: 2),
+                          label:  Text(icn!.label, style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),),
+                          deleteIcon:const  Icon(Icons.close),
+                          deleteIconColor: Colors.white,
+                          onDeleted: () {
+                            controller.updateStatusSet(element,remove:true);
+                          },
+                        )
+                  
+                  /*Badge(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     label: Text( icn!.label),
                     backgroundColor: icn.color,// ?? Theme.of(context).colorScheme.tertiary,
-                  ),
+                  ),*/
                 ),
               ) ;
             } 
@@ -165,81 +185,5 @@ class MAStatusesBadges extends StatelessWidget {
 }
 
 
-class TransactionItem extends StatelessWidget {
-  final MaTransaction transaction;
-  const TransactionItem({
-    Key? key,
-    required this.transaction,
-  }) : super(key: key);
-  goToDetails(context){
-    
-  }
-  @override
-  Widget build(BuildContext context) {
-   
-    return Container(
-        padding: const EdgeInsets.all(5),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(.1),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: LayoutBuilder(builder: (context, constraints) {
-          //debugPrint('width >>>> ${constraints.biggest.width} ');
-          List<Widget> headers=[
-            TextButton(
-              child:Text(transaction.code),
-              onPressed: (){
-                goToDetails(context);
-              },
-            ),
-            Expanded(
-              child: Text('${transaction.formattedDate}',
-                            textAlign: TextAlign.right,
-              ),
-            ),
-          ];
 
-          if(transaction.status!.isInProggress )
-          {
-            // headers.add(
-            //     // Padding(
-            //     //   padding: const EdgeInsets.only(left: 5,right: 5),
-            //     //   child: Badge( 
-            //     //       backgroundColor: /*Theme.of(context).colorScheme.secondary*/Colors.green, 
-            //     //       smallSize: 15.5,),
-            //     // ),
-            // );
-          }
-           return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: headers,),
-                ListTile(
-                  onTap: () {
-                      goToDetails(context);
-                  },
-                  title: Text(
-                    transaction.formattedamount,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  subtitle:Column(
-                    crossAxisAlignment : CrossAxisAlignment.start,
-                    children: [
-                      Text('${transaction.from} - ${transaction.to}'),
-                      Badge(
-                        label: Text('${transaction.participants} participants'),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      )
-                    ],
-                  ) ,
-                  trailing: MAStatusIconWidget(status: transaction.status?.keyValue),
-                ),
-              ],
-            );
-        }
-      )
-    );
-  }
-}
 

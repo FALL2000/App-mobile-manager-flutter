@@ -64,7 +64,7 @@ class MaUser {
         email: util.toSString(json['email']),
         userId: util.toSString(json['userId']),
         createdDate: util.toSString(json['createdDate']),
-        countryId: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
+        countryId: json['country'] != null ? util.toSString(json['country']) : util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
         cityId: util.toSString(zone['id']),
         gender: Gender.assignGender(util.toSString(json['gender'])),
         role: Role.assignRole(util.toSString(json['role'])),

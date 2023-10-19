@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Backend/MA_FireFunctionsController.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
-import 'package:x_money_manager/model/MA_Response.dart';
+import 'package:x_money_manager/Model/MA_Response.dart';
 import 'package:x_money_manager/Utilities/MA_Constants.dart';
 // import 'package:x_money_manager/model/MA_User.dart'; 
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
@@ -69,6 +69,46 @@ class MaUserController {
         debugPrint('$_agents');
         
         return _agents;
-    }
+  }
+  static Future<List<MaUser>> getOpenAgents(String zoneId) async{
+        debugPrint('#######getOpenAgents>>zoneId: $zoneId ');
+        const input = {
+            'action': 'GET-ALL',
+             'role': 'AGENT'
+        };
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+        // debugPrint(result);
+        List<MaUser> _agents=[];
+        if (!result.error){
+          for (var element in result.body) {
+            var _agent=MaUser.BuilfromJson(element);
+            //  debugPrint('${_agent.toJson()}');
+             debugPrint('-----_agent.countryId > ${_agent.countryId}');
+            if(_agent.countryId==zoneId) 
+              _agents.add(_agent);
+          }
+
+        }
+        // debugPrint('###################### prinitng trans');
+        // debugPrint(transactions.length);
+        // debugPrint('$_agents');
+        
+        return _agents;
+  }
+  
+  static Future<MaUser?> getUserInfo(String userId) async{
+        debugPrint('#######getUserInfo>>userId: $userId ');
+        var input = {
+            'action': 'GET-INFO',
+            'userId': userId
+        };
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+        // debugPrint(result);
+        if (!result.error){
+          MaUser _agent =MaUser.BuilfromJson(result.body);
+          debugPrint('${_agent.toJson()}');
+          return _agent;
+        }
+  }
 
 }

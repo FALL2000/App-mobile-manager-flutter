@@ -45,6 +45,15 @@ static const openConfig =MaStatusConfig('OPEN',
     'CANCELED':cancelConfig,
     'CLOSED':closeConfig,
   };
+  static final Map<String,MaStatusConfig>  statusApprovalConfig0={
+    'OPEN': openConfig,
+    'IN APPROVAL':appConfig,
+    'IN PROGRESS':progressConfig,
+    'APPROVED':approvedConfig,
+    'CANCELED':cancelConfig,
+    'REJECTED':cancelConfig,
+    'CLOSED':closeConfig,
+  };
   static final List<MaStatusConfig> filterStatues=[
     openConfig,approvedConfig,progressConfig,closeConfig,cancelConfig
   ];
