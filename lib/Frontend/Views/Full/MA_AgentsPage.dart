@@ -39,8 +39,8 @@ class MaAgentsPage extends StatelessWidget {
               }else{
                 if(agentState.hasMore.value)
                   return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30),
-                      child: Center(child: CircularProgressIndicator(),),
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: Center(child: CircularProgressIndicator(),),
                   );
               }
             }

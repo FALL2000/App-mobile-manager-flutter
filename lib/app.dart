@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_agentSearchController.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_SearchPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/login.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/MA_FilterAgent.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_FilterPage.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/backdrop.dart'; 
 import 'package:x_money_manager/Frontend/Views/Full/home.dart'; 
@@ -88,13 +90,10 @@ class _MoneyAppState extends State<MoneyApp> {
                           semanticLabel: 'search',
                         ),
                         onPressed: () {
-                          /*Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => SearchPage()),
-                          );*/
+                          showSearch(context: context, delegate: MAagentSearchController());
                         },
                       ),
+                      const MaFilterAgent()
                     ];
                   }
           ),
@@ -128,6 +127,11 @@ ThemeData _buildShrineTheme() {
     appBarTheme: const AppBarTheme(
       foregroundColor: kShrineLight,
       backgroundColor: kShrinePink100,
+    ),
+    searchBarTheme: SearchBarThemeData(
+      backgroundColor: MaterialStateProperty.resolveWith((states){
+        return kShrinePink100;
+      }),
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: OutlineInputBorder(),
