@@ -2,7 +2,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:x_money_manager/Backend/MA_TransactionsController.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionDetailsGetXCtrl.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/Details/Ma_ZoneAgentItem.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/Details/Ma_ZoneApprovalItem.dart';
@@ -26,7 +28,6 @@ class MaZoneDetailsWidget extends StatefulWidget {
     required this.transactionId,
     this.agent,
     this.gap,
-    required this.onAgentRefresh,
     required this.refreshed,
   });
   List<approvalTransaction> approvals;
@@ -35,7 +36,6 @@ class MaZoneDetailsWidget extends StatefulWidget {
   final String transactionId;
   final gapInfo? gap;
   bool refreshed=false;
-  final ValueChanged<MaUser?> onAgentRefresh;
 
   @override
   State<MaZoneDetailsWidget> createState() => _MaZoneDetailsWidgetState();
@@ -46,11 +46,9 @@ class _MaZoneDetailsWidgetState extends State<MaZoneDetailsWidget> {
 
   get hasGap=> widget.gap!= null;
 
-  var refreshed01=false;
-
   MaResponse? _response;
   bool _isLoading=false;
-
+  final MaTransactionDetailsProvider controller = Get.find();
 
 
   Future<void> handleAgentSelected(String agentId) async{
@@ -72,36 +70,34 @@ class _MaZoneDetailsWidgetState extends State<MaZoneDetailsWidget> {
         ),
         
     ];
-    var wd= (hasAgent )? MaZoneAgentItem(agent: widget.agent ,
-              refreshed: widget.refreshed,
-              onAgentRefresh:(agent){
-                 widget.onAgentRefresh(agent);
-                  // refreshed01=true;
-              }
-    ) :  MissingMaZoneAgentItem(
+    var wd= (hasAgent )? MaZoneAgentItem(agent: widget.agent , refreshed: widget.refreshed,
+                                          onAgentRefresh:(agent){
+                                            controller.updateAgent(agent, widget.zoneId, );
+                                          }) 
+                        : MissingMaZoneAgentItem(
                                     zoneId: widget.zoneId,
                                     onAgentSelected: (agent) async{
                                        setState(() {
                                          _isLoading=true;
                                        });
                                         await handleAgentSelected(agent.userId ?? '');
+                                         
                                         if(_response!.error){
                                           setState(() {
                                             _isLoading=false;
                                           });
                                           maShowSnackBar(context:context,message: _response!.message,error: true);
-                                          }else{
+                                        }
+                                        else{
                                           debugPrint('-------------------------------------------------------- refreshpage ${widget.key.toString()}');
-                                          // widget.key.toString();
-                                          widget.onAgentRefresh(agent);
-                                          widget.agent=agent;
+                                          controller.updateAgent(agent, widget.zoneId, );
                                           setState(() {
                                             _isLoading=false;
                                           });
                                         }
                                         
                                     },
-    );
+                            );
     widgets.add( wd);
     
     if(hasGap){
@@ -121,8 +117,11 @@ class _MaZoneDetailsWidgetState extends State<MaZoneDetailsWidget> {
         }).toList() ?? [];
     widgets.add(
       const Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: Text('Participants'),
+        padding: EdgeInsets.only(left: 20, top: 20),
+        child: Text('Participants',
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       )
     );
     widgets.add(
@@ -137,10 +136,17 @@ class _MaZoneDetailsWidgetState extends State<MaZoneDetailsWidget> {
      
     return Stack(
       children: [
-        Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widgets,
-              ),
+        RefreshIndicator(
+          onRefresh: () async{
+            debugPrint('RefreshIndicator----start');
+            await controller.doRefresh(); 
+            debugPrint('RefreshIndicator----End');
+          },
+          child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: widgets,
+                ),
+        ),
         Visibility(
           visible: _isLoading,
           child: MaSpinner(title: 'Please Wait...',)

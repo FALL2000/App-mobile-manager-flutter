@@ -46,6 +46,23 @@ class MaUser {
     String? countryId;
     String? cityId;
     Map<String, dynamic>? workStatus;
+
+    String get fullname=> '${firstname}${ lastname!.isNotEmpty ? ' '+lastname! : ''}';
+    String get initial{
+     String titleName = '';
+     try {
+       
+      List<String> _parts=  fullname.split(' ');
+      for (var i = 0; i < _parts.length; i++) {
+          String word = _parts[i];
+          titleName=titleName+word.trim()[0];
+          if (i == 1) break;
+      }
+     } catch (e) {
+      titleName='US'; 
+     }
+     return titleName.toUpperCase();
+   }
   
   MaUser({ required this.firstname, this.lastname, this.phone, this.gender, required this.email, 
             this.password, this.userId, this.createdDate, this.countryId, this.role,

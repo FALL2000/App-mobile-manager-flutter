@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionDetailsGetXCtrl.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_StatusIconWidget.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
 import 'package:x_money_manager/Utilities/MA_Constants.dart';
 import 'package:x_money_manager/Utilities/widgets/outputs.dart';
 class MaDetailsTab extends StatelessWidget {
-  const MaDetailsTab({
+  MaDetailsTab({
     super.key,
-    required this.request,
   });
 
-  final MaTransaction? request;
-
+  MaTransaction? request;
+  final MaTransactionDetailsProvider controller = Get.find();
   @override
   Widget build(BuildContext context) {
+    request= controller.transaction;
     var children=<Widget>[];
     bool hasGap= request?.gap != null;
     var _children0=[
-              outputField(
-                // leading_icon: MaIcons.NUMBER,
-                label:request?.formattedDate ?? '', value: '${request?.participants} participants' ,
-                trailing:MAStatusIconWidget(status: request?.status?.keyValue), 
-                // hide_border: true
-              ),
+              
              outputField(
               leading_icon: MaIcons.AMOUNT,
               label:'Amount:', value: request?.formattedOutAmount ?? '',
@@ -68,10 +65,31 @@ class MaDetailsTab extends StatelessWidget {
 
     widgets.addAll(children );
 
-    return ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: widgets,
-            );
+    return RefreshIndicator(
+      onRefresh: () async{
+            debugPrint('RefreshIndicator----start');
+            await controller.doRefresh(); 
+            debugPrint('RefreshIndicator----End');
+          },
+      child: Column(
+        children: [
+          Card( elevation: 5,
+                  child: outputField(
+                    // leading_icon: MaIcons.NUMBER,
+                    label:request?.formattedDate ?? '', value: '${request?.participants} participants' ,
+                    trailing:MAStatusIconWidget(status: request?.status?.keyValue), 
+                    hide_border: true
+                  ),
+                ),
+          Expanded(
+            child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: widgets,
+                  ),
+          )
+                ],
+      ),
+    );
     //Text('------Details of ${request.toString()}');
   }
 }

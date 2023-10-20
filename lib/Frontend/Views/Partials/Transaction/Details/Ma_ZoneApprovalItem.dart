@@ -3,7 +3,7 @@ import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_ApprovalS
 import 'package:x_money_manager/Model/MA_Transaction.dart';
 import 'package:x_money_manager/Utilities/widgets/outputs.dart';
     
-class MaZoneApprovalItem extends StatelessWidget {
+class MaZoneApprovalItem extends StatefulWidget {
   const MaZoneApprovalItem({
     super.key,
     required this.approval,
@@ -12,29 +12,57 @@ class MaZoneApprovalItem extends StatelessWidget {
   final approvalTransaction? approval;
 
   @override
+  State<MaZoneApprovalItem> createState() => _MaZoneApprovalItemState();
+}
+
+class _MaZoneApprovalItemState extends State<MaZoneApprovalItem> {
+  bool _isExpanded=false;
+  IconData get _icon=> _isExpanded ? Icons.arrow_drop_down : Icons.arrow_right;
+  @override
   Widget build(BuildContext context) {
     
-    return ExpansionTile(
-        // collapsedShape:const  Border( 
-        //   top: BorderSide(color: Colors.transparent , width: 0) ,
-        //   bottom: BorderSide( color: Colors.red ,width: 5) ,
-        // ),
-        shape:  Border( 
-          top: const BorderSide(color: Colors.transparent , width: 0) ,
-          bottom: BorderSide(color: Theme.of(context).colorScheme.primary , width: 1) ,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Card(
+         /*decoration:  BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+            // color:  isSelected ? kShrineLight : null,
+            border: Border.all(
+              // BorderSide(
+                color: Theme.of(context).colorScheme.secondary 
+              // ),
+              ),
+          ),*/
+        child: ExpansionTile(
+            // collapsedShape:const  Border( 
+            //   top: BorderSide(color: Colors.transparent , width: 0) ,
+            //   bottom: BorderSide( color: Colors.red ,width: 5) ,
+            // ),
+            shape:  const Border( 
+              top:  BorderSide(color: Colors.transparent , width: 0) ,
+              bottom:  BorderSide(color: Colors.transparent , width: 0) ,
+            ),
+            onExpansionChanged: (value) {
+              print(value);
+              setState(() {
+                _isExpanded= value;
+              });
+            },
+            leading: Icon(_icon, size: IconTheme.of(context).opticalSize),
+            // leading: MaApprovalStatusIcon(status: approval?.status?.keyValue),
+            // leading: CircleAvatar( child: Text('OUT'),),
+            title: Text('${widget.approval?.owner?.fullname}',
+              overflow: TextOverflow.ellipsis,) ,
+            subtitle: Text('${widget.approval?.formattedTotal}') ,
+            trailing: MaApprovalStatusIcon(status: widget.approval?.status?.keyValue),
+            children: [
+              outputField(value: '${widget.approval?.formattedamount}', label: 'Amount', hide_border: true,),
+              outputField(value: '${widget.approval?.formattedfees}', label: 'Fees',hide_border: true,),
+              ((widget.approval?.owner?.email.isNotEmpty ?? false) || (widget.approval?.owner?.phone?.isNotEmpty ?? false)) ? Text('${widget.approval?.owner?.email} * ${widget.approval?.owner?.phone}'): const SizedBox(height: 0.5,),
+              Text('${widget.approval?.formattedDate}'), 
+            ],
         ),
-        leading: const Icon(Icons.mood_outlined),
-        // leading: MaApprovalStatusIcon(status: approval?.status?.keyValue),
-        // leading: CircleAvatar( child: Text('OUT'),),
-        title: Text('${approval?.owner?.firstname}  ${approval?.owner?.lastname}') ,
-        subtitle: Text('${approval?.formattedTotal}') ,
-        trailing: MaApprovalStatusIcon(status: approval?.status?.keyValue),
-        children: [
-          outputField(value: '${approval?.formattedamount}', label: 'Amount', hide_border: true,),
-          outputField(value: '${approval?.formattedfees}', label: 'Fees',hide_border: true,),
-          ((approval?.owner?.email.isNotEmpty ?? false) || (approval?.owner?.phone?.isNotEmpty ?? false)) ? Text('${approval?.owner?.email} * ${approval?.owner?.phone}'): const SizedBox(height: 0.5,),
-          Text('${approval?.formattedDate}'), 
-        ],
+      ),
     );
     
    
