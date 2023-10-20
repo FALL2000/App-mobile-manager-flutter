@@ -13,34 +13,37 @@ class AgentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, String> mapName = agent.lastname == null ? _buildName(agent.firstname, context) : _buildName(agent.firstname, context, agent.lastname);
     return Card(
-      child: ExpansionTile(
-        title: Row(
-          children: [
-            Container(
-              width: 8.0,
-              height: 8.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: agent.workStatus == null ? colorDispo: colorInDispo,
+        child: ExpansionTile(
+          title: Row(
+            children: [
+              Container(
+                width: 8.0,
+                height: 8.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: agent.workStatus == null ? colorDispo: colorInDispo,
+                ),
               ),
-            ),
-            SizedBox(width: 4),
-            Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize)),
-          ],
+              SizedBox(width: 4),
+              Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize)),
+            ],
+          ),
+          shape: RoundedRectangleBorder(
+             side: BorderSide.none,
+             borderRadius: BorderRadius.zero,
+          ),
+          subtitle: _buildSubtitle(context),
+          collapsedIconColor: agent.workStatus == null ? colorDispo: colorInDispo,
+          iconColor: agent.workStatus == null ? colorDispo: colorInDispo,
+          leading: CircleAvatar(backgroundColor: agent.workStatus == null ? colorDispo: colorInDispo, child: Text(mapName['titleName'] as String),),
+          children: [
+            Column(
+             children: [
+               _childrens(context, mapName['subName'] as String)
+             ],
+          )],
+          //childrenPadding: EdgeInsets.all(20),
         ),
-        subtitle: _buildSubtitle(context),
-        collapsedIconColor: agent.workStatus == null ? colorDispo: colorInDispo,
-        iconColor: agent.workStatus == null ? colorDispo: colorInDispo,
-        leading: CircleAvatar(backgroundColor: agent.workStatus == null ? colorDispo: colorInDispo, child: Text(mapName['titleName'] as String),),
-        children: [
-          Column(
-           children: [
-             Divider(color: Theme.of(context).colorScheme.secondary,),
-             _childrens(context, mapName['subName'] as String)
-           ],
-        )],
-        //childrenPadding: EdgeInsets.all(20),
-      ),
     );
   }
 

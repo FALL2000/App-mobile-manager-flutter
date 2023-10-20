@@ -7,10 +7,13 @@ import '../../Model/MA_User.dart';
 
 class AgentState extends GetxController{
   var agents = <MaUser>[].obs;
+  var agentsSearch = <MaUser>[].obs;
   var hasMore = true.obs;
+  bool isFilter = false;
   int page = 1;
   final limit = 15;
   List<MaUser> agentsList = [];
+  List<MaUser> agentsListFilter = [];
 
   @override
   void onInit() async{
@@ -40,26 +43,66 @@ class AgentState extends GetxController{
     return MaUserController.getAgents();//await AgentMock.generateAgent(40);
   }
 
-  void getAgentsByPage() async{
-    List<MaUser> agentsSubList;
-    if(page == 1){
-      agentsSubList = limit > agentsList.length ? agentsList.sublist(0,agentsList.length) : agentsList.sublist(0,limit);
-      if(limit >= agentsList.length)
-        hasMore.value = false;
+  void searchAgent(String searchTerm){
+    if(searchTerm != ''){
+      List<MaUser> agentsResult = [];
+      agentsResult.addAll(agentsList);
+      agentsResult.retainWhere((element) =>
+      element.lastname == null ? element.firstname.contains(searchTerm) :
+      element.firstname.contains(searchTerm) || (element.lastname as String).contains(searchTerm));
+      agentsSearch.clear();
+      agentsSearch.addAll(agentsResult);
     }else{
-      int totalElement = limit * page;
-      if(totalElement > agentsList.length){
-        int start= totalElement-limit < agentsList.length ? totalElement-limit : agentsList.length-1;
-        agentsSubList = agentsList.sublist(start,agentsList.length);
-        hasMore.value = false;
-      }else{
-        agentsSubList = agentsList.sublist(totalElement-limit,totalElement);
-        if(totalElement == agentsList.length)
-          hasMore.value = false;
-      }
+      if(agentsSearch.length > 0)
+        agentsSearch.clear();
     }
-    print("sublist ${agentsSubList.length}");
-    agents.addAll(agentsSubList);
-    page++;
+  }
+
+  void getAgentsByPage() {
+     if(isFilter){
+       updateList(agentsListFilter);
+     }else{
+       updateList(agentsList);
+     }
+  }
+
+  void updateList(List<MaUser> listOfAgents){
+    List<MaUser> agentsSubList;
+    if(hasMore.value){
+      if(page == 1){
+        agentsSubList = limit > listOfAgents.length ? listOfAgents.sublist(0,listOfAgents.length) : listOfAgents.sublist(0,limit);
+        if(limit >= listOfAgents.length)
+          hasMore.value = false;
+      }else{
+        int totalElement = limit * page;
+        if(totalElement > listOfAgents.length){
+          agentsSubList = listOfAgents.sublist(totalElement-limit,listOfAgents.length);
+          hasMore.value = false;
+        }else{
+          agentsSubList = listOfAgents.sublist(totalElement-limit,totalElement);
+          if(totalElement == listOfAgents.length)
+            hasMore.value = false;
+        }
+      }
+      print("sublist ${agentsSubList.length}");
+      agents.addAll(agentsSubList);
+      page++;
+    }
+  }
+
+  void filterAgents(String status){
+    if(!isFilter){
+      isFilter = true;
+      agents.clear();
+    }
+    page = 1;
+    List<MaUser> agentsResult = [];
+    agentsResult.addAll(agentsList);
+    if(status == 'Disponible')
+      agentsResult.retainWhere((element) => element.workStatus != null);
+    if(status == 'Indisponible')
+      agentsResult.retainWhere((element) => element.workStatus == null);
+    agentsListFilter.addAll(agentsResult);
+    getAgentsByPage();
   }
 }
