@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:x_money_manager/Backend/MA_UserController.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionDetailsGetXCtrl.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Error.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/Utilities/widgets/MA_CardLoader.dart';
+import 'package:x_money_manager/Utilities/widgets/outputs.dart';
     
 
 class _MaZoneAgentItem extends StatelessWidget {
@@ -20,10 +23,22 @@ class _MaZoneAgentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return _agentCard(
-            child: ListTile(
-                leading: CircleAvatar( child: Text('AG'),),
-                title: Text('${agent?.firstname} - ${agent?.lastname}') ,
+            child: ExpansionTile(
+            // collapsedShape:const  Border( 
+            //   top: BorderSide(color: Colors.transparent , width: 0) ,
+            //   bottom: BorderSide( color: Colors.red ,width: 5) ,
+            // ),
+            shape:  const Border( 
+              top:  BorderSide(color: Colors.transparent , width: 0) ,
+              bottom:  BorderSide(color: Colors.transparent , width: 0) ,
+            ),
+                leading: CircleAvatar( child: Text('${agent?.initial}'),),
+                title: Text('${agent?.fullname}') ,
                 subtitle: Text('Agent In charge') ,
+                children: [
+                outputField(value: '${agent?.phone}', label: 'Phone', hide_border: true,),
+                outputField(value: '${agent?.email}', label: 'Email', hide_border: true,),
+            ],
             ),
           );
     
@@ -50,7 +65,7 @@ class _agentCard extends StatelessWidget {
 
 
 
-class MaZoneAgentItem extends StatefulWidget {
+class MaZoneAgentItem extends StatelessWidget {
    MaZoneAgentItem({
     super.key,
     required this.agent,
@@ -58,48 +73,31 @@ class MaZoneAgentItem extends StatefulWidget {
     required this.refreshed,
   });
 
-   MaUser? agent;
-  bool refreshed=false;
+  final MaUser? agent;
+  final bool refreshed;
   final ValueChanged<MaUser?> onAgentRefresh;
-
-  @override
-  State<MaZoneAgentItem> createState() => _MaZoneAgentItemState();
-}
-
-class _MaZoneAgentItemState extends State<MaZoneAgentItem> {
-  @override
-  void initState() { 
-    print('init state    ${widget.agent?.toJson()} widget.refreshed ${widget.refreshed} ');
-    super.initState();
-    if(!widget.refreshed) getAgentData();
-    else {
-      _agent=widget.agent;
-    }
-  }
   MaUser? _agent;
   bool loaded=false;
   Future<void> getAgentData() async{
-      _agent = await MaUserController.getUserInfo(widget.agent?.userId ?? '');
-      widget.onAgentRefresh(_agent);
-      widget.refreshed = true;
-      try {
-        setState(() {}); 
-      } catch (e) {
-        print(e); 
-      }
-      
+      _agent = await MaUserController.getUserInfo(agent?.userId ?? '');
+      onAgentRefresh(_agent);
   }
   @override
   Widget build(BuildContext context) {
-    print('widget.refreshed ${widget.refreshed} ');
-    return  widget.refreshed ? _MaZoneAgentItem( agent:   _agent,) :  const MaCardLoader();
+    print('init state    ${agent?.toJson()} refreshed ${refreshed} ');
+    if(!refreshed) {
+      getAgentData();
+    } else {
+      // _agent=agent;
+    }
+    return  refreshed ? _MaZoneAgentItem( agent:   agent,) :  const MaCardLoader();
   }
 }
 
 class MissingMaZoneAgentItem extends StatelessWidget {
  
 
-  const MissingMaZoneAgentItem({
+   MissingMaZoneAgentItem({
     super.key,
     
     required this.onAgentSelected,
@@ -107,17 +105,7 @@ class MissingMaZoneAgentItem extends StatelessWidget {
   });
    final String zoneId;
   final void Function(MaUser) onAgentSelected ;
-
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return _agentCard(
-            child: ListTile(
-              // leading: const Icon(Icons.person),
-              title: const Text('No Agent Assigned') ,
-              subtitle: const Text('Please Assigns an Agent') ,
-              trailing: IconButton(icon: Icon(Icons.person_add_alt), onPressed: () {
+  openAgentSelectionModal(context){
                 
                     showModalBottomSheet<void>(
                       context: context,
@@ -133,7 +121,7 @@ class MissingMaZoneAgentItem extends StatelessWidget {
                                         Widget child;
                                         if (snapshot.hasData) {
                                           child = MaAgentSelction(
-                                            Agents: snapshot.data,
+                                            agents: snapshot.data,
                                             onSelected: (agent){
                                                 debugPrint('Selected agentId ${agent.userId}');
                                                 onAgentSelected(agent);
@@ -155,38 +143,46 @@ class MissingMaZoneAgentItem extends StatelessWidget {
                         );
                       },
                     );
-              }, ),
-            )
-    );
+              }
+  @override
+  Widget build(BuildContext context) {
     
-   
+    return _agentCard(
+            child: ListTile(
+              title: const Text('No Agent Assigned') ,
+              subtitle: const Text('Please Assigns an Agent') ,
+              trailing: IconButton(
+                  icon: Icon(Icons.person_add_alt),
+                  onPressed: (){
+                    openAgentSelectionModal(context);
+                  },
+              ),
+            )
+          );
   }
 }
 
 class MaAgentSelction extends StatelessWidget {
    const MaAgentSelction({
     super.key,
-    required this.Agents,
+    required this.agents,
     required this.onSelected,
   });
   final void Function(MaUser) onSelected ;
-  final List<MaUser>? Agents;
+  final List<MaUser>? agents;
   @override
   Widget build(BuildContext context) {
-    print(Agents.toString());
     return ListView(
-      children: Agents?.map((agent) { 
-              return ListTile(
-                leading: CircleAvatar( child: Text('AG'),),
-                title: Text('${agent?.firstname} ${agent?.lastname}') ,
-                subtitle: Text('${agent?.email}')  ,
-                onTap: (){
-                 
-                  onSelected(agent);
-                },
-            );
-            }
-    ).toList() ?? [],
+      children: agents?.map((agent) { 
+                    return ListTile(
+                      leading: CircleAvatar( child: Text('${agent?.initial}'),),
+                      title: Text('${agent?.fullname}') ,
+                      subtitle: Text('${agent?.email}')  ,
+                      onTap: (){
+                        onSelected(agent);
+                      },
+                  );
+                }).toList() ?? [],
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:x_money_manager/Backend/MA_TransactionsController.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionDetailsGetXCtrl.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Error.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/Details/MA_InZoneTab.dart';
@@ -8,11 +10,12 @@ import 'package:x_money_manager/Frontend/Views/Partials/Transaction/Details/Ma_o
 import 'package:x_money_manager/Model/MA_Transaction.dart';
     
 class MaTransactionDetailsPage extends StatelessWidget {
-
-  const MaTransactionDetailsPage({ Key? key, required this.requestId }) : super(key: key);
+  
+  MaTransactionDetailsPage({ Key? key, required this.requestId }) : super(key: key);
   final String requestId;
   @override
   Widget build(BuildContext context) {
+    // final MaTransactionDetailsProvider controller = Get.put(MaTransactionDetailsProvider());
     return WillPopScope(
 
              onWillPop: () {
@@ -29,7 +32,17 @@ class MaTransactionDetailsPage extends StatelessWidget {
                     builder: (BuildContext context, AsyncSnapshot<MaTransaction?> snapshot) {
                       Widget child;
                       if (snapshot.hasData) {
-                        child = _detailsView(request: snapshot.data);
+                        child = GetBuilder<MaTransactionDetailsProvider>(
+                          init: MaTransactionDetailsProvider(),
+                          builder: (controller){
+                              controller.transaction=snapshot.data;
+
+                              debugPrint(' controller inAgentRefreshed ${controller.inAgentRefreshed}');
+                              debugPrint(' controller outAgentRefreshed ${controller.outAgentRefreshed}');
+                              return  _detailsView();
+                            });
+                        
+                         
                       } else if (snapshot.hasError) {
                         child = Scaffold(body:MaError(snapshot: snapshot ,));
                       } else {
@@ -41,33 +54,63 @@ class MaTransactionDetailsPage extends StatelessWidget {
           );
   }
 }
-
-class _detailsView extends StatefulWidget {
+enum SampleItem { Export, Report }
+class _detailsView extends StatelessWidget {
    _detailsView({
-    super.key,  this.request
+    super.key,  
+    //this.request
   });
   MaTransaction? request;
-
-  @override
-  State<_detailsView> createState() => _detailsViewState();
-}
-
-class _detailsViewState extends State<_detailsView> {
+  final MaTransactionDetailsProvider controller = Get.find();
   bool refreshed01=false;
   bool refreshed02=false;
   @override
   Widget build(BuildContext context) {
-    var zone1= '${ widget.request?.inCountry!.name ?? 'In Zone'}';
-    var zone2= '${ widget.request?.outCountry!.name ?? 'Out Zone'}';
+    final actionsBar=<Widget>[];
 
-     print('------Details of ${widget.request.toString()}');
+    
+    request= controller.transaction;
+    var zone1= '${ request?.inCountry!.name ?? 'In Zone'}';
+    var zone2= '${ request?.outCountry!.name ?? 'Out Zone'}';
+    actionsBar.add(
+       PopupMenuButton<SampleItem>(
+        surfaceTintColor: Colors.black12,
+        offset: Offset(0, 60),
+        color: Colors.white,
+        // initialValue: selectedMenu,
+        // Callback that sets the selected popup menu item.
+        onSelected: (SampleItem item) {
+          debugPrint('selectedMenu $item');
+          // setState(() {
+          //   // selectedMenu = item;
+          // });
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+          const PopupMenuItem<SampleItem>(
+            value: SampleItem.Export,
+            child: ListTile(
+              leading: Icon(Icons.picture_as_pdf),
+              title: Text('Export')
+              ),
+          ),
+           const PopupMenuItem<SampleItem>(
+            value: SampleItem.Report,
+            child: ListTile(
+              leading: Icon(Icons.report), 
+              title: Text('Report')),
+          ),
+        ],
+        ),
+    ); 
+     print('------Details of ${request.toString()}');
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           
-          title: Text('${widget.request?.id}'),
+          title: Text('${request?.id}'),
+          actions: actionsBar,
           bottom:  TabBar(
             // isScrollable: true,
             labelColor: AppBarTheme.of(context).foregroundColor,
@@ -78,56 +121,25 @@ class _detailsViewState extends State<_detailsView> {
               ),
               Tab(
                 text: zone1,
-                icon:widget.request!.hasInAgent ?  null :Icon(Icons.error) ,
+                icon:request!.hasInAgent ?  null :Icon(Icons.error) ,
               ),
               Tab(
                 text: zone2,
-                icon:widget.request!.hasOutAgent ?  null :Icon(Icons.error) ,
+                icon:request!.hasOutAgent ?  null :Icon(Icons.error) ,
               ),
             ],
           ),
         ),
-        body:  TabBarView(
-          children: <Widget>[
-            MaDetailsTab(request: widget.request),
-            MaInZoneTab(transaction: widget.request,
-                refreshed: refreshed01,
-                onAgentRefresh:(agent){
-                    widget.request?.InZoneAgent=agent;
-                    setState(() {
-                      refreshed01=true;
-                    });
-                }),
-            MaOutZoneTab(transaction: widget.request,
-                refreshed: refreshed02,
-                onAgentRefresh:(agent){
-                  print('refreshed agent');
-                    widget.request?.outZoneAgent=agent;
-                    setState(() {
-                      refreshed02=true;
-                    });
-                }
-            ),
-          ],
+        body: TabBarView(
+            children: <Widget>[
+              MaDetailsTab(),
+              MaInZoneTab(),
+              MaOutZoneTab(),
+            ],
         ),
       ),
     );
   }
 }
 
-
-
-class _outZoneTab extends StatelessWidget {
-  const _outZoneTab({
-    super.key,
-    required this.request,
-  });
-
-  final MaTransaction? request;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('------Details of ${request?.outCountry.toString()}  ${request?.outZoneDetails.toString()}');
-  }
-}
 
