@@ -60,8 +60,10 @@ class AgentState extends GetxController{
 
   void getAgentsByPage() {
      if(isFilter){
+       print('--------------isfilter ----------');
        updateList(agentsListFilter);
      }else{
+       print('--------------isNotfilter ----------');
        updateList(agentsList);
      }
   }
@@ -91,17 +93,16 @@ class AgentState extends GetxController{
   }
 
   void filterAgents(String status){
-    if(!isFilter){
-      isFilter = true;
-      agents.clear();
-    }
+    if(!hasMore.value) hasMore.value = true;
+    if(!isFilter) isFilter = true;
+    agents.clear();
     page = 1;
     List<MaUser> agentsResult = [];
     agentsResult.addAll(agentsList);
     if(status == 'Disponible')
-      agentsResult.retainWhere((element) => element.workStatus != null);
-    if(status == 'Indisponible')
       agentsResult.retainWhere((element) => element.workStatus == null);
+    if(status == 'Indisponible')
+      agentsResult.retainWhere((element) => element.workStatus != null);
     agentsListFilter.addAll(agentsResult);
     getAgentsByPage();
   }

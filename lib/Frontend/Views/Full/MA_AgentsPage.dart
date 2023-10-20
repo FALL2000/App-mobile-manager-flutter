@@ -20,38 +20,32 @@ class MaAgentsPage extends StatelessWidget {
     });
      return Scaffold(
       body: Container(
-        child: buildList(_controller, context),
+        child: buildList(_controller),
       ),
     );
   }
 
-  Widget buildList(ScrollController _controller, BuildContext context){
-    return Obx((){
-      if(agentState.agents.length > 0){
-          return RefreshIndicator(
-            onRefresh: () => agentState.refreshAgents(),
-            child: ListView.builder(
-                controller: _controller,
-                itemCount: agentState.agents.length + 1,
-                itemBuilder: (context, index){
-                  if(index < agentState.agents.length){
-                    var item = agentState.agents[index];
-                    return AgentWidget(agent: item);
-                  }else{
-                    if(agentState.hasMore.value)
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 30),
-                        child: Center(child: CircularProgressIndicator(),),
-                      );
-                  }
-                }
-            ),
-          );
-      }else{
-          return Center(
-            child: Text('Aucun Agent', style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize),),
-          );
-      }
-    });
+  Widget buildList(ScrollController _controller){
+    return Obx(()=>
+      RefreshIndicator(
+        onRefresh: () => agentState.refreshAgents(),
+        child: ListView.builder(
+            controller: _controller,
+            itemCount: agentState.agents.length + 1,
+            itemBuilder: (context, index){
+              if(index < agentState.agents.length){
+                var item = agentState.agents[index];
+                return AgentWidget(agent: item);
+              }else{
+                if(agentState.hasMore.value)
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: Center(child: CircularProgressIndicator(),),
+                  );
+              }
+            }
+        ),
+      ),
+    );
   }
 }
