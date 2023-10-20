@@ -19,13 +19,32 @@ class _MaZoneAgentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    return ListTile(
-        leading: CircleAvatar( child: Text('AG'),),
-        title: Text('${agent?.firstname} - ${agent?.lastname}') ,
-        subtitle: Text('Agent In charge') ,
-    );
+    return _agentCard(
+            child: ListTile(
+                leading: CircleAvatar( child: Text('AG'),),
+                title: Text('${agent?.firstname} - ${agent?.lastname}') ,
+                subtitle: Text('Agent In charge') ,
+            ),
+          );
     
    
+  }
+}
+
+class _agentCard extends StatelessWidget {
+  const _agentCard({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5,
+      child: child,
+    );
   }
 }
 
@@ -93,49 +112,51 @@ class MissingMaZoneAgentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    return ListTile(
-        // leading: const Icon(Icons.person),
-        title: Text('No Agent Assigned') ,
-        subtitle: Text('Please Assigns an Agent') ,
-        trailing: IconButton(icon: Icon(Icons.person_add_alt), onPressed: () {
-          
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return SizedBox(
-                    height: 550,
-                    child: Column( 
-                      children: [
-                        Expanded(
-                          child: FutureBuilder<List<MaUser>?>(
-                                future: MaUserController.getOpenAgents(zoneId), // a previously-obtained Future<String> or null
-                                builder: (BuildContext context, AsyncSnapshot<List<MaUser>?> snapshot) {
-                                  Widget child;
-                                  if (snapshot.hasData) {
-                                    child = MaAgentSelction(
-                                      Agents: snapshot.data,
-                                      onSelected: (agent){
-                                          debugPrint('Selected agentId ${agent.userId}');
-                                          onAgentSelected(agent);
-                                          Navigator.pop(context);
+    return _agentCard(
+            child: ListTile(
+              // leading: const Icon(Icons.person),
+              title: const Text('No Agent Assigned') ,
+              subtitle: const Text('Please Assigns an Agent') ,
+              trailing: IconButton(icon: Icon(Icons.person_add_alt), onPressed: () {
+                
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          height: 550,
+                          child: Column( 
+                            children: [
+                              Expanded(
+                                child: FutureBuilder<List<MaUser>?>(
+                                      future: MaUserController.getOpenAgents(zoneId), // a previously-obtained Future<String> or null
+                                      builder: (BuildContext context, AsyncSnapshot<List<MaUser>?> snapshot) {
+                                        Widget child;
+                                        if (snapshot.hasData) {
+                                          child = MaAgentSelction(
+                                            Agents: snapshot.data,
+                                            onSelected: (agent){
+                                                debugPrint('Selected agentId ${agent.userId}');
+                                                onAgentSelected(agent);
+                                                Navigator.pop(context);
+                                            },
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          child = MaError(snapshot: snapshot ,);
+                                        } else {
+                                          child = MaSpinner();
+                                        }
+                                        return child;
                                       },
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    child = MaError(snapshot: snapshot ,);
-                                  } else {
-                                    child = MaSpinner();
-                                  }
-                                  return child;
-                                },
+                                    )
+                                
                               )
-                          
-                        )
-                      ],
-                    ),
-                  );
-                },
-              );
-        }, ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+              }, ),
+            )
     );
     
    

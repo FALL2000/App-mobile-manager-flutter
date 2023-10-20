@@ -116,10 +116,21 @@ class MaDrawerWidget extends StatelessWidget {
 
 
   Widget _buildCategory(XItem item, BuildContext context) {
-    final categoryString =item.label;
     final ThemeData theme = Theme.of(context);
     final bool isSelected= item.id == currentItem.id;
-    return GestureDetector(
+    return  _XItemWidget( item: item, theme: theme,isSelected:isSelected,
+                onTap: (){
+                  onItemTap(item);
+                    if((item.path as String).isNotEmpty ){
+                      // Navigator.pushNamedAndRemoveUntil(context, item.route, ModalRoute.withName('/'));
+                      while (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                      Navigator.pushReplacementNamed(context,item.route);
+                    }
+                },
+              );
+    /*GestureDetector(
       onTap: ()  {
         onItemTap(item);
         if((item.path as String).isNotEmpty ){
@@ -131,7 +142,7 @@ class MaDrawerWidget extends StatelessWidget {
         }
         },
       child: _XItemWidget( item: item, theme: theme,isSelected:isSelected),
-    );
+    );*/
   }
 }
 
@@ -141,18 +152,40 @@ class _XItemWidget extends StatelessWidget {
     required this.item,
     required this.theme,
     required this.isSelected,
+    required this.onTap,
   });
 
   final XItem item;
   final ThemeData theme;
   final bool isSelected;
+  final void Function() onTap;
   Color get iconColor =>  isSelected ? kShrineLight : kShrinePinkUnselected ;
   Color get textColor =>  isSelected ? kShrineLight : kShrinePinkUnselected ;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 20, left: 10),
-      child: Row(
+      padding:const  EdgeInsets.only(bottom: 0, left: 0),
+      child:Container(
+        // width: double.infinity,
+        decoration: const BoxDecoration(
+          // color:  isSelected ? kShrineLight : null,
+          // border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.secondary,),),
+        ),
+        child:ListTile(
+                hoverColor: Theme.of(context).colorScheme.background,
+                selectedColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.background,
+                splashColor: Theme.of(context).colorScheme.background,
+                leading: Icon(item.icon, color: iconColor,),
+                title: Text( item.label, style: theme.textTheme.bodyLarge?.copyWith( color: textColor, ),),
+                // trailing: isSelected ? Icon(Icons.arrow_forward, /*color: iconColor,*/) : null,
+                onTap: onTap,
+              )
+      
+      ),
+      
+      
+       /*Row(
           children: <Widget>[
             Icon(item.icon, color: iconColor,),
             SizedBox(width: 5,),
@@ -165,7 +198,7 @@ class _XItemWidget extends StatelessWidget {
                   //textAlign: TextAlign.center,
                 ),
           ],
-        ),
+        ),*/
     );
   }
 }
