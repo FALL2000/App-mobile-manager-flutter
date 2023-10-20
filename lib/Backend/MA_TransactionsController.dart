@@ -1,7 +1,7 @@
 import 'package:x_money_manager/Backend/MA_FireFunctionsController.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
-import 'package:x_money_manager/model/MA_Request.dart';
-import 'package:x_money_manager/model/MA_Response.dart';
+import 'package:x_money_manager/Model/MA_Request.dart';
+import 'package:x_money_manager/Model/MA_Response.dart';
 import 'package:x_money_manager/Utilities/MA_Constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -28,8 +28,10 @@ class MATransactionsController {
     }
     static Future<MaTransaction?> getTransactionDetails( String transactionId) async{
         var input = {
-           'action': 'GET-INFO',
-            'transfertId': transactionId
+          'action': 'GET-INFO',
+          'transaction': {
+                          'id': transactionId
+                        }
         };
         // input.update(transfertId, (value) => transfertId);
         var result= await MaFireFunctionsController.call(MaConstants.CONST_TRANS_FUNCION, input);
@@ -41,6 +43,23 @@ class MATransactionsController {
         }else{
           throw new Exception(result.message??'not found');
         }
+        
+    }
+    static Future<MaResponse> getAssignAgent( String agentId, List<String> approvalsIds) async{
+        var input = {
+          'action': 'ASSIGN-AGENT',
+          'dataList': [
+            {
+              'agentId': agentId,
+              'approvals': approvalsIds,
+            }
+          ]
+        };
+        // input.update(transfertId, (value) => transfertId);
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_APPROVALS_FUNCION, input);
+        // debugPrint(result);
+        // MaTransaction transaction=null;
+        return result;
         
     }
     /*

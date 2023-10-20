@@ -3,6 +3,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/model/MA_Zone.dart';
 import 'package:intl/intl.dart';
 enum TransactionStatus {
@@ -38,11 +40,49 @@ enum TransactionStatus {
   // bool operator <(TransactionStatus status) => keyValue < status.keyValue;
   // bool operator >(TransactionStatus status) => keyValue > status.keyValue;
 }
+enum ApprovalStatus {
+    // open('OPEN'),
+    inapproval('IN APPROVAL'),
+    inprogress('IN PROGRESS'),
+    approved('APPROVED'),
+    canceled('CANCELED'),
+    rejected('REJECTED'),
+    closedwon('CLOSED WON'),
+    error('ERROR');
+    /**
+     *  
+     * xexport enum StatusApproval  {
+    Open = 'NEW',//send to client
+    InApproval = 'IN APPROVAL',//send to client
+    InProgress = 'IN PROGRESS',//took in charge by agent 
+    Approved = 'APPROVED',
+    Rejected = 'REJECTED',
+    Canceled = 'CANCELED',
+    ClosedWon = 'CLOSED WON',
+    Error = 'ERROR'
+}
+     */
+
+  final String keyValue;
+  const  ApprovalStatus( this.keyValue);
+  // bool get isOpen=> this==TransactionStatus.open;
+  // bool get isPending=> this==TransactionStatus.inapproval;
+  bool get isClosed=> this==ApprovalStatus.canceled;
+  bool get isSuccess=> this==ApprovalStatus.closedwon;
+  bool get isInProggress=> this==ApprovalStatus.inprogress || this==ApprovalStatus.approved;
+
+  static ApprovalStatus? assignStatus(String key){
+
+    return ApprovalStatus.values.firstWhere((element) => element.keyValue==key);
+
+  }
+  // bool operator <(TransactionStatus status) => keyValue < status.keyValue;
+  // bool operator >(TransactionStatus status) => keyValue > status.keyValue;
+}
 class MaTransaction {
   String amount='0';
   String convertedAmount='0';
   String? participants='0';
-  // bool toBank=false;
   String code; //
   String? createdDate; //
   String? endDate; //
@@ -50,39 +90,32 @@ class MaTransaction {
   String? transactionId ;//
   String? comment ;//
   String? reason ;//
-  // userReceiver? receiptInfo;
   List<approvalTransaction>? approvals;
   gapInfo? gap;
   MaCountry? inCountry;
-  // MaCity? incity;
-  // MaCity? outcity;
   MaCountry? outCountry;
   MaTransaction({         required  this.amount, required this.code, 
                           this.gap, this.status, this.transactionId,
                           this.createdDate, this.endDate,
                           this.comment, this.reason,
                           this.approvals,
-                        // required this.toBank,
-                        // this.receiptInfo,
+                          required this.convertedAmount,
                         this.inCountry, 
                         this.participants,
                         this.outCountry, 
-                        // this.outcity,
                         }
             );
   get id => transactionId ?? code;
   set id(value)=> transactionId=value;
   get from=> '${inCountry?.name}';
   get to=> '${outCountry?.name}';
-  // String get approvalId=> currentApproval?.id ??'';
   bool get isNew=> (transactionId!=null) ? false : true;
-  // bool get isEditable=> status!.isOpen ;
   bool get isFinal=> status!.isClosed ||  status!.isSuccess;
-  // bool get isPending=> status!.isPending && hasApproval;
-  // bool get isDeletable=> !status!.isInProggress && !isPending && !status!.isClosed;
-  // // bool get isDeletable=> status!.isOpen || status!.isSuccess;
-  // bool get hasApproval=> approvalId.isNotEmpty;
-  String get formattedamount=> NumberFormat.simpleCurrency(name: (currencycode )).format(double.parse(amount??'0'));
+  MaUser? InZoneAgent;
+  MaUser? outZoneAgent;
+  String get formattedamount=> NumberFormat.simpleCurrency(name: (inCurrencycode )).format(double.parse(amount??'0'));
+  String get formattedOutAmount=> NumberFormat.simpleCurrency(name: (currencycode )).format(double.parse(convertedAmount??'0'));
+  String get formattedgap=> NumberFormat.simpleCurrency(name: (gapCurrencycode )).format(double.parse(gap!.amount??'0'));
   // String get formattedfees=> NumberFormat.simpleCurrency(name: (currencycode )).format(double.parse(currentApproval?.fees ?? '0'));
   String get formattedDate {
       try {
@@ -92,23 +125,30 @@ class MaTransaction {
           } 
       return '';
   }
-  // String get formattedTotal {
-  //     try {
-  //           double fees= double.parse(currentApproval?.fees ?? '0');
-  //           double _amount= double.parse(amount);
-  //           return NumberFormat.simpleCurrency(name: (currencycode )).format(_amount+fees);
-  //         } catch (e) {
-  //           print(e); 
-  //         } 
-  //     return '';
-  // }
-    
-  // bool get isClosed=> status==TransactionStatus.canceled;
-  // bool get isSuccess=> status==TransactionStatus.closedwon;
-  // bool get isInProggress=> status==TransactionStatus.inprogress || status==TransactionStatus.approved;
+  List<approvalTransaction> get InZoneDetails {
+      return approvalsByZone(inCountry?.id);
+  }
+  List<approvalTransaction> get outZoneDetails {
+      return approvalsByZone(outCountry?.id);
+  }
+
+  List<approvalTransaction>  approvalsByZone(String? zoneId) {
+      try {
+            return approvals?.where((element) => 
+              element.inCountry?.id == zoneId 
+            ).toList() ?? []; 
+          } catch (e) {
+            print(e); 
+          } 
+      return [];
+  }
+  bool get hasInAgent=> (InZoneAgent!=null) ? true : false;
+  bool get hasOutAgent=> (outZoneAgent!=null) ? true : false;
   get currencycode=> outCountry!.currencyCode ?? '';
+  get inCurrencycode=> inCountry!.currencyCode ?? '';
+  get gapCurrencycode=> gap!.currency ?? '';
   @override
-  String toString() => "(id=$id, code=$code, amount=$amount, endDate=$endDate, status=$status, createdDate=$createdDate,   gap=${gap.toString()} , inCountry=${inCountry.toString()}, outCountry=${outCountry.toString()} )";
+  String toString() => "(id=$id, code=$code, amount=$amount, endDate=$endDate, status=$status, createdDate=$createdDate,   gap=${gap.toString()} , inCountry=${inCountry.toString()}, outCountry=${outCountry.toString()} , approvals=${approvals.toString()} )";
 
 
  factory MaTransaction.fromJson(Map<Object?, Object?> json){
@@ -127,10 +167,17 @@ class MaTransaction {
       //     _seconds=_seconds*1000;  
       //     date = new DateTime.fromMillisecondsSinceEpoch(_seconds).toString();  
       // }
-      
-      return MaTransaction(
+      List<approvalTransaction> _approvals = [];
 
-        amount: (additionalInfo['convertedAmount']?.toString() )?? '0',
+      if(json['approvals']!=null){
+        for (var element in json['approvals'] as List<dynamic>) {
+          _approvals.add(approvalTransaction.buildJson(element));
+        }
+      }
+      var trs= MaTransaction(
+
+        amount: (additionalInfo['totalAmount']?.toString() )?? '0',
+        convertedAmount: (additionalInfo['convertedAmount']?.toString() )?? '0',
         participants: (additionalInfo['participants']?.toString() )?? '0',
         code: util.toSString(json['code']),
         // toBank: json['to_bank'] as bool,
@@ -140,13 +187,17 @@ class MaTransaction {
         endDate: util.toSString(json['endDate']),//date,
         inCountry: MaCountry.fromJson(inzone),
         // incity: MaCity.fromJson(inzone),
+        approvals: _approvals,
         outCountry:  MaCountry.fromJson(outzone),
         // receiptInfo: userReceiver.fromJson(jsonDecode( jsonEncode(json['receiver'] ?? {}))),
         transactionId: util.toSString(json['id']),
         status: TransactionStatus.assignStatus(util.toSString(json['status'])),
       );
 
+    trs.InZoneAgent= trs.InZoneDetails.firstWhereOrNull((element) => element.agentId?.isNotEmpty ?? false)?.agent;
+    trs.outZoneAgent= trs.outZoneDetails.firstWhereOrNull((element) => element.agentId?.isNotEmpty ?? false)?.agent;
 
+      return trs;
 
 
 
@@ -207,6 +258,7 @@ class gapInfo {
   String? amount='';
   String? currency='';
   gapInfo({ this.amount,this.currency } );
+  String get formattedamount=> NumberFormat.simpleCurrency(name: (currency )).format(double.parse(amount??'0'));
   @override
   String toString() => "(amount=$amount,currency=$currency )";
   factory gapInfo.fromJson(Map<Object?, Object?> json){
@@ -229,7 +281,28 @@ class approvalTransaction {
   String? id='';
   String? startDate='';
   String? fees='';
-  approvalTransaction({ this.id,this.startDate,this.fees, } );
+  String? amount='';
+  String? ownerId='';
+  String? agentId='';
+  String? requestId='';
+  ApprovalStatus? status; //
+  
+  MaUser? owner;
+  MaUser? agent;
+  MaCountry? inCountry;
+  MaCity? incity;
+  MaCity? outcity;
+  MaCountry? outCountry;
+  approvalTransaction({ this.id,this.startDate,this.fees,this.inCountry,this.incity,this.outcity
+          ,this.outCountry
+          ,this.amount
+          ,this.owner
+          ,this.agent
+          ,this.status
+          ,this.ownerId
+          ,this.agentId
+          ,this.requestId
+  } );
   String get formattedDate {
       try {
             return DateFormat.yMMMEd().add_jm().format(DateTime.parse(startDate??'')); 
@@ -238,8 +311,23 @@ class approvalTransaction {
           } 
       return '';
   }
+  String get formattedamount=> NumberFormat.simpleCurrency(name: (currencycode )).format(double.parse(amount??'0'));
+  String get formattedfees=> NumberFormat.simpleCurrency(name: (currencycode )).format(double.parse(fees ?? '0'));
+  
+  String get formattedTotal {
+      try {
+            double fees= double.parse(this.fees ?? '0');
+            double _amount= double.parse(this.amount ?? '0');
+            return NumberFormat.simpleCurrency(name: (currencycode )).format(_amount+fees);
+          } catch (e) {
+            print(e); 
+          } 
+      return '';
+  }
+  get currencycode=> inCountry!.currencyCode ?? '';
   @override
-  String toString() => "(id=$id,startDate=$startDate, fees=$fees )";
+  String toString() => '(id=$id,startDate=$startDate,status=$status, fees=$fees, amount=$amount, ownerId=$ownerId,  owner=${owner?.toJson()}, agentId=$agentId,  agent=${agent?.toJson()}, '
+                              +'requestId=$requestId, inCountry=$inCountry,  inCountry=${inCountry.toString()}, outCountry=${outCountry.toString()} )';
   factory approvalTransaction.fromJson(Map<Object?, Object?> json){
       return approvalTransaction(
         id :util.toSString(json['id']),// json['id'] as bool,
@@ -247,6 +335,31 @@ class approvalTransaction {
         fees : util.toSString(json['fees'])
       );
   } 
+  factory approvalTransaction.buildJson(Map<Object?, Object?> json){
+    Map<Object?, Object?> transfert= jsonDecode( jsonEncode(json['transfert']??{}));
+    Map<Object?, Object?> owner= jsonDecode( jsonEncode(transfert['owner']??{}));
+    Map<Object?, Object?> agent= jsonDecode( jsonEncode(transfert['agent']??{}));
+      var _app= approvalTransaction(
+        id :util.toSString(json['id']),// json['id'] as bool,
+        startDate : util.toSString(json['startDate']),
+        fees : util.toSString(json['fees']),
+        amount : util.toSString(transfert['amount']),
+        ownerId : util.toSString(transfert['ownerId']),
+        agentId : util.toSString(json['agentId']),
+        owner: MaUser.BuilfromJson(owner),
+        agent: MaUser.BuilfromJson(agent),
+        requestId : util.toSString(transfert['id']),
+        inCountry: MaCountry(id: util.toSString(transfert['inZoneId']), name: util.toSString(transfert['inZoneName']), currencyCode: util.toSString(transfert['inZoneCurrency'])),
+        // incity: MaCity()
+        // outcity: 
+        status: ApprovalStatus.assignStatus(util.toSString(json['status'])),
+        outCountry: MaCountry(id: util.toSString(transfert['outZoneId']), name: util.toSString(transfert['outZoneName']), currencyCode: util.toSString(transfert['outZoneCurrency'])),
+      );
+      _app.owner?.userId= util.toSString(transfert['ownerId']);
+      _app.agent?.userId= _app.agentId;
+      return _app;
+  } 
+
 
   Map<String, dynamic> toJson() => {
         'id': id,

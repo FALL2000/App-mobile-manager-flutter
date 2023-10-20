@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:x_money_manager/model/MA_Response.dart';
+import 'package:x_money_manager/Model/MA_Response.dart';
 class MaFireFunctionsController {
     static Future<MaResponse> call(String funcName, dynamic data) async{
       print('@@@@=====> calling firebase $funcName');
