@@ -83,7 +83,7 @@ class AgentWidget extends StatelessWidget {
       return Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left:25,top:10,right:10,bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -107,7 +107,7 @@ class AgentWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left:10,top:0,right:10,bottom: 10),
+            padding: EdgeInsets.only(left:25,top:0,right:10,bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: agent.workStatus == null ? [
