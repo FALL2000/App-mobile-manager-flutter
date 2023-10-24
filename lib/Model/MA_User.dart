@@ -45,9 +45,12 @@ class MaUser {
     String? createdDate;
     String? countryId;
     String? cityId;
+    String? workload;
+    String? flag;
     Map<String, dynamic>? workStatus;
 
     String get fullname=> '${firstname}${ lastname!.isNotEmpty ? ' '+lastname! : ''}';
+    String get workload0=> workload?.isNotEmpty ??false ? '$workload' : '0';
     String get initial{
      String titleName = '';
      try {
@@ -65,7 +68,9 @@ class MaUser {
    }
   
   MaUser({ required this.firstname, this.lastname, this.phone, this.gender, required this.email, 
-            this.password, this.userId, this.createdDate, this.countryId, this.role,
+            this.password, this.userId, this.createdDate, this.countryId, 
+            this.role,
+            this.workload,this.flag,
             this.cityId, this.workStatus});
 
 
@@ -75,18 +80,20 @@ class MaUser {
       print(json);
       Map<Object?, Object?> zone= jsonDecode( jsonEncode(json['cityObj']??{}));
       Map<String, dynamic>? workStatus = json['workStatus']!=null ? jsonDecode( jsonEncode(json['workStatus'])) : null;
-      print('-----------------workStatus');
-      print(workStatus);
+      print('-----------------flag');
+      print(util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['flag']));
       return MaUser(
         firstname: util.toSString(json['firstname']),
         lastname: util.toSString(json['lastname']),
         phone: util.toSString(json['phone']),
         email: util.toSString(json['email']),
         userId: util.toSString(json['userId']),
+        workload: util.toSString(json['workload']),
         workStatus: workStatus,
         createdDate: util.toSString(json['createdDate']),
         countryId: json['country'] != null ? util.toSString(json['country']) : util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
         cityId: util.toSString(zone['id']),
+        flag: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['flag']),
         gender: Gender.assignGender(util.toSString(json['gender'])),
         role: Role.assignRole(util.toSString(json['role'])),
       );
@@ -108,6 +115,8 @@ class MaUser {
         phone: util.toSString(json['phone']),
         email: util.toSString(json['email']),
         userId: util.toSString(json['userId']),
+        flag: util.toSString(json['flag']),
+        workload: util.toSString(json['workload']),
         createdDate: util.toSString(json['createdDate']),
         countryId: util.toSString(json['countryId']),
         cityId: util.toSString(json['cityId']),
@@ -133,6 +142,7 @@ class MaUser {
         'createdDate': createdDate,
         'countryId': countryId,
         'cityId': cityId,
+        'flag': flag,
       };
 
       Map<String, dynamic> toSave(){
