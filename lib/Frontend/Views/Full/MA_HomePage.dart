@@ -45,7 +45,7 @@ class MaHomePage extends StatelessWidget {
                     ),
                   ),
                   Container(
-                  width: 700,
+                  width: 300,
                   height: 70,
                   color: Colors.blue,
                 ),
