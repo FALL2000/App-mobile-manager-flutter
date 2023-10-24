@@ -60,7 +60,7 @@ class MaUserController {
         List<MaUser> _agents=[];
         if (!result.error){
           for (var element in result.body) {
-            _agents.add(MaUser.fromJson(element));
+            _agents.add(MaUser.BuilfromJson(element));
           }
 
         }

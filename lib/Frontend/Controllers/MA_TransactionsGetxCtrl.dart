@@ -56,7 +56,7 @@ class TransactionsProvider extends GetxController{
   }
   Future< List<MaTransaction>> init() async {
     debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize hasTransactions== $hasTransactions');
-    if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
+    // if(hasTransactions) return Transactions;  // to uncomment in order to alw\ays  have refreshed data
     var __transactions=  await MATransactionsController.getAlltransactions();
     _transactions=(__transactions);
     // _transactions.addAll(__transactions);

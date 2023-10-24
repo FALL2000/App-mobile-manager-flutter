@@ -45,12 +45,13 @@ class MATransactionsController {
         }
         
     }
-    static Future<MaResponse> getAssignAgent( String agentId, List<String> approvalsIds) async{
+    static Future<MaResponse> getAssignAgent( String agentId,String transactioncode, List<String> approvalsIds) async{
         var input = {
           'action': 'ASSIGN-AGENT',
           'dataList': [
             {
               'agentId': agentId,
+              'transactionCode': transactioncode,
               'approvals': approvalsIds,
             }
           ]

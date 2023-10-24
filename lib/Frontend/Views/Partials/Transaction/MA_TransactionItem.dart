@@ -43,7 +43,7 @@ class MaTransactionItem extends StatelessWidget {
             ),
           ];
 
-          if(transaction.status!.isInProggress )
+          if(transaction.status?.isInProggress ?? false )
           {
             // headers.add(
             //     // Padding(

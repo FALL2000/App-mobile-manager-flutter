@@ -57,7 +57,7 @@ class _MaZoneDetailsWidgetState extends State<MaZoneDetailsWidget> {
           return app.id ?? '';
     }).toList() ?? [];
     debugPrint('Selected agentId $agentId     approvalsIds $approvalsIds');
-    _response=await MATransactionsController.getAssignAgent(agentId, approvalsIds);
+    _response=await MATransactionsController.getAssignAgent(agentId,widget.transactionId, approvalsIds);
     debugPrint(' approvalsIds ${this.toString()}');
   }
 

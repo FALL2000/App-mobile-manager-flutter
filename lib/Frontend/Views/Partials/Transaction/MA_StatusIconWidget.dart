@@ -13,7 +13,9 @@ class MAStatusIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var _icon=Icons.do_not_disturb;
     var _color=Colors.black;
+    print('_status ---------------- $_status');
     var _config= MaStatusConfig.statusConfig0[_status];
+     print(MaStatusConfig.statusConfig0);
     var _label='';
     if (_config!=null) {
         _icon= _config.icon;

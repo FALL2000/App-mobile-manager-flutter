@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:x_money_manager/Backend/MA_UserController.dart';
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
@@ -83,6 +84,9 @@ class MaLoginController {
         }
       }
 }
-signOut() async{FirebaseAuth.instance.signOut();
+signOut() async{
+    await FirebaseAuth.instance.signOut();
     await MaLocalStore.logOut();
+    await Get.deleteAll();
+
 }

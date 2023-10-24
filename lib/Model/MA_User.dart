@@ -74,12 +74,16 @@ class MaUser {
       print('@@@@@@@@@@@@++++++');
       print(json);
       Map<Object?, Object?> zone= jsonDecode( jsonEncode(json['cityObj']??{}));
+      Map<String, dynamic>? workStatus = json['workStatus']!=null ? jsonDecode( jsonEncode(json['workStatus'])) : null;
+      print('-----------------workStatus');
+      print(workStatus);
       return MaUser(
         firstname: util.toSString(json['firstname']),
         lastname: util.toSString(json['lastname']),
         phone: util.toSString(json['phone']),
         email: util.toSString(json['email']),
         userId: util.toSString(json['userId']),
+        workStatus: workStatus,
         createdDate: util.toSString(json['createdDate']),
         countryId: json['country'] != null ? util.toSString(json['country']) : util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['id']),
         cityId: util.toSString(zone['id']),

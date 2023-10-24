@@ -13,6 +13,7 @@ enum TransactionStatus {
     inprogress('IN PROGRESS'),
     approved('APPROVED'),
     canceled('CANCELED'),
+    queued('QUEUED'),
     // rejected('REJECTED'),
     closedwon('CLOSED');
     /**
@@ -34,7 +35,7 @@ enum TransactionStatus {
 
   static TransactionStatus? assignStatus(String key){
 
-    return TransactionStatus.values.firstWhere((element) => element.keyValue==key);
+    return TransactionStatus.values.firstWhereOrNull((element) => element.keyValue==key);
 
   }
   // bool operator <(TransactionStatus status) => keyValue < status.keyValue;
@@ -73,7 +74,7 @@ enum ApprovalStatus {
 
   static ApprovalStatus? assignStatus(String key){
 
-    return ApprovalStatus.values.firstWhere((element) => element.keyValue==key);
+    return ApprovalStatus.values.firstWhereOrNull((element) => element.keyValue==key);
 
   }
   // bool operator <(TransactionStatus status) => keyValue < status.keyValue;

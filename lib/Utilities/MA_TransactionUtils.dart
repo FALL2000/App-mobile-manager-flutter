@@ -6,7 +6,8 @@ class MaStatusConfig {
     final IconData icon;
     final Color color;
     const  MaStatusConfig(this.key,  {required this.icon, required this.color, required this.label});
-
+@override
+  String toString() => "(label=$label,key=$key,icon=$icon )";
 static const openConfig =MaStatusConfig('OPEN',
             icon:Icons.donut_large,
             color:Colors.blue,
@@ -32,6 +33,11 @@ static const openConfig =MaStatusConfig('OPEN',
       color:Colors.red,
       label:'Cancelled',
     );
+  static const queudConfig = MaStatusConfig('QUEUED',
+      icon:Icons.warning,
+      color:Colors.orange,
+      label:'Queued',
+    );
   static const closeConfig = MaStatusConfig('CLOSED',
       icon:Icons.task_alt,
       color:Colors.green,
@@ -44,6 +50,7 @@ static const openConfig =MaStatusConfig('OPEN',
     'APPROVED':approvedConfig,
     'CANCELED':cancelConfig,
     'CLOSED':closeConfig,
+    'QUEUED':queudConfig,
   };
   static final Map<String,MaStatusConfig>  statusApprovalConfig0={
     'OPEN': openConfig,
@@ -53,6 +60,7 @@ static const openConfig =MaStatusConfig('OPEN',
     'CANCELED':cancelConfig,
     'REJECTED':cancelConfig,
     'CLOSED':closeConfig,
+    'QUEUED':queudConfig,
   };
   static final List<MaStatusConfig> filterStatues=[
     openConfig,approvedConfig,progressConfig,closeConfig,cancelConfig

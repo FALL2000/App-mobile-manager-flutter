@@ -57,14 +57,14 @@ class AgentWidget extends StatelessWidget {
   }
 
   Widget _listTransaction(){
-    List<String> transactions = agent.workStatus?['transactions'] as List<String>;
+    List<dynamic> transactions = agent.workStatus?['transactions'] ;//as List<String>;
     var listWidget = transactions.map((trans) =>
         GestureDetector(
           onTap: () {
 
           },
           child: Text(
-            trans,
+            trans as String,
             style: TextStyle(
               decoration: TextDecoration.underline,
               color: Colors.blue,
