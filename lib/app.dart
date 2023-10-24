@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_agentSearchController.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_HomePage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_SearchPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/login.dart';
@@ -62,8 +63,26 @@ class _MoneyAppState extends State<MoneyApp> {
       '/': (BuildContext context) => Backdrop(
               currentXitem: _curentItem,
               onItemTap: onXItemtap,
-              frontLayer: HomePage(),
-              frontTitle: Text(items.homeItem.label),
+              frontLayer: const MaHomePage(),
+              frontTitle: const Text(''),
+              frontLeading: Icon(items.homeItem.icon),
+              buildBarActions:(BuildContext context) {
+                    return <Widget>[
+                      IconButton(
+                        icon: const Icon(
+                          Icons.person,
+                          semanticLabel: 'profile',
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage()),
+                          );
+                        },
+                      )
+                    ];
+                  }
           ),
       '/Transactions': (BuildContext context) => Backdrop(
               currentXitem: _curentItem,

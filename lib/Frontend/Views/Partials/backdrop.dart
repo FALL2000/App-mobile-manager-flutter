@@ -9,11 +9,13 @@ class Backdrop extends StatefulWidget {
   final XItem currentXitem;
   final Widget frontLayer;
   final Widget frontTitle;
+  final Widget? frontLeading;
   final List<Widget> Function(BuildContext context)? buildBarActions ;
   const Backdrop({
     required this.currentXitem,
     required this.frontLayer,
     required this.frontTitle,
+    this.frontLeading,
     required this.onItemTap,
     this.buildBarActions,
     Key? key,
@@ -26,7 +28,7 @@ class Backdrop extends StatefulWidget {
 
 class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin {
   var ctime;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -47,9 +49,17 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       elevation: 0.0,
       titleSpacing: 0.0,
       title: widget.frontTitle,
+      leading: widget.frontLeading !=null ? GestureDetector(
+                                                    onTap: () {
+                                                      _scaffoldKey.currentState?.openDrawer();
+                                                    },
+                                                    child: widget.frontLeading ?? const Icon(Icons.bar_chart),
+                                                )
+                                              : null,
       actions: widget.buildBarActions!=null ? widget.buildBarActions!(context) : [],
     );
     return Scaffold(
+            key: _scaffoldKey,
             appBar: appBar,
             drawer: MaDrawerWidget(onItemTap:widget.onItemTap, currentItem: widget.currentXitem),
             body: WillPopScope(
