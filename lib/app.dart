@@ -89,6 +89,7 @@ class _MoneyAppState extends State<MoneyApp> {
               onItemTap: onXItemtap,
               frontLayer: MaTransactionsPage(),
               frontTitle: Text(items.transItem.label),
+              frontLeading: Icon(items.transItem.icon),
               buildBarActions:(BuildContext context) {
                     return <Widget>[
                       const MATransactionSearchIcon(),
@@ -101,6 +102,7 @@ class _MoneyAppState extends State<MoneyApp> {
               onItemTap: onXItemtap,
               frontLayer: MaAgentsPage(),
               frontTitle: Text(items.agentItem.label),
+              frontLeading: Icon(items.agentItem.icon),
               buildBarActions:(BuildContext context) {
                     return <Widget>[
                       IconButton(
@@ -120,6 +122,7 @@ class _MoneyAppState extends State<MoneyApp> {
               currentXitem: _curentItem,
               onItemTap: onXItemtap,
               frontLayer: Placeholder(),
+              frontLeading: Icon(items.settingsItem.icon),
               frontTitle: Text(items.settingsItem.label),
           ),
     };
