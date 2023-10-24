@@ -8,10 +8,14 @@ import '../../Model/MA_User.dart';
 class AgentState extends GetxController{
   var agents = <MaUser>[].obs;
   var agentsSearch = <MaUser>[].obs;
+  var agentStatus = <String>[].obs;
   var hasMore = true.obs;
-  bool isFilter = false;
+  RxBool isFilter = false.obs;
+  RxBool isFinish = false.obs;
   int page = 1;
   final limit = 15;
+  bool isDispo = false;
+  bool isIndispo = false;
   List<MaUser> agentsList = [];
   List<MaUser> agentsListFilter = [];
 
@@ -24,10 +28,11 @@ class AgentState extends GetxController{
 
   Future<void> refreshAgents() async {
     agents.clear();
-    agentsList = await _getAgents();
+    // agentsList = await _getAgents();
     page = 1;
     hasMore.value = true;
-    // await Future.delayed(Duration(seconds: 2));
+    isFinish.value = false;
+    await Future.delayed(Duration(seconds: 2));
     getAgentsByPage();
   }
 
@@ -37,6 +42,7 @@ class AgentState extends GetxController{
     agents.clear();
     page = 1;
     hasMore.value = true;
+    isFinish.value = false;
     super.onClose();
   }
 
@@ -49,8 +55,8 @@ class AgentState extends GetxController{
       List<MaUser> agentsResult = [];
       agentsResult.addAll(agentsList);
       agentsResult.retainWhere((element) =>
-      element.lastname == null ? element.firstname.contains(searchTerm) :
-      element.firstname.contains(searchTerm) || (element.lastname as String).contains(searchTerm));
+      element.lastname == null ? element.firstname.toUpperCase().contains(searchTerm.toUpperCase()) :
+      element.firstname.toUpperCase().contains(searchTerm.toUpperCase()) || (element.lastname as String).toUpperCase().contains(searchTerm.toUpperCase()));
       agentsSearch.clear();
       agentsSearch.addAll(agentsResult);
     }else{
@@ -60,13 +66,14 @@ class AgentState extends GetxController{
   }
 
   void getAgentsByPage() {
-     if(isFilter){
+     if(isFilter.value){
        print('--------------isfilter ----------');
        updateList(agentsListFilter);
      }else{
        print('--------------isNotfilter ----------');
        updateList(agentsList);
      }
+     if(!isFinish.value) isFinish.value = true;
   }
 
   void updateList(List<MaUser> listOfAgents){
@@ -95,16 +102,46 @@ class AgentState extends GetxController{
 
   void filterAgents(String status){
     if(!hasMore.value) hasMore.value = true;
-    if(!isFilter) isFilter = true;
+    if(!isFilter.value) isFilter.value = true;
+    isFinish.value = false;
     agents.clear();
     page = 1;
-    List<MaUser> agentsResult = [];
-    agentsResult.addAll(agentsList);
-    if(status == 'Disponible')
-      agentsResult.retainWhere((element) => element.workStatus == null);
-    if(status == 'Indisponible')
-      agentsResult.retainWhere((element) => element.workStatus != null);
-    agentsListFilter.addAll(agentsResult);
+    if((status == 'Disponible' && !isDispo) || (status == 'Indisponible' && !isIndispo)){
+      List<MaUser> agentsResult = [];
+      agentsResult.addAll(agentsList);
+      if(status == 'Disponible'){
+        agentsResult.retainWhere((element) => element.workStatus == null);
+        agentStatus.add(status);
+        isDispo = true;
+      }
+      if(status == 'Indisponible'){
+        agentsResult.retainWhere((element) => element.workStatus != null);
+        agentStatus.add(status);
+        isIndispo = true;
+      }
+      agentsListFilter.addAll(agentsResult);
+    }
+    getAgentsByPage();
+  }
+
+  void removeStatusInFilter(String status){
+    if(!hasMore.value) hasMore.value = true;
+    isFinish.value = false;
+    agents.clear();
+    page = 1;
+    if(status == 'Disponible'){
+       agentsListFilter.removeWhere((element) => element.workStatus == null);
+       agentStatus.remove(status);
+       isDispo = false;
+    }
+    if(status == 'Indisponible'){
+      agentsListFilter.removeWhere((element) => element.workStatus != null);
+      agentStatus.remove(status);
+      isIndispo = false;
+    }
+    if(!isDispo && !isIndispo){
+      isFilter.value = false;
+    }
     getAgentsByPage();
   }
 }

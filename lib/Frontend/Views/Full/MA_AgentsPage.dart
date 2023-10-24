@@ -10,6 +10,7 @@ class MaAgentsPage extends StatelessWidget {
   MaAgentsPage({ Key? key }) : super(key: key);
   final AgentState agentState = Get.put(AgentState());
   final _controller = ScrollController();
+  //final List<String> agentStatus = ['Disponible', 'Indisponible'];
 
   @override
   Widget build(BuildContext context){
@@ -19,33 +20,106 @@ class MaAgentsPage extends StatelessWidget {
       }
     });
      return Scaffold(
-      body: Container(
-        child: buildList(_controller),
+      body: Column(
+          children: [
+            _chipVisibility(),
+            Expanded(
+              child: buildList(_controller, context),
+            ),
+          ]
       ),
     );
   }
 
-  Widget buildList(ScrollController _controller){
-    return Obx(()=>
-      RefreshIndicator(
-        onRefresh: () => agentState.refreshAgents(),
-        child: ListView.builder(
-            controller: _controller,
-            itemCount: agentState.agents.length + 1,
-            itemBuilder: (context, index){
-              if(index < agentState.agents.length){
-                var item = agentState.agents[index];
-                return AgentWidget(agent: item);
-              }else{
-                if(agentState.hasMore.value)
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Center(child: CircularProgressIndicator(),),
-                  );
-              }
-            }
-        ),
-      ),
+  Widget buildList(ScrollController _controller, BuildContext context){
+    return Obx(() {
+      if(agentState.isFinish.value){
+        if(agentState.agents.length > 0){
+          return RefreshIndicator(
+            onRefresh: () => agentState.refreshAgents(),
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              controller: _controller,
+              itemCount: agentState.agents.length + 1,
+              itemBuilder: (context, index) {
+                if (index < agentState.agents.length) {
+                  var item = agentState.agents[index];
+                  return AgentWidget(agent: item);
+                } else {
+                  if (agentState.hasMore.value)
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30),
+                      child: Center(child: CircularProgressIndicator(),),
+                    );
+                }
+              },
+            ),
+          );
+        }else{
+          return Center(
+            child: Text('Aucun Agent', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize)),
+          );
+        }
+      }else{
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 30),
+          child: Center(child: CircularProgressIndicator(),),
+        );
+      }
+    });
+  }
+
+  Widget _chipVisibility() {
+    return Obx(() {
+      final bool isFilter = agentState.isFilter.value;
+      return isFilter
+          ? Visibility(
+        child: _buildChipList(),
+        visible: true,
+      )
+          : Visibility(
+        child: _buildChipList(),
+        visible: false,
+      );
+    });
+  }
+
+  Widget _buildChipList(){
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 7),
+        height: 40,
+        child: ListView(
+            reverse: true,
+            scrollDirection : Axis.horizontal,
+            children: _buildElement(),
+        )
     );
+  }
+
+  List<Widget> _buildElement(){
+    return agentState.agentStatus.map((e) =>
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Dismissible(
+                direction : DismissDirection.vertical,
+                onDismissed: (dir){
+                    agentState.removeStatusInFilter(e);
+                },
+                key: Key(e) ,
+                child: Chip(
+                  elevation: 0.9,
+                  backgroundColor: e == 'Disponible'? Colors.green:Colors.red,
+                  labelPadding: const EdgeInsets.symmetric(vertical: 2),
+                  label:  Text(e, style:  TextStyle(color: Colors.white),),
+                  deleteIcon:const  Icon(Icons.close),
+                  deleteIconColor: Colors.white,
+                  onDeleted: () {
+                    agentState.removeStatusInFilter(e);
+                  },
+                )
+            )
+        )
+    ).toList();
   }
 }
