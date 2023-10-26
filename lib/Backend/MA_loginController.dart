@@ -84,9 +84,11 @@ class MaLoginController {
         }
       }
 }
-signOut() async{
+Future<void> signOut() async{
+  print('------------signOut---START-----------');
     await FirebaseAuth.instance.signOut();
     await MaLocalStore.logOut();
     await Get.deleteAll();
+    print('------------signOut-----------');
 
 }

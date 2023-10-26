@@ -14,12 +14,16 @@ class HomePage extends StatelessWidget {
           'home'
         ),
         ElevatedButton(onPressed: () async{
-
+                print('------------signOut onPressed---START-----------');
                 await signOut();
+                print('------------signOut onPressed---NAVIGATE START-----------');
                 while (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
                 Navigator.pushNamed(context, '/login');
+                print('------------signOut onPressed---NAVIGATE END-----------');
+                
+                print('------------signOut onPressed---END-----------');
           }, child: Text('logout'))
         ]
       ),

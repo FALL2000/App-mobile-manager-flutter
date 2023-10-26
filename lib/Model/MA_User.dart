@@ -143,6 +143,7 @@ class MaUser {
         'countryId': countryId,
         'cityId': cityId,
         'flag': flag,
+        'workload': workload,
       };
 
       Map<String, dynamic> toSave(){

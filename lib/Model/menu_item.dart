@@ -35,6 +35,9 @@ class XItem {
   @override
   String toString() => "$name (id=$id)";
 }
+
+
+
 const XItem _homeItem=XItem(
         id: 0,
         name: 'home',
@@ -47,21 +50,21 @@ const XItem _transItem=XItem(
         name: 'Transactions',
         label: 'Transactions',
         path: '/Transactions',
-        icon:  Icons.share,
+        icon:  Icons.monetization_on,
       );
 const XItem _agentItem=XItem(
         id: 2,
         name: 'Agents',
         label: 'Agents',
         path: '/Agents',
-        icon:  Icons.people,
+        icon:  Icons.group,
       );
 const XItem _settingsItem=XItem(
         id: 3,
         name: 'Settings',
         label: 'Settings',
         path: '/Settings',
-        icon:  Icons.settings,
+        icon:  Icons.settings_suggest_outlined,
       
       );
 class items {
