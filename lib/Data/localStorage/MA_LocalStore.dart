@@ -7,15 +7,17 @@ class MaLocalStore {
     static  Future<SharedPreferences> _prefs  = SharedPreferences.getInstance();
     static SharedPreferences? prefs;
 
-    static init() async{
+    static  Future<void> init() async{
         prefs ??= await _prefs; // if (prefs == null) await _prefs;
+         print('------------SharedPreferences init-----------');
+         print(prefs?.getKeys());
     }
 
-    static storeData(String key, dynamic data,) async{
+    static  Future<void> storeData(String key, dynamic data,) async{
         init();
         await prefs?.setString(key, jsonEncode(data));
     }
-    static storeUser(MaUser user) async{
+    static  Future<void> storeUser(MaUser user) async{
         init();
         await prefs?.setString('localUser', jsonEncode(user));
         await prefs?.setBool('hasLocalUser', user.userId?.isNotEmpty ?? false);
@@ -39,10 +41,15 @@ class MaLocalStore {
         
         return user;
     }
-    static logOut() async{
-        init();
+    static Future<void> logOut() async{
+        print('------------clearing all localStorage---START-----------');
+        await init();
+        
         await prefs?.remove('hasLocalUser');
         await prefs?.remove('localUser');
+         print('------------SharedPreferences logOut-----------');
+         print(prefs?.getKeys());
+        print('------------clearing all localStorage---END-----------');
     }
 
 

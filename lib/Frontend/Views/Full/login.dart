@@ -247,7 +247,7 @@ class _loginPageState extends State<_loginPage> {
           if (_response.error){
               maShowSnackBar(context: context, message: _response.message, error: true);
           }else{
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/');
           } 
   }
   Future<void> _handleRecover(BuildContext context) async {

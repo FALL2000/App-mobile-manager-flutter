@@ -19,7 +19,7 @@ class MaLoginController {
           print('@@@@@-------------------------------');
           MaUser _user = MaUser.BuilfromJson(response.body);
           
-          print(_user);
+          print(_user?.toString());
           print(_user.role);
           if(_user.role == Role.manager || _user.role == Role.admin) {
             _user.email = _user.email.isEmpty ? emailAddress : _user.email;
@@ -84,9 +84,11 @@ class MaLoginController {
         }
       }
 }
-signOut() async{
+Future<void> signOut() async{
+  print('------------signOut---START-----------');
     await FirebaseAuth.instance.signOut();
     await MaLocalStore.logOut();
     await Get.deleteAll();
+    print('------------signOut-----------');
 
 }

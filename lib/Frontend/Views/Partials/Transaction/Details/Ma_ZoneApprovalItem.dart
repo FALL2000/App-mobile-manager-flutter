@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/Transaction/MA_ApprovalStatusIcon.dart';
 import 'package:x_money_manager/Model/MA_Transaction.dart';
+import 'package:x_money_manager/Utilities/widgets/MA_ExpansionTile.dart';
 import 'package:x_money_manager/Utilities/widgets/outputs.dart';
     
 class MaZoneApprovalItem extends StatefulWidget {
@@ -24,24 +25,7 @@ class _MaZoneApprovalItemState extends State<MaZoneApprovalItem> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Card(
-         /*decoration:  BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-            // color:  isSelected ? kShrineLight : null,
-            border: Border.all(
-              // BorderSide(
-                color: Theme.of(context).colorScheme.secondary 
-              // ),
-              ),
-          ),*/
-        child: ExpansionTile(
-            // collapsedShape:const  Border( 
-            //   top: BorderSide(color: Colors.transparent , width: 0) ,
-            //   bottom: BorderSide( color: Colors.red ,width: 5) ,
-            // ),
-            shape:  const Border( 
-              top:  BorderSide(color: Colors.transparent , width: 0) ,
-              bottom:  BorderSide(color: Colors.transparent , width: 0) ,
-            ),
+        child: MaExpansionTile(
             onExpansionChanged: (value) {
               print(value);
               setState(() {
@@ -49,10 +33,7 @@ class _MaZoneApprovalItemState extends State<MaZoneApprovalItem> {
               });
             },
             leading: Icon(_icon, size: IconTheme.of(context).opticalSize),
-            // leading: MaApprovalStatusIcon(status: approval?.status?.keyValue),
-            // leading: CircleAvatar( child: Text('OUT'),),
-            title: Text('${widget.approval?.owner?.fullname}',
-              overflow: TextOverflow.ellipsis,) ,
+            title: Text('${widget.approval?.owner?.fullname}', overflow: TextOverflow.ellipsis,) ,
             subtitle: Text('${widget.approval?.formattedTotal}') ,
             trailing: MaApprovalStatusIcon(status: widget.approval?.status?.keyValue),
             children: [

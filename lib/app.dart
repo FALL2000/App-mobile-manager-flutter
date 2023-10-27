@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_NavigationGetxCtrl.dart';
 import 'package:x_money_manager/Frontend/Controllers/MA_agentSearchController.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_HomePage.dart';
@@ -22,21 +23,22 @@ class MoneyApp extends StatefulWidget {
 }
 
 class _MoneyAppState extends State<MoneyApp> {
+  final controller = Get.put(MaNavigationGetxCtrl());
   final appState = Get.put(AuthController());
-   XItem _curentItem = XItemsRepository.defaultItem();
-    String _initialRoute='';
-  void onXItemtap(XItem item) {
-    setState(() {
-      _curentItem = item;
+  // XItem _curentItem = XItemsRepository.defaultItem();
+  String _initialRoute='';
+  // void onXItemtap(XItem item) {
+  //   setState(() {
+  //     _curentItem = item;
       
-    });
-  }
-  void setInitial(XItem item) {
-    setState(() {
-      _curentItem = item;
+  //   });
+  // }
+  // void setInitial(XItem item) {
+  //   setState(() {
+  //     _curentItem = item;
       
-    });
-  }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class _MoneyAppState extends State<MoneyApp> {
     }else{
       _initialRoute='/';
     }
+    // controller.currentItem=_curentItem;
     print('_initialRoute $_initialRoute');
     
     return GetMaterialApp(
@@ -61,8 +64,8 @@ class _MoneyAppState extends State<MoneyApp> {
     var _routes ={
       '/login': (BuildContext context) =>  MALoginPage(),
       '/': (BuildContext context) => Backdrop(
-              currentXitem: _curentItem,
-              onItemTap: onXItemtap,
+              // currentXitem: _curentItem,
+              // onItemTap: onXItemtap,
               frontLayer: const MaHomePage(),
               frontTitle: const Text(''),
               frontLeading: Icon(items.homeItem.icon),
@@ -85,8 +88,8 @@ class _MoneyAppState extends State<MoneyApp> {
                   }
           ),
       '/Transactions': (BuildContext context) => Backdrop(
-              currentXitem: _curentItem,
-              onItemTap: onXItemtap,
+              // currentXitem: _curentItem,
+              // onItemTap: onXItemtap,
               frontLayer: MaTransactionsPage(),
               frontTitle: Text(items.transItem.label),
               frontLeading: Icon(items.transItem.icon),
@@ -98,8 +101,8 @@ class _MoneyAppState extends State<MoneyApp> {
               }
           ),
       '/Agents': (BuildContext context) => Backdrop(
-              currentXitem: _curentItem,
-              onItemTap: onXItemtap,
+              // currentXitem: _curentItem,
+              // onItemTap: onXItemtap,
               frontLayer: MaAgentsPage(),
               frontTitle: Text(items.agentItem.label),
               frontLeading: Icon(items.agentItem.icon),
@@ -119,8 +122,8 @@ class _MoneyAppState extends State<MoneyApp> {
                   }
           ),
         '/Settings': (BuildContext context) => Backdrop(
-              currentXitem: _curentItem,
-              onItemTap: onXItemtap,
+              // currentXitem: _curentItem,
+              // onItemTap: onXItemtap,
               frontLayer: Placeholder(),
               frontLeading: Icon(items.settingsItem.icon),
               frontTitle: Text(items.settingsItem.label),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_NavigationGetxCtrl.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Error.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
@@ -8,12 +10,12 @@ import 'package:x_money_manager/Utilities/colors.dart';
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
     
 class MaDrawerWidget extends StatelessWidget {
-  final XItem currentItem;
+  // final XItem currentItem;
   // final ValueChanged<Category> onCategoryTap;
-  final ValueChanged<XItem> onItemTap;
+  // final ValueChanged<XItem> onItemTap;
   const MaDrawerWidget({ Key? key,
-    required this.currentItem,
-    required this.onItemTap,
+    // required this.currentItem,
+    // required this.onItemTap,
    }) : super(key: key);
   
   @override
@@ -27,14 +29,18 @@ class MaDrawerWidget extends StatelessWidget {
             .map((XItem i) => _buildCategory(i, context))
             .toList());
     return Drawer(
-      child: Container(
-        // padding: const EdgeInsets.only(top: 40.0),
-        color: kShrinePink100,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: children2,
-        ),
-      ),
+      child:GetBuilder<MaNavigationGetxCtrl>(
+          init: MaNavigationGetxCtrl(),
+          builder: (controller){
+              return  Container(
+                  // padding: const EdgeInsets.only(top: 40.0),
+                  color: kShrinePink100,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: children2,
+                  ),
+                );
+            })
     );
   }
 
@@ -117,17 +123,20 @@ class MaDrawerWidget extends StatelessWidget {
 
   Widget _buildCategory(XItem item, BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final bool isSelected= item.id == currentItem.id;
+  final controller = Get.put(MaNavigationGetxCtrl());
+    
+    final bool isSelected= item.id == controller.currentItem?.id;
     return  _XItemWidget( item: item, theme: theme,isSelected:isSelected,
                 onTap: (){
-                  onItemTap(item);
-                    if((item.path as String).isNotEmpty ){
-                      // Navigator.pushNamedAndRemoveUntil(context, item.route, ModalRoute.withName('/'));
-                      while (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-                      Navigator.pushReplacementNamed(context,item.route);
+                  // onItemTap(item);
+                  controller.updateCurrent(item);
+                  if((item.path as String).isNotEmpty ){
+                    // Navigator.pushNamedAndRemoveUntil(context, item.route, ModalRoute.withName('/'));
+                    while (Navigator.canPop(context)) {
+                      Navigator.pop(context);
                     }
+                    Navigator.pushReplacementNamed(context,item.route);
+                  }
                 },
               );
     /*GestureDetector(
