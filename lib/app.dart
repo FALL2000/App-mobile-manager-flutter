@@ -5,6 +5,7 @@ import 'package:x_money_manager/Frontend/Controllers/MA_agentSearchController.da
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_HomePage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_SearchPage.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_SettingsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/login.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_FilterAgent.dart';
@@ -124,7 +125,7 @@ class _MoneyAppState extends State<MoneyApp> {
         '/Settings': (BuildContext context) => Backdrop(
               // currentXitem: _curentItem,
               // onItemTap: onXItemtap,
-              frontLayer: Placeholder(),
+              frontLayer: MaSettingsPage(),
               frontLeading: Icon(items.settingsItem.icon),
               frontTitle: Text(items.settingsItem.label),
           ),
