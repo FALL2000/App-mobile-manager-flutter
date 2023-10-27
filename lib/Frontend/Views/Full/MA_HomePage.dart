@@ -196,7 +196,7 @@ class _ChipReport extends StatelessWidget {
               print('GestureDetector ${icn.label}');
               transCtrl.initFilter();
               transCtrl.updateStatusSet(e.status.key);
-              Navigator.pushReplacementNamed(context, '/Transactions');
+              Navigator.pushNamed(context, '/Transactions');
             },
             child: Badge(
               label: Text('${e.value}'),
