@@ -21,10 +21,16 @@ class MaTransactionDetailsPage extends StatelessWidget {
 
              onWillPop: () {
               if(from!=null) return Future.value(true);
-              while (Navigator.canPop(context)) {
-                Navigator.pop(context);
+              // while (Navigator.canPop(context)) {
+              //   Navigator.pop(context);
+              // }
+              try{
+                Navigator.popUntil(context, ModalRoute.withName('/Transactions'));
+                Navigator.pushReplacementNamed(context,'/Transactions');
+              }catch(e){
+                Navigator.pushReplacementNamed(context,'/Transactions');
               }
-              Navigator.pushReplacementNamed(context,'/Transactions');
+              
 
               return Future.value(false);
              },

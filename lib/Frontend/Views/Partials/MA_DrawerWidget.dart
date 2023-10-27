@@ -135,7 +135,10 @@ class MaDrawerWidget extends StatelessWidget {
                     while (Navigator.canPop(context)) {
                       Navigator.pop(context);
                     }
-                    Navigator.pushReplacementNamed(context,item.route);
+                    if(item==items.homeItem)
+                      Navigator.pushReplacementNamed(context,item.route);
+                    else 
+                      Navigator.pushNamed(context,item.route);
                   }
                 },
               );
