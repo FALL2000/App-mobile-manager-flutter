@@ -11,20 +11,22 @@ import 'package:x_money_manager/Model/MA_Transaction.dart';
     
 class MaTransactionDetailsPage extends StatelessWidget {
   
-  MaTransactionDetailsPage({ Key? key, required this.requestId }) : super(key: key);
+  MaTransactionDetailsPage({ Key? key, required this.requestId, this.from }) : super(key: key);
   final String requestId;
+  final String? from;
   @override
   Widget build(BuildContext context) {
     // final MaTransactionDetailsProvider controller = Get.put(MaTransactionDetailsProvider());
     return WillPopScope(
 
              onWillPop: () {
-                while (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-                Navigator.pushReplacementNamed(context,'/Transactions');
+              if(from!=null) return Future.value(true);
+              while (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+              Navigator.pushReplacementNamed(context,'/Transactions');
 
-                return Future.value(false);
+              return Future.value(false);
              },
 
              child: FutureBuilder<MaTransaction?>(

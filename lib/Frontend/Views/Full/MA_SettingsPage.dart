@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:x_money_manager/Frontend/Views/Full/home.dart';
 
 import '../../../Data/localStorage/MA_LocalStore.dart';
 import '../../../Model/MA_User.dart';
@@ -15,7 +16,13 @@ class MaSettingsPage extends StatelessWidget {
     List<Widget> childrens2 = [
       GestureDetector(
         child: _buildProfileUser(context),
-        onTap: (){},
+        onTap: (){
+           Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomePage()),
+            );
+        },
       ),
       Divider(color: Colors.grey[200],),
     ];

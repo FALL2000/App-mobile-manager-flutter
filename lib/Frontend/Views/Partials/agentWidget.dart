@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionDetailsPage.dart';
 
 import '../../../Model/MA_User.dart';
 
@@ -56,12 +57,18 @@ class AgentWidget extends StatelessWidget {
     }
   }
 
-  Widget _listTransaction(){
+  Widget _listTransaction(context){
     List<dynamic> transactions = agent.workStatus?['transactions'] ;//as List<String>;
     var listWidget = transactions.map((trans) =>
         GestureDetector(
           onTap: () {
-
+            
+                Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => MaTransactionDetailsPage(requestId: trans, from: 'AG',)),
+                        );
+              
           },
           child: Text(
             trans as String,
@@ -114,7 +121,7 @@ class AgentWidget extends StatelessWidget {
                 Text("Cet agent est libre pour une transaction",),
               ]:
               [
-                _listTransaction()
+                _listTransaction(context)
               ],
             ),
           )
