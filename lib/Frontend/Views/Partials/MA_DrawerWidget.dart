@@ -10,12 +10,12 @@ import 'package:x_money_manager/Utilities/colors.dart';
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
     
 class MaDrawerWidget extends StatelessWidget {
-  final XItem currentItem;
+  // final XItem currentItem;
   // final ValueChanged<Category> onCategoryTap;
-  final ValueChanged<XItem> onItemTap;
+  // final ValueChanged<XItem> onItemTap;
   const MaDrawerWidget({ Key? key,
-    required this.currentItem,
-    required this.onItemTap,
+    // required this.currentItem,
+    // required this.onItemTap,
    }) : super(key: key);
   
   @override
@@ -123,20 +123,20 @@ class MaDrawerWidget extends StatelessWidget {
 
   Widget _buildCategory(XItem item, BuildContext context) {
     final ThemeData theme = Theme.of(context);
+  final controller = Get.put(MaNavigationGetxCtrl());
     
-    final MaNavigationGetxCtrl controller = Get.find();
     final bool isSelected= item.id == controller.currentItem?.id;
     return  _XItemWidget( item: item, theme: theme,isSelected:isSelected,
                 onTap: (){
-                  onItemTap(item);
+                  // onItemTap(item);
                   controller.updateCurrent(item);
-                    if((item.path as String).isNotEmpty ){
-                      // Navigator.pushNamedAndRemoveUntil(context, item.route, ModalRoute.withName('/'));
-                      while (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-                      Navigator.pushReplacementNamed(context,item.route);
+                  if((item.path as String).isNotEmpty ){
+                    // Navigator.pushNamedAndRemoveUntil(context, item.route, ModalRoute.withName('/'));
+                    while (Navigator.canPop(context)) {
+                      Navigator.pop(context);
                     }
+                    Navigator.pushReplacementNamed(context,item.route);
+                  }
                 },
               );
     /*GestureDetector(

@@ -5,18 +5,18 @@ import 'package:x_money_manager/Frontend/Views/Partials/MA_DrawerWidget.dart';
 
 
 class Backdrop extends StatefulWidget {
-  final ValueChanged<XItem> onItemTap;
-  final XItem currentXitem;
+  // final ValueChanged<XItem> onItemTap;
+  // final XItem currentXitem;
   final Widget frontLayer;
   final Widget frontTitle;
   final Widget? frontLeading;
   final List<Widget> Function(BuildContext context)? buildBarActions ;
   const Backdrop({
-    required this.currentXitem,
+    // required this.currentXitem,
     required this.frontLayer,
     required this.frontTitle,
     this.frontLeading,
-    required this.onItemTap,
+    // required this.onItemTap,
     this.buildBarActions,
     Key? key,
   }) : super(key: key);
@@ -61,7 +61,7 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
     return Scaffold(
             key: _scaffoldKey,
             appBar: appBar,
-            drawer: MaDrawerWidget(onItemTap:widget.onItemTap, currentItem: widget.currentXitem),
+            drawer: MaDrawerWidget(/*onItemTap:widget.onItemTap, currentItem: widget.currentXitem*/),
             body: WillPopScope(
 
               onWillPop: () {

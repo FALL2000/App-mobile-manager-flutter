@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_DashboardGetxCtrl.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_NavigationGetxCtrl.dart';
+import 'package:x_money_manager/Frontend/Controllers/MA_TransactionsGetxCtrl.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/MA_Error.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Spinner.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/Utilities/widgets/MA_CardLoader.dart';
@@ -34,7 +39,7 @@ class _MaHomePageState extends State<MaHomePage> {
             // left: 0,
             // top: 15,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: _userBox(),
             ),
           ),
@@ -50,8 +55,8 @@ class _MaHomePageState extends State<MaHomePage> {
                     Card(
                       elevation: 3,
                       child: MaExpansionTile(
-                        title: Text('Quick Actions'), //leading: Icon(Icons.),
-                        trailing: Icon(Icons.link),
+                        title: const Text('Quick Actions'), //leading: Icon(Icons.),
+                        trailing: const Icon(Icons.link),
                         initiallyExpanded: true,
                         children: [
                           Wrap(
@@ -61,12 +66,6 @@ class _MaHomePageState extends State<MaHomePage> {
                                 QuickLink(item: items.transItem,),
                                 QuickLink(item: items.agentItem,),
                                 QuickLink(item: items.settingsItem,),
-                                
-                                // TextButton.icon(
-                                //     onPressed: () {},
-                                //     icon: const Icon(
-                                //         Icons.settings_suggest_outlined),
-                                //     label: const Text('Settings')),
                               ]),
                         ],
                       ),
@@ -75,92 +74,18 @@ class _MaHomePageState extends State<MaHomePage> {
                       elevation: 3,
                       child: MaExpansionTile(
                         expandedAlignment: Alignment.topLeft,
-                        childrenPadding: const EdgeInsets.only(left: 25, bottom: 10),
+                        childrenPadding: const EdgeInsets.only(left: 25, bottom: 10,top: 10),
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         title: const Text('Transaction Reports'), //leading: Icon(Icons.),
-                        trailing: Icon(Icons.table_chart),
+                        trailing: const Icon(Icons.table_chart),
                         initiallyExpanded: true,
+
                         children: [
-                          Wrap(
-                              spacing: 5.0, // gap between adjacent chips
-                              runSpacing: 1.0, // gap between lines
-                              children: <Widget>[
-                               GestureDetector(
-                                onTap: () {
-                                  print('GestureDetector');
-                                },
-                                 child: Chip(
-                                    elevation: 0.9,
-                                    // backgroundColor:  icn?.color,
-                                    labelPadding: const EdgeInsets.symmetric(vertical: 2),
-                                    label:  Text('Pending', //style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),
-                                    ),
-                                    deleteIcon: Badge(
-                                                label: const Text('15'),
-                                                backgroundColor: Theme.of(context).colorScheme.tertiary,
-                                              ),
-                                    deleteIconColor: Colors.white,
-                                    onDeleted: () {
-                                      // controller.updateStatusSet(element,remove:true);
-                                    },
-                                  ),
-                               ),
-                               Chip(
-                                  elevation: 0.9,
-                                  // backgroundColor:  icn?.color,
-                                  labelPadding: const EdgeInsets.symmetric(vertical: 2),
-                                  label:  Text('Pending', //style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),
-                                  ),
-                                  deleteIcon: Badge(
-                                              label: const Text('15'),
-                                              backgroundColor: Theme.of(context).colorScheme.tertiary,
-                                            ),
-                                  deleteIconColor: Colors.white,
-                                  onDeleted: () {
-                                    // controller.updateStatusSet(element,remove:true);
-                                  },
-                                ),
-                               Chip(
-                                  elevation: 0.9,
-                                  // backgroundColor:  icn?.color,
-                                  labelPadding: const EdgeInsets.symmetric(vertical: 2),
-                                  label:  Text('Pending', //style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),
-                                  ),
-                                  deleteIcon: Badge(
-                                              label: const Text('15'),
-                                              backgroundColor: Theme.of(context).colorScheme.tertiary,
-                                            ),
-                                  deleteIconColor: Colors.white,
-                                  onDeleted: () {
-                                    // controller.updateStatusSet(element,remove:true);
-                                  },
-                                ),
-                               Chip(
-                                  elevation: 0.9,
-                                  // backgroundColor:  icn?.color,
-                                  labelPadding: const EdgeInsets.symmetric(vertical: 2),
-                                  label:  Text('Pending', //style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),
-                                  ),
-                                  deleteIcon: Badge(
-                                              label: const Text('15'),
-                                              backgroundColor: Theme.of(context).colorScheme.tertiary,
-                                            ),
-                                  deleteIconColor: Colors.white,
-                                  onDeleted: () {
-                                    // controller.updateStatusSet(element,remove:true);
-                                  },
-                                ),
-                                
-                                // TextButton.icon(
-                                //     onPressed: () {},
-                                //     icon: const Icon(
-                                //         Icons.settings_suggest_outlined),
-                                //     label: const Text('Settings')),
-                              ]),
+                          ChipReport(),
                         ],
                       ),
                     ),
-                    MaExpansionPanelList(
+                    /*MaExpansionPanelList(
                       children: [
                         MAExpansionPanel(
                             headerBuilder: (context, isOpen) {
@@ -187,7 +112,7 @@ class _MaHomePageState extends State<MaHomePage> {
                                       label: const Text('Agents')),
                                 ])),
                       ],
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -199,16 +124,105 @@ class _MaHomePageState extends State<MaHomePage> {
   }
 }
 
+class ChipReport extends StatelessWidget {
+   ChipReport({
+    super.key,
+  });
+  final controller= Get.put(MADashboardGetxCtrl());
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, int>?>(
+          future: controller.countByStatus(), // a previously-obtained Future<String> or null
+          builder: (BuildContext context, AsyncSnapshot<Map<String, int>?> snapshot) {
+            Widget child;
+            if (snapshot.hasData) {
+              child = GetBuilder<MADashboardGetxCtrl>(
+                init: MADashboardGetxCtrl(),
+                builder: (controller){
+                    return  _ChipReport();
+                  });
+              
+                
+            } else if (snapshot.hasError) {
+              child =MaError(snapshot: snapshot ,);
+            } else {
+              child = MaSpinner();
+            }
+            return child;
+          },
+    );
+    
+  }
+}
+
+class _ChipReport extends StatelessWidget {
+   _ChipReport({
+    super.key,
+  });
+  final MADashboardGetxCtrl controller = Get.find();
+  final  transCtrl = Get.put(TransactionsProvider());
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+        spacing: 10.0, // gap between adjacent chips
+        runSpacing: 5.0, // gap between lines
+        children: controller.statusReport.map((e) {
+          var icn= e.status;
+            return GestureDetector(
+                onTap: () {
+                  print('GestureDetector ${icn.label}');
+                  transCtrl.updateStatusSet(e.status.key);
+                  Navigator.pushReplacementNamed(context,'/Transactions');
+                },
+                child: Badge(
+                  label:  Text('${e.value}'),
+                  backgroundColor:icn.color,
+                  child: Chip(
+                      elevation: 0.9,
+                      // backgroundColor:  icn.color,
+                      labelPadding: const EdgeInsets.symmetric(vertical: 2),
+                      label:  Text(icn.label, 
+                      // style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),
+                      ),
+                       side:BorderSide.none,// BorderSide(color: Theme.of(context).colorScheme.primary,),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Theme.of(context).colorScheme.primary,),
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      // deleteIcon: Badge(
+                      //             label:  Text('${e.value}'),
+                      //             backgroundColor:icn.color,// Theme.of(context).colorScheme.tertiary,
+                      //           ),
+                      // deleteIconColor: Colors.white,
+                      // onDeleted: () {
+                      //   // controller.updateStatusSet(element,remove:true);
+                      // },
+                    ),
+                ),
+              );
+        }).toList()
+          
+          // TextButton.icon(
+          //     onPressed: () {},
+          //     icon: const Icon(
+          //         Icons.settings_suggest_outlined),
+          //     label: const Text('Settings')),
+        );
+  }
+}
+
 class QuickLink extends StatelessWidget {
-  const QuickLink({
+  QuickLink({
     super.key,
     required this.item
   });
   final XItem item;
+  final controller = Get.put(MaNavigationGetxCtrl());
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
         onPressed: () {
+          controller.updateCurrent(item);
           Navigator.pushReplacementNamed(context,item.route);
         },
         icon: Icon(item.icon),
@@ -226,7 +240,7 @@ class _userBox extends StatelessWidget {
     return FutureBuilder<MaUser?>(
       future: MaLocalStore.getStoredUser(),
       builder: (BuildContext context, AsyncSnapshot<MaUser?> snapshot) {
-        Widget child = MaCardLoader();
+        Widget child =const  MaCardLoader();
         if (snapshot.hasData) {
           child = UserCard(user: snapshot.data);
         } else if (snapshot.hasError) {
@@ -249,7 +263,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 150,
+        height: 130,
         child: Card(
             elevation: 3,
             child: Column(
@@ -261,40 +275,64 @@ class UserCard extends StatelessWidget {
                     bottom: BorderSide(color: Colors.transparent, width: 0),
                   ),
                   title: RichText(
-                    text: TextSpan(
-                      text: 'Hi,',
-                      style: DefaultTextStyle.of(context).style,
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: ' ${user?.fullname}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
+                                text: TextSpan(
+                                  text: 'Hi,',
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: ' ${user?.fullname}',
+                                        style:
+                                            const TextStyle(fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                   
                   subtitle: Text('${user?.email}'),
-                  trailing: user?.flag?.isNotEmpty ?? false
-                      ? SizedBox.square(
-                          dimension: 50,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: SvgPicture.network(
-                              '${user?.flag}',
-                            ),
-                          ),
-                        )
-                      : null,
-                ),
-                _cardPaddedChild(
-                  child: const Row(
-                    children: [
-                      Text('Account Status Active'),
-                      Badge(
+                  trailing: Badge(
+                        offset: const Offset(-0, -15),
+                        textColor:  AppBarTheme.of(context).foregroundColor,
+                        label: Text('Active',style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),),
+                        // padding: const EdgeInsets.symmetric(vertical: 10),
                         backgroundColor: Colors.green,
-                      )
-                    ],
-                  ),
+                        ),
                 ),
+                // Visibility(
+                //   visible: user?.flag?.isNotEmpty ?? false,
+                //   child: Align(
+                //     alignment :Alignment(0.0, 10.0),
+                //     child: SizedBox(
+                //             height: 40,
+                //             width: 80,
+                //             child: Padding(
+                //               padding: const EdgeInsets.all(0.0),
+                //               child: ClipRRect(
+                //                 borderRadius: BorderRadius.circular(30),
+                //                 child: SvgPicture.network(
+                //                   '${user?.flag}',
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //   )
+                
+                // )
+                // _cardPaddedChild(
+                //   child:  Row(
+                //     children: [
+                //       Badge(
+                //         offset: Offset(25, 4),
+                //         textColor:  AppBarTheme.of(context).foregroundColor,
+                //         label: Text('Active',style:  TextStyle(color: AppBarTheme.of(context).foregroundColor),),
+                //         // padding: const EdgeInsets.symmetric(vertical: 10),
+                //         backgroundColor: Colors.green,
+                //         child: Text('Account Status'),
+                //         ),
+                //       // Badge(
+                //       //   backgroundColor: Colors.green,
+                //       // )
+                //     ],
+                //   ),
+                // ),
                 // _cardPaddedChild(
                 //   child: Text('Actively working on ${user?.workload0} items'),
                 // ),
