@@ -30,12 +30,12 @@ class MaTransactionDetailsPage extends StatelessWidget {
               // while (Navigator.canPop(context)) {
               //   Navigator.pop(context);
               // }
-              try{
-                Navigator.popUntil(context, ModalRoute.withName('/Transactions'));
-                Navigator.pushReplacementNamed(context,'/Transactions');
-              }catch(e){
-                Navigator.pushReplacementNamed(context,'/Transactions');
+              while (Navigator.canPop(context)) {
+                Navigator.pop(context);
               }
+              print('can pop ${Navigator.of(context).canPop()}');
+              // Navigator.of(context).canPop()
+              Navigator.pushNamed(context,'/Transactions');
               
 
               return Future.value(false);
@@ -135,11 +135,11 @@ class _detailsView extends StatelessWidget {
               ),
               Tab(
                 text: zone1,
-                icon:request!.hasInAgent ?  null :Icon(Icons.error) ,
+                icon:request!.hasInAgent ?  null : const Icon(Icons.error) ,
               ),
               Tab(
                 text: zone2,
-                icon:request!.hasOutAgent ?  null :Icon(Icons.error) ,
+                icon:request!.hasOutAgent ?  null : const Icon(Icons.error) ,
               ),
             ],
           ),

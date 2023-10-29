@@ -27,8 +27,14 @@ class MADashboardGetxCtrl extends GetxController {
     // debugPrint('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ TransactionsProvider ::::: initialize size ${_transactions.length}');
     return Transactions;
   }
+  Future<void> refresh() async {
+    forceRefresh=true;
+    _counter = await countByStatus();
+    forceRefresh=false;
+    update(['madashboard']);
+  }
   Future< Map<String,int>> countByStatus() async {
-    _counter ={};
+    _counter.clear();
     var _transactions=  await init();
     for (var element in _transactions) {
        debugPrint('-----transID: ${element.id} transStatus ${element.status?.keyValue}-----');

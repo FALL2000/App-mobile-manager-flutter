@@ -50,92 +50,98 @@ class _MaHomePageState extends State<MaHomePage> {
               // height: 400,
               // width: 400,
               child: SafeArea(
-                child: Column(
-                  // physics: const AlwaysScrollableScrollPhysics(),
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: _userBox(),
-                    ),
-                    Expanded(
-                      child: ListView(
-                          // physics: const AlwaysScrollableScrollPhysics(),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                     final controller = Get.put(MADashboardGetxCtrl());
+                     await controller.refresh();
+                  },
+                  child: Column(
+                    // physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: _userBox(),
+                      ),
+                      Expanded(
+                        child: ListView(
+                            // physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              Card(
+                                elevation: 3,
+                                child: MaExpansionTile(
+                                  title: const Text(
+                                      'Quick Actions'), //leading: Icon(Icons.),
+                                  trailing: const Icon(Icons.link),
+                                  initiallyExpanded: true,
+                                  children: [
+                                    Wrap(
+                                        spacing:
+                                            5.0, // gap between adjacent chips
+                                        runSpacing: 14.0, // gap between lines
+                                        children: <Widget>[
+                                          QuickLink(
+                                            item: items.transItem,
+                                          ),
+                                          QuickLink(
+                                            item: items.agentItem,
+                                          ),
+                                          QuickLink(
+                                            item: items.settingsItem,
+                                          ),
+                                        ]),
+                                  ],
+                                ),
+                              ),
+                              Card(
+                                elevation: 3,
+                                child: MaExpansionTile(
+                                  expandedAlignment: Alignment.topLeft,
+                                  childrenPadding: const EdgeInsets.only(
+                                      left: 25, bottom: 10, top: 10),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  title: const Text(
+                                      'Transaction Reports'), //leading: Icon(Icons.),
+                                  trailing: const Icon(Icons.table_chart),
+                                  initiallyExpanded: true,
+                
+                                  children: [
+                                    ChipReport(),
+                                  ],
+                                ),
+                              ),
+                              /*MaExpansionPanelList(
                           children: [
-                            Card(
-                              elevation: 3,
-                              child: MaExpansionTile(
-                                title: const Text(
-                                    'Quick Actions'), //leading: Icon(Icons.),
-                                trailing: const Icon(Icons.link),
-                                initiallyExpanded: true,
-                                children: [
-                                  Wrap(
-                                      spacing:
-                                          5.0, // gap between adjacent chips
-                                      runSpacing: 14.0, // gap between lines
-                                      children: <Widget>[
-                                        QuickLink(
-                                          item: items.transItem,
-                                        ),
-                                        QuickLink(
-                                          item: items.agentItem,
-                                        ),
-                                        QuickLink(
-                                          item: items.settingsItem,
-                                        ),
-                                      ]),
-                                ],
-                              ),
-                            ),
-                            Card(
-                              elevation: 3,
-                              child: MaExpansionTile(
-                                expandedAlignment: Alignment.topLeft,
-                                childrenPadding: const EdgeInsets.only(
-                                    left: 25, bottom: 10, top: 10),
-                                expandedCrossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                title: const Text(
-                                    'Transaction Reports'), //leading: Icon(Icons.),
-                                trailing: const Icon(Icons.table_chart),
-                                initiallyExpanded: true,
-
-                                children: [
-                                  ChipReport(),
-                                ],
-                              ),
-                            ),
-                            /*MaExpansionPanelList(
-                        children: [
-                          MAExpansionPanel(
-                              headerBuilder: (context, isOpen) {
-                                return const ListTile(
-                                    title: Text('Transactions Reports'),
-                                    leading: Icon(Icons.tab));
-                              },
-                              body: Wrap(
-                                  spacing: 5.0, // gap between adjacent chips
-                                  runSpacing: 14.0, // gap between lines
-                                  children: <Widget>[
-                                    TextButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.monetization_on),
-                                        label: const Text('Transactions')),
-                                    TextButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                            Icons.settings_suggest_outlined),
-                                        label: const Text('Settings')),
-                                    TextButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.group),
-                                        label: const Text('Agents')),
-                                  ])),
-                        ],
-                      ),*/
-                          ]),
-                    ),
-                  ],
+                            MAExpansionPanel(
+                                headerBuilder: (context, isOpen) {
+                                  return const ListTile(
+                                      title: Text('Transactions Reports'),
+                                      leading: Icon(Icons.tab));
+                                },
+                                body: Wrap(
+                                    spacing: 5.0, // gap between adjacent chips
+                                    runSpacing: 14.0, // gap between lines
+                                    children: <Widget>[
+                                      TextButton.icon(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.monetization_on),
+                                          label: const Text('Transactions')),
+                                      TextButton.icon(
+                                          onPressed: () {},
+                                          icon: const Icon(
+                                              Icons.settings_suggest_outlined),
+                                          label: const Text('Settings')),
+                                      TextButton.icon(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.group),
+                                          label: const Text('Agents')),
+                                    ])),
+                          ],
+                        ),*/
+                            ]),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -161,6 +167,7 @@ class ChipReport extends StatelessWidget {
         Widget child;
         if (snapshot.hasData) {
           child = GetBuilder<MADashboardGetxCtrl>(
+              id: 'madashboard',
               init: MADashboardGetxCtrl(),
               builder: (controller) {
                 return _ChipReport();
