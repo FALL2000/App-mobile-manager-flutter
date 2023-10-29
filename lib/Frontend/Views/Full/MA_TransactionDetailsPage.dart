@@ -14,6 +14,12 @@ class MaTransactionDetailsPage extends StatelessWidget {
   MaTransactionDetailsPage({ Key? key, required this.requestId, this.from }) : super(key: key);
   final String requestId;
   final String? from;
+  Future<MaTransaction?> getTransaction(String requestId)async{
+    final MaTransactionDetailsProvider controller = Get.put(MaTransactionDetailsProvider());
+
+    controller.transaction=await MATransactionsController.getTransactionDetails(requestId);
+    return controller.transaction;
+  } 
   @override
   Widget build(BuildContext context) {
     // final MaTransactionDetailsProvider controller = Get.put(MaTransactionDetailsProvider());
@@ -36,14 +42,14 @@ class MaTransactionDetailsPage extends StatelessWidget {
              },
 
              child: FutureBuilder<MaTransaction?>(
-                    future: MATransactionsController.getTransactionDetails(requestId), // a previously-obtained Future<String> or null
+                    future: getTransaction(requestId), // a previously-obtained Future<String> or null
                     builder: (BuildContext context, AsyncSnapshot<MaTransaction?> snapshot) {
                       Widget child;
                       if (snapshot.hasData) {
                         child = GetBuilder<MaTransactionDetailsProvider>(
                           init: MaTransactionDetailsProvider(),
                           builder: (controller){
-                              controller.transaction=snapshot.data;
+                              // controller.transaction=snapshot.data;
 
                               debugPrint(' controller inAgentRefreshed ${controller.inAgentRefreshed}');
                               debugPrint(' controller outAgentRefreshed ${controller.outAgentRefreshed}');
