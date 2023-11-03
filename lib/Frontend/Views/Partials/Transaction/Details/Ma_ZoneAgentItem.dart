@@ -36,7 +36,7 @@ class _MaZoneAgentItem extends StatelessWidget {
                 title: Text('${agent?.fullname}') ,
                 subtitle: Text('Agent In charge') ,
                 children: [
-                outputField(value: '${agent?.phone}', label: 'Phone', hide_border: true,),
+                outputField(value: '${agent?.phone}', label: 'Phone', hide_border: true, trailing: const Icon(Icons.call),),
                 outputField(value: '${agent?.email}', label: 'Email', hide_border: true,),
             ],
             ),

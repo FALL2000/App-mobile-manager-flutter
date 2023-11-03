@@ -17,6 +17,15 @@ class MaLocalStore {
         init();
         await prefs?.setString(key, jsonEncode(data));
     }
+    
+    static  Future<void> storeDeviceToken(String token) async{
+        await init();
+        await prefs?.setString('fcmTokem', token);
+    }
+    static Future<String?> getStoredToken() async{
+        await init();
+        return prefs?.getString('fcmTokem');
+    }
     static  Future<void> storeUser(MaUser user) async{
         init();
         await prefs?.setString('localUser', jsonEncode(user));

@@ -16,7 +16,8 @@ class MaTransactionDetailsPage extends StatelessWidget {
   final String? from;
   Future<MaTransaction?> getTransaction(String requestId)async{
     final MaTransactionDetailsProvider controller = Get.put(MaTransactionDetailsProvider());
-
+    controller.inAgentRefreshed=false;
+    controller.outAgentRefreshed=false;
     controller.transaction=await MATransactionsController.getTransactionDetails(requestId);
     return controller.transaction;
   } 
