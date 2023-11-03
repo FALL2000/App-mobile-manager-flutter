@@ -9,6 +9,10 @@ class MaConstants {
     static const String CONST_USER_FUNCION = 'nl_manage_users';
     static const String CONST_COUNTRY_FUNCION = 'nl_manage_country';
     static const String CONST_FCMTOKEM_FUNCION = 'nl_manage_token';
+    static const Map<String, String> CONST_AGENT_STATUS = {
+      "disponible": "Available",
+      "indisponible": "Unavailable"
+    };
 }
  class MaIcons {
     static const IconData AMOUNT = Icons.price_check;
