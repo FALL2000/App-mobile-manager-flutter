@@ -28,12 +28,13 @@ class AgentState extends GetxController{
   }
 
   Future<void> refreshAgents() async {
-    agents.clear();
+    isFinish.value = false;
     agentsList = await _getAgents();
     page = 1;
     hasMore.value = true;
-    isFinish.value = false;
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
+    
+    agents.clear();
     getAgentsByPage();
   }
 

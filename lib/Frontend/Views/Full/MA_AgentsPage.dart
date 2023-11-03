@@ -35,7 +35,7 @@ class MaAgentsPage extends StatelessWidget {
       if(agentState.isFinish.value){
         if(agentState.agents.length > 0){
           return RefreshIndicator(
-            onRefresh: () => agentState.refreshAgents(),
+            onRefresh: () async => await agentState.refreshAgents(),
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
