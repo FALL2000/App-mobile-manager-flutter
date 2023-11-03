@@ -4,14 +4,13 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:x_money_manager/Data/states/agent_state.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/agentWidget.dart';
+import 'package:x_money_manager/Utilities/MA_Constants.dart';
     
 class MaAgentsPage extends StatelessWidget {
 
   MaAgentsPage({ Key? key }) : super(key: key);
   final AgentState agentState = Get.put(AgentState());
   final _controller = ScrollController();
-  //final List<String> agentStatus = ['Disponible', 'Indisponible'];
-
   @override
   Widget build(BuildContext context){
     _controller.addListener(() {
@@ -45,7 +44,7 @@ class MaAgentsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index < agentState.agents.length) {
                   var item = agentState.agents[index];
-                  return AgentWidget(agent: item);
+                  return AgentWidget(agent: item, status: MaConstants.CONST_AGENT_STATUS,);
                 } else {
                   if (agentState.hasMore.value)
                     return Padding(
@@ -58,7 +57,7 @@ class MaAgentsPage extends StatelessWidget {
           );
         }else{
           return Center(
-            child: Text('Aucun Agent', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize)),
+            child: Text('No Agent', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize)),
           );
         }
       }else{
@@ -109,7 +108,7 @@ class MaAgentsPage extends StatelessWidget {
                 key: Key(e) ,
                 child: Chip(
                   elevation: 0.9,
-                  backgroundColor: e == 'Disponible'? Colors.green:Colors.red,
+                  backgroundColor: e == MaConstants.CONST_AGENT_STATUS['disponible']? Colors.green:Colors.red,
                   labelPadding: const EdgeInsets.symmetric(vertical: 2),
                   label:  Text(e, style:  TextStyle(color: Colors.white),),
                   deleteIcon:const  Icon(Icons.close),

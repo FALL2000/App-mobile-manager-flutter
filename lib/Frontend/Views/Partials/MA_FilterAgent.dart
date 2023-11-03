@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:x_money_manager/Utilities/MA_Constants.dart';
 
 import '../../../Data/states/agent_state.dart';
 
@@ -10,7 +11,6 @@ class MaFilterAgent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> agentStatus = ['Disponible', 'Indisponible'];
     final AgentState agentState = Get.put(AgentState());
     return IconButton(
       icon: const Icon(
@@ -18,7 +18,7 @@ class MaFilterAgent extends StatelessWidget {
         semanticLabel: 'filter by Status',
       ),
       onPressed: () {
-        var widgets=agentStatus.map((e){
+        var widgets=MaConstants.CONST_AGENT_STATUS.values.toList().map((e){
           //debugPrint(e.label);
           return ListTile(
             trailing:  Container(
@@ -26,7 +26,7 @@ class MaFilterAgent extends StatelessWidget {
               height: 15.0,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: e == 'Disponible' ? Colors.green: Colors.red,
+                color: e == MaConstants.CONST_AGENT_STATUS['disponible'] ? Colors.green: Colors.red,
               ),
             ),
             title: Text(e),

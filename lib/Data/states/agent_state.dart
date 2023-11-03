@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:x_money_manager/Backend/MA_UserController.dart';
 import 'package:x_money_manager/Data/mockData/agentMock.dart';
+import 'package:x_money_manager/Utilities/MA_Constants.dart';
 
 import '../../Model/MA_User.dart';
 
@@ -106,15 +107,15 @@ class AgentState extends GetxController{
     isFinish.value = false;
     agents.clear();
     page = 1;
-    if((status == 'Disponible' && !isDispo) || (status == 'Indisponible' && !isIndispo)){
+    if((status == MaConstants.CONST_AGENT_STATUS['disponible'] && !isDispo) || (status == MaConstants.CONST_AGENT_STATUS['indisponible'] && !isIndispo)){
       List<MaUser> agentsResult = [];
       agentsResult.addAll(agentsList);
-      if(status == 'Disponible'){
+      if(status == MaConstants.CONST_AGENT_STATUS['disponible']){
         agentsResult.retainWhere((element) => element.workStatus == null);
         agentStatus.add(status);
         isDispo = true;
       }
-      if(status == 'Indisponible'){
+      if(status == MaConstants.CONST_AGENT_STATUS['indisponible']){
         agentsResult.retainWhere((element) => element.workStatus != null);
         agentStatus.add(status);
         isIndispo = true;
@@ -129,12 +130,12 @@ class AgentState extends GetxController{
     isFinish.value = false;
     agents.clear();
     page = 1;
-    if(status == 'Disponible'){
+    if(status == MaConstants.CONST_AGENT_STATUS['disponible']){
        agentsListFilter.removeWhere((element) => element.workStatus == null);
        agentStatus.remove(status);
        isDispo = false;
     }
-    if(status == 'Indisponible'){
+    if(status == MaConstants.CONST_AGENT_STATUS['indisponible']){
       agentsListFilter.removeWhere((element) => element.workStatus != null);
       agentStatus.remove(status);
       isIndispo = false;

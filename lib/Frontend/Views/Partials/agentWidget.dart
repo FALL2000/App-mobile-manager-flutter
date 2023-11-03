@@ -5,7 +5,8 @@ import '../../../Model/MA_User.dart';
 
 class AgentWidget extends StatelessWidget {
    MaUser agent;
-   AgentWidget({super.key, required this.agent});
+   Map<String, String> status;
+   AgentWidget({super.key, required this.agent, required this.status});
 
    MaterialColor colorDispo = Colors.green;
    MaterialColor colorInDispo = Colors.red;
@@ -50,18 +51,18 @@ class AgentWidget extends StatelessWidget {
 
   Widget _buildSubtitle(BuildContext context){
     if(agent.workStatus == null){
-      return Text('Disponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorDispo));
+      return Text(status['disponible'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorDispo));
     }else{
      // List<String> transactions = agent.workStatus?['transactions'] as List<String>;
-      return Text('InDisponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorInDispo),);
+      return Text(status['indisponible'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorInDispo),);
     }
   }
 
   Widget _listTransaction(context){
     List<dynamic> transactions = agent.workStatus?['transactions'] ;//as List<String>;
     var listWidget = transactions.map((trans) =>
-        GestureDetector(
-          onTap: () {
+        TextButton(
+          onPressed: () {
             
                 Navigator.push(
                           context,
@@ -73,8 +74,7 @@ class AgentWidget extends StatelessWidget {
           child: Text(
             trans as String,
             style: TextStyle(
-              decoration: TextDecoration.underline,
-              color: Colors.blue,
+              color: Colors.green,
             ),
           ),
         )
@@ -118,7 +118,7 @@ class AgentWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: agent.workStatus == null ? [
-                Text("Cet agent est libre pour une transaction",),
+                Text("This agent can be assign to a transaction",),
               ]:
               [
                 _listTransaction(context)
