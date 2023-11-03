@@ -7,6 +7,10 @@ import '../Views/Partials/agentWidget.dart';
 class MAagentSearchController extends SearchDelegate {
 
   AgentState agentState = Get.find();
+  final Map<String, String> status = {
+    "disponible": "Available",
+    "indisponible": "Unavailable"
+  };
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -38,7 +42,7 @@ class MAagentSearchController extends SearchDelegate {
               itemCount: agentState.agentsSearch.length ,
               itemBuilder: (context, index){
                 var item = agentState.agentsSearch[index];
-                return AgentWidget(agent: item);
+                return AgentWidget(agent: item, status: status,);
               }
           ),
     );
@@ -52,7 +56,7 @@ class MAagentSearchController extends SearchDelegate {
             itemCount: agentState.agentsSearch.length ,
             itemBuilder: (context, index){
               var item = agentState.agentsSearch[index];
-              return AgentWidget(agent: item);
+              return AgentWidget(agent: item, status: status,);
             }
         ),
     );

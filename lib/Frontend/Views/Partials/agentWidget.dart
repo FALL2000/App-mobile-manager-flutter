@@ -6,7 +6,8 @@ import '../../../Model/MA_User.dart';
 
 class AgentWidget extends StatelessWidget {
    MaUser agent;
-   AgentWidget({super.key, required this.agent});
+   Map<String, String> status;
+   AgentWidget({super.key, required this.agent, required this.status});
 
    MaterialColor colorDispo = Colors.green;
    MaterialColor colorInDispo = Colors.red;
@@ -117,7 +118,7 @@ class AgentWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: agent.workStatus == null ? [
-                Text("Cet agent est libre pour une transaction",),
+                Text("This agent can be assign to a transaction",),
               ]:
               [
                 _listTransaction(context)

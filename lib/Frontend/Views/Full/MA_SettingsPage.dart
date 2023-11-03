@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_ProfilePage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/home.dart';
 
 import '../../../Data/localStorage/MA_LocalStore.dart';
@@ -20,7 +21,7 @@ class MaSettingsPage extends StatelessWidget {
            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => HomePage()),
+                builder: (BuildContext context) => ProfilePage()),
             );
         },
       ),
@@ -88,7 +89,7 @@ class MaSettingsPage extends StatelessWidget {
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
                Text(mapName['name'] as String,  style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize, color: Theme.of(context).colorScheme.onPrimary, fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight)),
-               Text('Gestionnaire', style: TextStyle(color: Colors.grey),)
+               Text('Manager', style: TextStyle(color: Colors.grey),)
              ],
            )
          ],
@@ -125,7 +126,7 @@ class MaSettingsPage extends StatelessWidget {
   List<Widget> _builListTile(BuildContext context){
     final List<Map<String, dynamic>> elements = [
       {
-        'name':'Langue',
+        'name':'Language',
         'icon': Icon(Icons.language,color: Theme.of(context).colorScheme.primary,)
       },
       {
@@ -133,23 +134,49 @@ class MaSettingsPage extends StatelessWidget {
         'icon': Icon(Icons.notifications,color: Theme.of(context).colorScheme.primary,)
       },
       {
-        'name':'Commentaire sur l\'application',
+        'name':'Comment on application',
         'icon': Icon(Icons.comment,color: Theme.of(context).colorScheme.primary,)
       },
       {
-        'name':'Aide',
+        'name':'Help',
         'icon': Icon(Icons.help,color: Theme.of(context).colorScheme.primary,)
       },
       {
-        'name':'A propos',
+        'name':'About',
         'icon': Icon(Icons.info,color: Theme.of(context).colorScheme.primary,)
       }
     ];
     return elements.map((e) =>
        ListTile(
+         onTap: (){
+           _buildActionsOfList(e['name']);
+         } ,
          leading: e['icon'],
          title: Text(e['name'], style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize),),
        )
     ).toList();
+  }
+
+  void _buildActionsOfList(String element){
+
+    if(element == "Language"){
+
+    }
+
+    if(element == "Notifications"){
+
+    }
+
+    if(element == "Comment on application"){
+
+    }
+
+    if(element == "Help"){
+
+    }
+
+    if(element == "About"){
+
+    }
   }
 }
