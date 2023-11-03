@@ -36,7 +36,7 @@ class AgentWidget extends StatelessWidget {
              borderRadius: BorderRadius.zero,
           ),
           subtitle: _buildSubtitle(context),
-          collapsedIconColor: agent.workStatus == null ? colorDispo: colorInDispo,
+          // collapsedIconColor: agent.workStatus == null ? colorDispo: colorInDispo,
           iconColor: agent.workStatus == null ? colorDispo: colorInDispo,
           leading: CircleAvatar(backgroundColor: agent.workStatus == null ? colorDispo: colorInDispo, child: Text(mapName['titleName'] as String),),
           children: [
