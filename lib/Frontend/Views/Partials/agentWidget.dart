@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionDetailsPage.dart';
+import 'package:x_money_manager/Model/menu_item.dart';
 
 import '../../../Model/MA_User.dart';
 
@@ -26,7 +27,7 @@ class AgentWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 4),
-              Text(mapName['name'] as String, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize)),
+              Text(agent.fullname, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge?.fontSize)),
             ],
           ),
           shape: RoundedRectangleBorder(
@@ -49,19 +50,21 @@ class AgentWidget extends StatelessWidget {
   }
 
   Widget _buildSubtitle(BuildContext context){
-    if(agent.workStatus == null){
-      return Text('Disponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorDispo));
-    }else{
-     // List<String> transactions = agent.workStatus?['transactions'] as List<String>;
-      return Text('InDisponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorInDispo),);
-    }
+    // if(agent.workStatus == null){
+    //   return Text('Disponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorDispo));
+    // }else{
+    //  // List<String> transactions = agent.workStatus?['transactions'] as List<String>;
+    //   return Text('InDisponible', style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorInDispo),);
+    // }
+    return Text(agent.email, /*style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize, color: colorInDispo),*/);
   }
 
   Widget _listTransaction(context){
     List<dynamic> transactions = agent.workStatus?['transactions'] ;//as List<String>;
     var listWidget = transactions.map((trans) =>
-        GestureDetector(
-          onTap: () {
+        TextButton.icon(
+          icon: Icon(items.transItem.icon),
+          onPressed: () {
             
                 Navigator.push(
                           context,
@@ -69,14 +72,7 @@ class AgentWidget extends StatelessWidget {
                             builder: (BuildContext context) => MaTransactionDetailsPage(requestId: trans, from: 'AG',)),
                         );
               
-          },
-          child: Text(
-            trans as String,
-            style: TextStyle(
-              decoration: TextDecoration.underline,
-              color: Colors.blue,
-            ),
-          ),
+          }, label: Text( trans as String)
         )
     );
     List<Widget> widgets = listWidget.toList();
@@ -95,21 +91,24 @@ class AgentWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(name,),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Center(
-                      child: _buildSubtitle(context),
-                    ),
-                  ),
-                  width: 110.0,
-                  height: 30.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    shape: BoxShape.rectangle,
-                    color: Colors.white,
-                  ),
-                ),
+                Visibility(
+                  visible: agent.phone?.isNotEmpty ?? false,
+                  child: TextButton.icon(onPressed: (){}, icon: const Icon(Icons.call), label: Text('${agent.phone}', overflow: TextOverflow.ellipsis,) ,))
+                // Container(
+                //   child: Padding(
+                //     padding: EdgeInsets.all(5),
+                //     child: Center(
+                //       child: 
+                //     ),
+                //   ),
+                //   width: 110.0,
+                //   height: 30.0,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(3),
+                //     shape: BoxShape.rectangle,
+                //     color: Colors.white,
+                //   ),
+                // ),
               ],
             ),
           ),

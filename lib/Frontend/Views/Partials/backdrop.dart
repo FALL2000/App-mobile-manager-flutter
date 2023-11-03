@@ -50,10 +50,25 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
       titleSpacing: 0.0,
       title: widget.frontTitle,
       leading: widget.frontLeading !=null ? GestureDetector(
+
                                                     onTap: () {
                                                       _scaffoldKey.currentState?.openDrawer();
                                                     },
-                                                    child: widget.frontLeading ?? const Icon(Icons.bar_chart),
+                                                    child: IconButton(
+                                                      padding: const EdgeInsets.only(right: 25.0),
+                                                      onPressed: (){
+                                                        _scaffoldKey.currentState?.openDrawer();
+                                                      },
+                                                      icon: Stack(children: <Widget>[
+                                                        const Opacity(
+                                                          opacity: 0.4,
+                                                          child:  Icon(Icons.notes,),
+                                                        ),
+                                                        FractionalTranslation(
+                                                          translation: Offset(1.0, 0.0),
+                                                          child: widget.frontLeading,
+                                                        )]),
+                                                    ),
                                                 )
                                               : null,
       actions: widget.buildBarActions!=null ? widget.buildBarActions!(context) : [],
@@ -61,7 +76,7 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
     return Scaffold(
             key: _scaffoldKey,
             appBar: appBar,
-            drawer: MaDrawerWidget(/*onItemTap:widget.onItemTap, currentItem: widget.currentXitem*/),
+            drawer: const MaDrawerWidget(/*onItemTap:widget.onItemTap, currentItem: widget.currentXitem*/),
             body: WillPopScope(
 
               onWillPop: () {

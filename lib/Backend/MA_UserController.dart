@@ -9,14 +9,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 class MaUserController {
 
   static Future<MaResponse> sendToken(String? token) async{
-        
+        var storedToken= await MaLocalStore.getStoredToken();
+        if(storedToken==token){
+          // token has already been sended to Firebase 
+          return  MaResponse.successResponse(message: 'token has already been sended to Firebase');
+        }
         var input = {
-            "action": "UPDATE",
-            "user": {"fcmToken": token}
+            "action": "NEW-DEVICE",
+            "token": token
         };
-        var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_FCMTOKEM_FUNCION, input);
+        if(!result.error){
+           await MaLocalStore.storeDeviceToken(token??'');
+        }
         return result;
-  }
+    }
+    static Future<MaResponse> removeToken() async{
+        var storedToken= await MaLocalStore.getStoredToken();
+        if(storedToken?.isEmpty ?? false){
+          return  MaResponse.successResponse(message: 'token removed from Firebase');
+        }
+        var input = {
+            "action": "OLD-DEVICE",
+            "token":  storedToken
+        };
+
+        var result= await MaFireFunctionsController.call(MaConstants.CONST_FCMTOKEM_FUNCION, input);
+        return result;
+    }
   static Future<MaResponse?> CompleteAccount( MaUser? user) async{
       if(user==null) return MaResponse.errorResponse(message: 'Empty user');
       user.userId=FirebaseAuth.instance.currentUser!.uid;

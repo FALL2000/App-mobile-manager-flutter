@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:x_money_manager/views/full/TransactionDetailsPage.dart';
 import 'package:get/get.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionDetailsPage.dart';
 
 
 class LocalNotificationService {
@@ -32,8 +33,8 @@ class LocalNotificationService {
     print('@@@@@@@onNotificationTap');
     String action = data['action'] ?? '';
     if(action.isNotEmpty ){
-      if(action=='APPROVAL-REQUEST') {
-        // Get.to(TransactionDetailsPage(requestId: data['requestId'],));
+      if(action=='NEW-TRANSACTION-MANAGER') {
+        Get.to(MaTransactionDetailsPage(requestId: data['transactionId'],));
       }
     }
   }
@@ -58,7 +59,8 @@ class LocalNotificationService {
             // different sound for
             // different notification
             //playSound: true,
-            priority: Priority.high),
+            priority: Priority.high,
+            styleInformation: BigTextStyleInformation(''),),
       );
       print('fabrication de notificationDetails end ');
       print(id);

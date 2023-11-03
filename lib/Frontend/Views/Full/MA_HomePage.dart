@@ -190,6 +190,7 @@ class _ChipReport extends StatelessWidget {
     super.key,
   });
   final MADashboardGetxCtrl controller = Get.find();
+  final _controller = Get.put(MaNavigationGetxCtrl());
   final transCtrl = Get.put(TransactionsProvider());
   @override
   Widget build(BuildContext context) {
@@ -200,6 +201,7 @@ class _ChipReport extends StatelessWidget {
           var icn = e.status;
           return GestureDetector(
             onTap: () {
+              _controller.updateCurrent(items.transItem,);
               print('GestureDetector ${icn.label}');
               transCtrl.initFilter();
               transCtrl.updateStatusSet(e.status.key);
