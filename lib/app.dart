@@ -54,7 +54,7 @@ class _MoneyAppState extends State<MoneyApp> {
     print('_initialRoute $_initialRoute');
     
     return GetMaterialApp(
-      title: 'Shrine',
+      title: 'Money App',
       initialRoute: _initialRoute,
       routes: _buildRoutes,
       theme: _kShrineTheme,

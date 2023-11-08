@@ -43,6 +43,16 @@ static const openConfig =MaStatusConfig('OPEN',
       color:Colors.green,
       label:'Done',
     );
+  static const collectedConfig = MaStatusConfig('COLLECTED',
+    icon:Icons.task_alt,
+    color:Color.fromARGB(255, 143, 204, 145),
+    label:'Collected',
+  );
+  static const stoppedConfig = MaStatusConfig('STOPPED',
+      icon:Icons.cancel,
+      color:Color.fromARGB(255, 184, 244, 54),
+      label:'Paused',
+    );
   static final Map<String,MaStatusConfig>  statusConfig0={
     'OPEN': openConfig,
     'IN APPROVAL':appConfig,
@@ -61,6 +71,8 @@ static const openConfig =MaStatusConfig('OPEN',
     'REJECTED':cancelConfig,
     'CLOSED':closeConfig,
     'QUEUED':queudConfig,
+    'STOPPED': stoppedConfig,
+    'COLLECTED': collectedConfig,
   };
   static final List<MaStatusConfig> filterStatues=[
     openConfig,approvedConfig,progressConfig,closeConfig,cancelConfig

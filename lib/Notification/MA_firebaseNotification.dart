@@ -53,7 +53,7 @@ class MaFirebaseNotification {
       String? deviceToken = await _firebaseMessage.getToken();
        print('getDeviceToken:::::deviceToken: "${deviceToken}"');
        if(deviceToken!.isNotEmpty){
-          MaUserController.sendToken(deviceToken);
+          await MaUserController.sendToken(deviceToken);
           return deviceToken;
        }
 

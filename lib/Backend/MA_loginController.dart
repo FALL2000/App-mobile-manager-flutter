@@ -5,6 +5,7 @@ import 'package:x_money_manager/Data/localStorage/MA_LocalStore.dart';
 import 'package:x_money_manager/Model/MA_User.dart';
 // import 'package:x_money_manager/Model/MA_User.dart';
 import 'package:x_money_manager/Model/MA_Response.dart';
+import 'package:x_money_manager/Notification/MA_firebaseNotification.dart';
 class MaLoginController {
       static Future<MaResponse> login(String emailAddress, String password) async{
         try {
@@ -23,6 +24,7 @@ class MaLoginController {
           print(_user.role);
           if(_user.role == Role.manager || _user.role == Role.admin) {
             _user.email = _user.email.isEmpty ? emailAddress : _user.email;
+            await MaFirebaseNotification.getDeviceToken();
             await MaLocalStore.storeUser(_user);
             return MaResponse.successResponse(message: '',body: credential);
           }

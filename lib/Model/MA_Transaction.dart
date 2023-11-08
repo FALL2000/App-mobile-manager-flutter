@@ -49,7 +49,9 @@ enum ApprovalStatus {
     canceled('CANCELED'),
     rejected('REJECTED'),
     closedwon('CLOSED WON'),
-    error('ERROR');
+    error('ERROR'),
+    stopped('STOPPED'),
+    collected('COLLECTED');
     /**
      *  
      * xexport enum StatusApproval  {

@@ -14,7 +14,7 @@ class MaApprovalStatusIcon extends StatelessWidget {
     var _icon=Icons.do_not_disturb;
     var _color=Colors.black;
     var _config= MaStatusConfig.statusApprovalConfig0[_status];
-    var _label='';
+    var _label=_status;
     if (_config!=null) {
         _icon= _config.icon;
         _color= _config.color;
