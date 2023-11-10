@@ -1,6 +1,6 @@
 import 'package:x_money_manager/Backend/MA_FireFunctionsController.dart';
 import 'package:x_money_manager/model/MA_Response.dart';
-import 'package:x_money_manager/model/MA_Zone.dart';
+import 'package:x_money_manager/Model/MA_Zone.dart';
 import 'package:x_money_manager/Utilities/MA_Constants.dart';
 
 class MaZoneController {
