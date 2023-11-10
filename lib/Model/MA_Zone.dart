@@ -9,17 +9,19 @@ class MaCountry {
   final String name;
   final String? currencyCode;
   final String id;
+  final String? iso;
   List<MaCity>? cities;
 
   MaCountry({
     required this.name,
     required this.id,
+    this.iso,
     this.currencyCode,
     this.cities
   });
    MaCountry minimize(){
 
-    return MaCountry(name: name, id: id,currencyCode:currencyCode);
+    return MaCountry(name: name, id: id,currencyCode:currencyCode, iso: iso);
   }
   factory MaCountry.fromJson(Map<Object?, Object?> json){
 
@@ -32,6 +34,7 @@ class MaCountry {
       return MaCountry(
         name : util.toSString(json['name']),
         id : util.toSString(json['id']),
+        iso: util.toSString(json['iso2']),
         currencyCode: util.toSString(json['currency']).isNotEmpty ?  util.toSString(json['currency']) :  util.toSString(json['currencyCode']) ,
         cities: _cities
       );
@@ -43,9 +46,10 @@ class MaCountry {
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
+    'iso2': iso,
       };
   @override
-  String toString() => "(currencyCode=$currencyCode,  name=$name, id=$id )";
+  String toString() => "(currencyCode=$currencyCode,  name=$name, id=$id , iso2=$iso )";
 }
 
 class MaCity {

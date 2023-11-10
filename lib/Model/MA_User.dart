@@ -85,7 +85,7 @@ class MaUser {
     Map<Object?, Object?> zone= jsonDecode( jsonEncode(json['cityObj']??{}));
     Map<String, dynamic>? workStatus = json['workStatus']!=null ? jsonDecode( jsonEncode(json['workStatus'])) : null;
     print('-----------------flag');
-    print(util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['flag']));
+    print(util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['iso2']));
     var user= MaUser(
       firstname: util.toSString(json['firstname']),
       lastname: util.toSString(json['lastname']),
@@ -100,10 +100,9 @@ class MaUser {
       flag: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['flag']),
       gender: Gender.assignGender(util.toSString(json['gender'])),
       role: Role.assignRole(util.toSString(json['role'])),
-
     );
     user.city=MaCity(name: util.toSString(zone['name']), id: user.cityId ?? '');
-    user.country= MaCountry(name: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['name']), id: user.countryId ?? '');
+    user.country= MaCountry(name: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['name']), id: user.countryId ?? '', iso: util.toSString(jsonDecode( jsonEncode(zone['country']??{}))['iso2']));
     return user;
 
 
@@ -117,6 +116,8 @@ class MaUser {
     print(json);
     Map<Object?, Object?> zone= jsonDecode( jsonEncode(json['cityObj']??{}));
     Map<Object?, Object?> _city= jsonDecode( jsonEncode(json['city']??{}));
+    print('@@@@@@@@@@@@++++++country');
+    print(jsonDecode( jsonEncode(json['country']??{})));
     return MaUser(
     firstname: util.toSString(json['firstname']),
     lastname: util.toSString(json['lastname']),

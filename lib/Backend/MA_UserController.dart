@@ -131,4 +131,21 @@ class MaUserController {
         }
   }
 
+  static Future<MaResponse> updateUserInfo(data) async{
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ update user info');
+    var input = {
+      'action': 'UPDATE',
+      'userId':FirebaseAuth.instance.currentUser!.uid,
+      'user':data
+    };
+
+    var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+    print(result);
+    if(! result.error){
+      // print(result.body);
+      // await MaLocalStore.storeUser(MaUser.fromJson(result.body));
+    }
+    return result;
+  }
+
 }
