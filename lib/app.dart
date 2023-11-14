@@ -4,6 +4,7 @@ import 'package:x_money_manager/Frontend/Controllers/MA_NavigationGetxCtrl.dart'
 import 'package:x_money_manager/Frontend/Controllers/MA_agentSearchController.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_AgentsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_HomePage.dart';
+import 'package:x_money_manager/Frontend/Views/Full/MA_ProfilePage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_SearchPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_SettingsPage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_TransactionsPage.dart';
@@ -81,7 +82,7 @@ class _MoneyAppState extends State<MoneyApp> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()),
+                              builder: (BuildContext context) => ProfilePage()),
                           );
                         },
                       )

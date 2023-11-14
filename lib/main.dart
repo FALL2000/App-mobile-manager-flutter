@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:x_money_manager/Frontend/Views/Partials/MA_LoadingPage.dart';
 import 'app.dart';
 import 'package:x_money_manager/Frontend/Controllers/AuthController.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_Error.dart';
@@ -18,7 +19,7 @@ void main() {
                         } else if (snapshot.hasError) {
                           child =appWrapper( home: Scaffold(body: MaError(snapshot: snapshot ,)),);
                         } else {
-                          child =appWrapper( home: Scaffold(body: MaSpinner(title: 'Welcome...',)));
+                          child =appWrapper( home: LoadingView());
                         }
                         return child;
                       },

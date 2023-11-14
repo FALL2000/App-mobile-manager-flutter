@@ -4,6 +4,9 @@ import 'package:x_money_manager/Model/menu_item.dart';
 import 'package:x_money_manager/Frontend/Views/Partials/MA_DrawerWidget.dart';
 
 
+import 'package:x_money_manager/Frontend/Controllers/MA_NavigationGetxCtrl.dart';
+
+import 'package:get/get.dart';
 class Backdrop extends StatefulWidget {
   // final ValueChanged<XItem> onItemTap;
   // final XItem currentXitem;
@@ -80,7 +83,11 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
             body: WillPopScope(
 
               onWillPop: () {
-                  if(Navigator.canPop(context)) return Future.value(true);
+                  if(Navigator.canPop(context)) {
+                    final _controller = Get.put(MaNavigationGetxCtrl());
+                       _controller.updateCurrent(items.homeItem,);
+                    return Future.value(true);
+                    }
                   DateTime now = DateTime.now();
                   if (ctime == null || now.difference(ctime) > Duration(seconds: 2)) { 
                       //add duration of press gap

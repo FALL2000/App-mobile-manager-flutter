@@ -56,6 +56,7 @@ class MaLocalStore {
         
         await prefs?.remove('hasLocalUser');
         await prefs?.remove('localUser');
+        await prefs?.remove('fcmTokem');
          print('------------SharedPreferences logOut-----------');
          print(prefs?.getKeys());
         print('------------clearing all localStorage---END-----------');

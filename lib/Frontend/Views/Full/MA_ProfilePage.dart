@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:x_money_manager/Backend/MA_UserController.dart';
+import 'package:x_money_manager/Backend/MA_loginController.dart';
 
 import '../../../Data/localStorage/MA_LocalStore.dart';
 import '../../../Data/states/zones_state.dart';
@@ -34,7 +35,19 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Column(
         children: [
-           _buildProfileUser(context)
+           _buildProfileUser(context),
+           ElevatedButton(onPressed: () async{
+                print('------------signOut onPressed---START-----------');
+                await signOut();
+                print('------------signOut onPressed---NAVIGATE START-----------');
+                while (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                Navigator.popAndPushNamed(context, '/login');
+                print('------------signOut onPressed---NAVIGATE END-----------');
+                
+                print('------------signOut onPressed---END-----------');
+          }, child: Text('logout'))
         ],
       ),
     );

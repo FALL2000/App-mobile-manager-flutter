@@ -54,8 +54,8 @@ class MADashboardGetxCtrl extends GetxController {
   }
 
   List<ChipReportItem>  get statusReport{
-      return  MaStatusConfig.statusConfig0.entries.map((e) { 
-          return ChipReportItem(status: e.value, value: _counter.putIfAbsent(e.key, () => 0));
+      return  MaStatusConfig.filterStatues.map((e) { 
+          return ChipReportItem(status: e, value: _counter.putIfAbsent(e.key, () => 0));
           }
       ).toList();
   }
