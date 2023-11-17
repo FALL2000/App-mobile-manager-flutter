@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:x_money_manager/Backend/MA_UserController.dart';
+//import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+//import 'package:x_money_manager/Backend/MA_UserController.dart';
 
+import '../../../Backend/MA_UserController.dart';
 import '../../../Data/localStorage/MA_LocalStore.dart';
 import '../../../Data/states/zones_state.dart';
 import '../../../Model/MA_User.dart';
@@ -23,9 +24,13 @@ class _ProfilePageState extends State<ProfilePage> {
   final ZonesProvider zoneState = Get.put(ZonesProvider());
   bool hasError = false;
   String emailTextError = '';
+  String codeIso = '';
   String dropdownValueCity = '';
   String dropdownValueCountry = '';
+  String currentPhone = '';
+  bool isEnabled = false;
   List<MaCity> cityList = [];
+  MaUser _user = MaUser(firstname: '', email: '');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context, AsyncSnapshot<MaUser?> snapshot) {
         Widget child;
         if (snapshot.hasData) {
-          var _user = snapshot.data as MaUser;
+          _user = snapshot.data as MaUser;
           child = _buildScrollView(_user, context);
         } else if (snapshot.hasError) {
           child = MaError(snapshot: snapshot ,);
@@ -115,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
      String localisation = country =="" ? 'None' : country + '-'+ city;
      List<Map<String,dynamic>> userInfos = [
        {"element": name, "icon": Icons.person, "label":"Name", "key":"name", "isTextfield":true},
-       {"element": localisation, "icon": Icons.location_city, "label":"Location", "key":"location", "isTextfield":false},
+       {"element": localisation, "icon": Icons.location_city, "label":"Location", "key":"location", "isTextfield":false, "iso":User.country?.iso??""},
        {"element": User.email, "icon":Icons.email, "label":"Email Adress", "key":"email", "isTextfield":true},
        {"element":User.phone?? 'None', "icon":Icons.phone, "label":"Phone", "key":"phone", "isTextfield":true, "iso":User.country?.iso??""}
      ];
@@ -134,10 +139,23 @@ class _ProfilePageState extends State<ProfilePage> {
                    dropdownValueCity = cityId;
                    dropdownValueCountry = countryId;
                    cityList = zoneState.getCountryCities(countryId);
+                   codeIso = e['iso'];
+                   currentPhone = User.phone??'';
+                   isEnabled = false;
+                   if(hasError)
+                     hasError =false;
                  });
-                 _showEditProfileBottomSheet(context,e, countryId);
+                 _showEditProfileBottomSheet(context,User, e, countryId);
                }else{
-                   _showEditProfileBottomSheet(context,e);
+                   if(e['key'] == 'phone')
+                     setState(() {
+                       codeIso = e['iso'];
+                     });
+                   if(hasError)
+                     setState((){
+                       hasError = false;
+                     });
+                   _showEditProfileBottomSheet(context,User,e);
                }
              },
            ):null,
@@ -178,9 +196,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _showEditProfileBottomSheet(BuildContext context, Map<String, dynamic> userInfos, [String? countryId]) {
-
-    TextEditingController _textFieldController = TextEditingController(text: userInfos['element']);
+  void _showEditProfileBottomSheet(BuildContext context, MaUser User, Map<String, dynamic> userInfos, [String? countryId, String? phone]) {
+    TextEditingController _textFieldController = userInfos['isTextfield'] ? TextEditingController(text: userInfos['element']):TextEditingController();
     TextInputType typeInput = getTextInput(userInfos);
     List<MaCountry> countryList = zoneState.getCountries();
     String valueCountry = countryId?? '';
@@ -197,29 +214,70 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  userInfos['isTextfield'] ? _builTextField(_textFieldController,typeInput,userInfos) : _buildPicklistLocalisation(countryList,valueCountry),
+                  userInfos['isTextfield'] ? _builTextField(_textFieldController,typeInput,userInfos) : _buildPicklistLocalisation(countryList,valueCountry,_textFieldController),
                   SizedBox(height: 16.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                          onPressed:(){
-                            /*if(userInfos['isTextfield']){
-                              dynamic data = userInfos['key'] == 'phone'? {'phone':_textFieldController.text}:{'email':_textFieldController.text};
-                              await MaUserController.updateUserInfo(data);
+                          onPressed:()async{
+                            if(userInfos['isTextfield']){
+                              if(hasError){
+                                _showDialog(context,'Incorrect Value','You filled the field with incorrect value');
+                              }else{
+                               _showDialogSave(context);
+                                dynamic data = userInfos['key'] == 'phone'? {'phone':_textFieldController.text}:{'email':_textFieldController.text};
+                                var response = await MaUserController.updateUserInfo(data);
+                                if(!response.error){
+                                  if(userInfos['key'] == 'phone')
+                                    User.phone = _textFieldController.text;
+                                  if(userInfos['key'] == 'email')
+                                    User.email = _textFieldController.text;
+                                  await MaLocalStore.storeUser(User);
+                                  setState(() {
+                                    _user = User;
+                                  });
+                                  Navigator.pop(context);
+                                }else{
+                                  _showDialog(context,'Error Occured','an error occurred while saving, please try again later');
+                                }
+                                print('rrrrrrrrrrrrrrr${response}');
+                                Navigator.pop(context);
+                              }
                             }else{
-                              dynamic data = {'city':dropdownValueCity,'country':dropdownValueCity};
-                              await MaUserController.updateUserInfo(data);
-                            }*/
+                              if(hasError){
+                                _showDialog(context,'Incorrect Value','You filled the field with incorrect value');
+                              }else{
+                                _showDialogSave(context);
+                                dynamic data = valueCountry==dropdownValueCountry? {'city':dropdownValueCity,'country':dropdownValueCountry}:{'city':dropdownValueCity,'country':dropdownValueCountry,'phone':_textFieldController.text};
+                                var response = await MaUserController.updateUserInfo(data);
+                                if(!response.error){
+                                  User.cityId = dropdownValueCity;
+                                  User.countryId = dropdownValueCountry;
+                                  User.country = zoneState.getCountry(dropdownValueCountry);
+                                  User.city = zoneState.getCity(zoneState.getCountry(dropdownValueCountry), dropdownValueCity);
+                                  if(valueCountry != dropdownValueCountry)
+                                    User.phone = _textFieldController.text;
+                                  await MaLocalStore.storeUser(User);
+                                  setState(() {
+                                    _user = User;
+                                  });
+                                  Navigator.pop(context);
+                                }else{
+                                  _showDialog(context,'Error Occured','an error occurred while saving, please try again later');
+                                }
+                                Navigator.pop(context);
+                              }
+                            }
                           },
-                          child: Text('Enregistrer')
+                          child: Text('Save')
                       ),
                       TextButton(
                           onPressed: (){
                             Navigator.pop(context);
                           },
-                          child: Text('Annuler')
-                      )
+                          child: Text('Cancel')
+                      ),
                     ],
                   )
                 ],
@@ -231,32 +289,57 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _builTextField(TextEditingController editControl, TextInputType typeInput,Map<String, dynamic> userInfos){
-    //print('isooooooooooooooooooooooooo${userInfos['iso']}');
-    String countryIso = userInfos['iso']??'';
-    return  (userInfos['key'] == 'phone') ?IntlPhoneField(
-      decoration: InputDecoration(
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-            ),
+    return  (userInfos['key'] == 'phone') ?StatefulBuilder(
+      builder: (context,setState) {
+        return InternationalPhoneNumberInput(
+          onInputChanged: (phoneNumber)async{
+            if(codeIso != phoneNumber.isoCode){
+              setState((){
+                codeIso = phoneNumber.isoCode as String;
+              });
+            }
+          },
+          inputDecoration: InputDecoration(
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange,
+                  width: 1.0,
+                ),
+              )
           ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.orange,
-              width: 1.0,
-            ),
-          )
-      ),
-      controller: editControl,
-      initialCountryCode: userInfos['iso'],
-      onChanged: (phone) {
-          //print('pppppppppppppppppppppppppp${phone.completeNumber}');
-      },
-      onCountryChanged: (country) {
-        countryIso = country.code;
-        //print('ccccccccccccccccccc${phone.code}');
-      },
+          textFieldController: editControl,
+          countries: [codeIso],
+          initialValue: PhoneNumber(isoCode: codeIso, phoneNumber: editControl.text),
+          onInputValidated: (bool value){
+              //print("ffffffffffffffffffffffffff${value}");
+            if(value){
+              print('yesssssssssssssssssssssss');
+              if(hasError){
+                setState((){
+                  hasError = false;
+                });
+              }
+            }else{
+              print('Noooooooooooooooooooooooo');
+              if(!hasError){
+                setState((){
+                  hasError = true;
+                });
+              }
+            }
+          },
+          selectorConfig: SelectorConfig(
+            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+          ),
+          autoValidateMode: AutovalidateMode.onUserInteraction,
+        );
+      }
     ):
     StatefulBuilder(
       builder: (context,setState) {
@@ -301,7 +384,6 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       }
     );
-
   }
 
   TextInputType getTextInput(Map<String, dynamic> userInfos){
@@ -310,7 +392,7 @@ class _ProfilePageState extends State<ProfilePage> {
      return TextInputType.text;
   }
 
-  Widget _buildPicklistLocalisation(List<MaCountry> countryList, String countryId){
+  Widget _buildPicklistLocalisation(List<MaCountry> countryList, String countryId, TextEditingController editControl){
      return StatefulBuilder(
        builder: (context, setState) {
          return Column(
@@ -320,13 +402,69 @@ class _ProfilePageState extends State<ProfilePage> {
                  dropdownValueCountry = value;
                  cityList = zoneState.getCountryCities(value);
                  dropdownValueCity = cityList.first.id;
+                 codeIso = zoneState.getCountry(value)?.iso as String;
+                 isEnabled = value != countryId ? true:false;
                });
+               if(value != countryId){
+                 editControl.text = '';
+               }else{
+                 editControl.text = currentPhone;
+               }
              }),
              _dropdownButtonWidget(cityList, false, (value){
                setState((){
                  dropdownValueCity = value;
                });
-             })
+             }),
+             InternationalPhoneNumberInput(
+               onInputChanged: (phoneNumber)async{
+                 if(codeIso != phoneNumber.isoCode){
+                   setState((){
+                     codeIso = phoneNumber.isoCode as String;
+                   });
+                 }
+               },
+               isEnabled: isEnabled,
+               inputDecoration: InputDecoration(
+                   border: UnderlineInputBorder(
+                     borderSide: BorderSide(
+                       color: Colors.grey,
+                       width: 1.0,
+                     ),
+                   ),
+                   focusedBorder: UnderlineInputBorder(
+                     borderSide: BorderSide(
+                       color: Colors.orange,
+                       width: 1.0,
+                     ),
+                   )
+               ),
+               textFieldController: editControl,
+               countries: [codeIso],
+               initialValue: PhoneNumber(isoCode: codeIso, phoneNumber: currentPhone),
+               onInputValidated: (bool value){
+                 //print("ffffffffffffffffffffffffff${value}");
+                 if(value){
+                   print('yesssssssssssssssssssssss');
+                   if(hasError){
+                     setState((){
+                       hasError = false;
+                     });
+                   }
+                 }else{
+                   print('Noooooooooooooooooooooooo');
+                   if(!hasError){
+                     setState((){
+                       hasError = true;
+                     });
+                   }
+                 }
+               },
+               selectorConfig: SelectorConfig(
+                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+               ),
+               autoValidateMode: AutovalidateMode.onUserInteraction,
+             )
            ],
          );
        }
@@ -356,6 +494,38 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }).toList(),
       ),
+    );
+  }
+  void _showDialogSave(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('In Save...'),
+          content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),
+          actions: [],
+        );
+      },
+    );
+  }
+
+  void _showDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
