@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:x_money_manager/Frontend/Views/Full/MA_ProfilePage.dart';
 import 'package:x_money_manager/Frontend/Views/Full/home.dart';
@@ -7,9 +9,24 @@ import '../../../Model/MA_User.dart';
 import '../Partials/MA_Error.dart';
 import '../Partials/MA_Spinner.dart';
 
-class MaSettingsPage extends StatelessWidget {
+class MaSettingsPage extends StatefulWidget {
 
   MaSettingsPage({ Key? key }) : super(key: key);
+
+  @override
+  State<MaSettingsPage> createState() => _MaSettingsPageState();
+}
+
+class _MaSettingsPageState extends State<MaSettingsPage> {
+  final languages = ['fr','en'];
+  final Locale currentLocale = PlatformDispatcher.instance.locale;
+  String currentLanguageCode = '';
+
+  @override
+  void initState() {
+    currentLanguageCode = currentLocale.languageCode;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +64,7 @@ class MaSettingsPage extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildProfileUser(BuildContext context){
     return FutureBuilder<MaUser?>(
       future: MaLocalStore.getStoredUser(), // a previously-obtained Future<String> or null
@@ -66,6 +84,7 @@ class MaSettingsPage extends StatelessWidget {
       },
     );
   }
+
   Widget _buildTitleAvatar(String firstName, BuildContext context, [String? lastName]){
      Map<String, String> mapName = lastName == null ? _buildName(firstName):_buildName(firstName, lastName);
      return  Padding(
@@ -123,51 +142,98 @@ class MaSettingsPage extends StatelessWidget {
     }
   }
 
+  String getLanguage(String languageCode){
+     switch (languageCode){
+       case 'en':
+         return 'English';
+       case 'fr':
+         return 'French';
+       default:
+         return 'English';
+     }
+  }
+
   List<Widget> _builListTile(BuildContext context){
     final List<Map<String, dynamic>> elements = [
       {
         'name':'Language',
-        'icon': Icon(Icons.language,color: Theme.of(context).colorScheme.primary,)
+        'icon': Icon(Icons.language,color: Theme.of(context).colorScheme.primary,),
+        'key':'Language'
       },
       {
         'name':'Notifications',
-        'icon': Icon(Icons.notifications,color: Theme.of(context).colorScheme.primary,)
+        'icon': Icon(Icons.notifications,color: Theme.of(context).colorScheme.primary,),
+        'key':'Notifications'
       },
       {
         'name':'Comment on application',
-        'icon': Icon(Icons.comment,color: Theme.of(context).colorScheme.primary,)
+        'icon': Icon(Icons.comment,color: Theme.of(context).colorScheme.primary,),
+        'key':'Comment'
       },
       {
         'name':'Help',
-        'icon': Icon(Icons.help,color: Theme.of(context).colorScheme.primary,)
+        'icon': Icon(Icons.help,color: Theme.of(context).colorScheme.primary,),
+        'key':'Help'
       },
       {
         'name':'About',
-        'icon': Icon(Icons.info,color: Theme.of(context).colorScheme.primary,)
+        'icon': Icon(Icons.info,color: Theme.of(context).colorScheme.primary,),
+        'key':'About'
       }
     ];
     return elements.map((e) =>
        ListTile(
          onTap: (){
-           _buildActionsOfList(e['name']);
+           _buildActionsOfList(e['key']);
          } ,
          leading: e['icon'],
          title: Text(e['name'], style: TextStyle(fontSize: Theme.of(context).textTheme.bodySmall?.fontSize),),
+         subtitle: e['key'] == 'Language'?Text(getLanguage(currentLanguageCode)):null,
        )
     ).toList();
+  }
+  void _showBottomSheetLanguage(){
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 150,
+          child: Column(
+            children: [
+              Expanded(
+                  child: ListView(
+                    children: languages.map((e) =>
+                        ListTile(
+                          onTap: (){
+                             setState(() {
+                               currentLanguageCode = e;
+                             });
+                             Navigator.pop(context);
+                          },
+                          trailing: currentLanguageCode == e ? Icon(Icons.check):null,
+                          title: e == 'fr'?Text('French'):Text('English'),
+                        )
+                    ).toList(),
+                  )
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _buildActionsOfList(String element){
 
     if(element == "Language"){
-
+      _showBottomSheetLanguage();
     }
 
     if(element == "Notifications"){
 
     }
 
-    if(element == "Comment on application"){
+    if(element == "Comment"){
 
     }
 

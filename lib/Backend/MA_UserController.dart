@@ -148,4 +148,22 @@ class MaUserController {
     return result;
   }
 
+  static Future<MaResponse> updateUserPassword(newPassword) async{
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ update user password');
+    var input = {
+      'action': 'UPDATE',
+      'userId':FirebaseAuth.instance.currentUser!.uid,
+      'password': newPassword,
+      'user': {}
+    };
+
+    var result= await MaFireFunctionsController.call(MaConstants.CONST_USER_FUNCION, input);
+    print(result);
+    if(! result.error){
+      // print(result.body);
+      // await MaLocalStore.storeUser(MaUser.fromJson(result.body));
+    }
+    return result;
+  }
+
 }

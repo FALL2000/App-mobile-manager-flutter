@@ -17,6 +17,7 @@ import '../../../Model/MA_Zone.dart';
 import '../../../Utilities/widgets/outputs.dart';
 import '../Partials/MA_Error.dart';
 import '../Partials/MA_Spinner.dart';
+import 'MA_PasswordEditPage.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -85,7 +86,13 @@ class _ProfilePageState extends State<ProfilePage> {
     childrens.addAll(_buildListInfos(User, context));
     childrens.add(Center(
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => PasswordEditPage()),
+          );
+        },
         child: Text(
           "Edit Password",
           style: TextStyle(
